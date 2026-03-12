@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Supafood Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff5f14",
+                        "background-light": "#f8f6f5",
+                        "background-dark": "#120a07",
+                        "surface-dark": "#1c120e",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .sidebar-item-active {
+            background-color: rgba(255, 95, 20, 0.1);
+            color: #ff5f14;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-72 flex-shrink-0 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-surface-dark hidden md:flex flex-col">
+<div class="p-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined font-bold">restaurant</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight">Supafood</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Restaurant Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl sidebar-item-active group" href="#">
+<span class="material-symbols-outlined text-[22px]">dashboard</span>
+<span class="font-semibold text-sm">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">menu_book</span>
+<span class="font-semibold text-sm">Menu</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">shopping_bag</span>
+<span class="font-semibold text-sm">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">leaderboard</span>
+<span class="font-semibold text-sm">Analytics</span>
+</a>
+</nav>
+<div class="p-6 border-t border-slate-200 dark:border-white/5">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Admin user profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvUFGlOgtvwgHhCEScB1fQGmib40BV6FmYvfi3B5LWPSMglw9fWfblzUH37nQSA6Req66BxF64rQl2g9G3kqaKSCHHCW2wn643tSHSIDqvyZhPuGYcRHFqIaJWnJJ9JN0KOOLCkANdajH2T_VndcMgqTfnYa9QSMEgWvrqHeT4yVaOlaoigMAksFB2r1VL3YH64oCBIGVvaEjphjxkYtf-tvoTOuIV4e3SrX4gmpq8bihnjYK5juBMh6fBCV_jepG-fy_WoJFQduE"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">Alex Rivera</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">General Manager</p>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">settings</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="sticky top-0 z-10 glass px-8 py-4 flex items-center justify-between">
+<div>
+<h2 class="text-lg font-bold">Dashboard Overview</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Monday, October 23</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-white/5 border-none rounded-xl focus:ring-2 focus:ring-primary/50 w-64 text-sm transition-all" placeholder="Search data..." type="text"/>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-all relative">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Top Section: Stats Cards -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Today's Revenue -->
+<div class="lg:col-span-2 glass rounded-xl p-8 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 text-primary/10">
+<span class="material-symbols-outlined text-9xl">payments</span>
+</div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<p class="text-slate-500 dark:text-slate-400 font-semibold text-sm uppercase tracking-wider">Today's Revenue</p>
+<div class="flex items-baseline gap-4 mt-2">
+<h3 class="text-5xl font-extrabold tracking-tight">$12,482.50</h3>
+<span class="px-2.5 py-1 bg-green-500/10 text-green-500 text-sm font-bold rounded-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                        14.2%
+                                    </span>
+</div>
+</div>
+<div class="mt-12 flex items-center gap-8">
+<div class="space-y-1">
+<p class="text-xs text-slate-500 dark:text-slate-400">Online Orders</p>
+<p class="text-xl font-bold">$8,120.00</p>
+</div>
+<div class="w-px h-10 bg-white/10"></div>
+<div class="space-y-1">
+<p class="text-xs text-slate-500 dark:text-slate-400">Dine-in</p>
+<p class="text-xl font-bold">$4,362.50</p>
+</div>
+<div class="ml-auto">
+<button class="px-6 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                                        View Report
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Stat Cards -->
+<div class="flex flex-col gap-6">
+<div class="glass rounded-xl p-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Orders</p>
+<h4 class="text-2xl font-bold">342</h4>
+</div>
+</div>
+<div class="glass rounded-xl p-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
+<span class="material-symbols-outlined">avg_pace</span>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Avg. Wait Time</p>
+<h4 class="text-2xl font-bold">18 min</h4>
+</div>
+</div>
+<div class="glass rounded-xl p-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
+<span class="material-symbols-outlined">star</span>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Avg. Rating</p>
+<h4 class="text-2xl font-bold">4.8 / 5</h4>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+<!-- Live Orders -->
+<div class="glass rounded-xl flex flex-col h-[500px]">
+<div class="p-6 border-b border-white/10 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h3 class="font-bold text-lg">Live Orders</h3>
+<span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+</div>
+<button class="text-primary text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="flex-1 overflow-y-auto p-2 space-y-2">
+<!-- Order Item -->
+<div class="p-4 hover:bg-white/5 rounded-xl transition-colors border border-transparent hover:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                                        #42
+                                    </div>
+<div>
+<p class="font-bold text-sm">Classic Truffle Burger <span class="text-slate-500 font-normal">x2</span></p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Order from Tablet • 3 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full">In Prep</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Order Item -->
+<div class="p-4 hover:bg-white/5 rounded-xl transition-colors border border-transparent hover:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-500/20 flex items-center justify-center text-slate-400 font-bold">
+                                        #41
+                                    </div>
+<div>
+<p class="font-bold text-sm">Quinoa Harvest Bowl <span class="text-slate-500 font-normal">x1</span></p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Takeaway • 8 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest rounded-full">Ready</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Order Item -->
+<div class="p-4 hover:bg-white/5 rounded-xl transition-colors border border-transparent hover:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                                        #40
+                                    </div>
+<div>
+<p class="font-bold text-sm">Spicy Ramen Supreme <span class="text-slate-500 font-normal">x3</span></p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Dine-in • Table 12 • 12 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full">In Prep</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Order Item -->
+<div class="p-4 hover:bg-white/5 rounded-xl transition-colors border border-transparent hover:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-500/20 flex items-center justify-center text-slate-400 font-bold">
+                                        #39
+                                    </div>
+<div>
+<p class="font-bold text-sm">Vegan Avocado Toast <span class="text-slate-500 font-normal">x1</span></p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Dine-in • Table 05 • 15 mins ago</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-blue-500/10 text-blue-500 text-[10px] font-bold uppercase tracking-widest rounded-full">Order Recieved</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Selling Items -->
+<div class="glass rounded-xl p-8 flex flex-col h-[500px]">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-bold text-lg">Top Selling Items</h3>
+<select class="bg-slate-100 dark:bg-white/5 border-none rounded-lg text-xs font-semibold py-1.5 focus:ring-1 focus:ring-primary">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<!-- Simple Chart Visualization -->
+<div class="space-y-6 flex-1">
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-semibold mb-1">
+<span>Truffle Burger</span>
+<span>842 sold</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-white/5 h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-semibold mb-1">
+<span>Crispy Tofu Bowl</span>
+<span>624 sold</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-white/5 h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary/70 h-full rounded-full" style="width: 65%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-semibold mb-1">
+<span>Mediterranean Wrap</span>
+<span>512 sold</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-white/5 h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary/50 h-full rounded-full" style="width: 55%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-semibold mb-1">
+<span>Spicy Ramen Supreme</span>
+<span>488 sold</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-white/5 h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary/30 h-full rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-semibold mb-1">
+<span>Superberry Smoothie</span>
+<span>390 sold</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-white/5 h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary/20 h-full rounded-full" style="width: 35%"></div>
+</div>
+</div>
+</div>
+<div class="pt-6 mt-auto flex justify-center">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Main Courses</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary/50"></span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Sides &amp; Wraps</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary/20"></span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Drinks</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

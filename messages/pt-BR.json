@@ -1,0 +1,43 @@
+{
+  "Dashboard": {
+    "title": "Painel de Controle",
+    "overview": "Visão Geral do Painel",
+    "revenue": "Receita de Hoje",
+    "onlineOrders": "Pedidos Online",
+    "dineIn": "No Local",
+    "viewReport": "Ver Relatório",
+    "totalOrders": "Total de Pedidos",
+    "avgWaitTime": "Tempo Médio de Espera",
+    "avgRating": "Avaliação Média",
+    "liveOrders": "Pedidos ao Vivo",
+    "viewAll": "Ver Tudo",
+    "topSelling": "Mais Vendidos",
+    "last7Days": "Últimos 7 Dias",
+    "last30Days": "Últimos 30 Dias",
+    "mainCourses": "Pratos Principais",
+    "sides": "Acompanhamentos",
+    "drinks": "Bebidas",
+    "inPrep": "Em Preparo",
+    "ready": "Pronto",
+    "received": "Recebido",
+    "search": "Buscar dados..."
+  },
+  "Navigation": {
+    "home": "Início",
+    "menu": "Menu",
+    "orders": "Pedidos",
+    "analytics": "Análise",
+    "menuToggle": "Abrir Menu"
+  },
+  "Profile": {
+    "settings": "Configurações da Conta",
+    "switchUnit": "Trocar Unidade",
+    "logout": "Sair",
+    "manager": "Gerente Geral"
+  },
+  "General": {
+    "minsAgo": "{mins} min atrás",
+    "sold": "{count} vendidos",
+    "table": "Mesa"
+  }
+}

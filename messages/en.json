@@ -1,0 +1,43 @@
+{
+  "Dashboard": {
+    "title": "Dashboard",
+    "overview": "Dashboard Overview",
+    "revenue": "Today's Revenue",
+    "onlineOrders": "Online Orders",
+    "dineIn": "Dine-in",
+    "viewReport": "View Report",
+    "totalOrders": "Total Orders",
+    "avgWaitTime": "Avg. Wait Time",
+    "avgRating": "Avg. Rating",
+    "liveOrders": "Live Orders",
+    "viewAll": "View All",
+    "topSelling": "Top Selling Items",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "mainCourses": "Main Courses",
+    "sides": "Sides & Wraps",
+    "drinks": "Drinks",
+    "inPrep": "In Prep",
+    "ready": "Ready",
+    "received": "Order Received",
+    "search": "Search data..."
+  },
+  "Navigation": {
+    "home": "Home",
+    "menu": "Menu",
+    "orders": "Orders",
+    "analytics": "Analytics",
+    "menuToggle": "Toggle Menu"
+  },
+  "Profile": {
+    "settings": "Account Settings",
+    "switchUnit": "Switch Unit",
+    "logout": "Logout",
+    "manager": "General Manager"
+  },
+  "General": {
+    "minsAgo": "{mins} mins ago",
+    "sold": "{count} sold",
+    "table": "Table"
+  }
+}
