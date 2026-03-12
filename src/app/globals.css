@@ -6,11 +6,14 @@
 
 @theme {
   --color-primary: #ff5f14;
+  --color-primary-foreground: #ffffff;
   --color-background-light: #f8f6f5;
   --color-background-dark: #120a07;
   --color-surface-dark: #1c120e;
+  --color-popover: #1c120e;
+  --color-popover-foreground: #ffffff;
   --font-display: "Inter", sans-serif;
-
+  --font-sans: "Inter", sans-serif;
   --radius-DEFAULT: 0.5rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;

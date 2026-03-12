@@ -3,6 +3,8 @@
 import React from 'react';
 import { Search, Bell } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { MobileNav } from './MobileNav';
+import { UserAvatar } from './UserAvatar';
 
 export function Header() {
   const t = useTranslations('Dashboard');
@@ -14,26 +16,33 @@ export function Header() {
   });
 
   return (
-    <header className="sticky top-0 z-10 glass px-8 py-4 flex items-center justify-between">
-      <div>
-        <h2 className="text-lg font-bold">{t('overview')}</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">{currentDate}</p>
+    <header className="sticky top-0 z-10 glass px-4 md:px-8 py-4 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <MobileNav />
+        <div className="hidden sm:block">
+          <h2 className="text-lg font-bold">{t('overview')}</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400">{currentDate}</p>
+        </div>
       </div>
       
-      <div className="flex items-center gap-4">
-        <div className="relative group">
+      <div className="flex items-center gap-3 md:gap-4">
+        <div className="relative group hidden md:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input 
             type="text" 
             placeholder={t('search')}
-            className="pl-10 pr-4 py-2 bg-slate-100 dark:bg-white/5 border-none outline-none rounded-xl focus:ring-2 focus:ring-primary/50 w-64 text-sm transition-all"
+            className="pl-10 pr-4 py-2 bg-slate-100 dark:bg-white/5 border-none outline-none rounded-xl focus:ring-2 focus:ring-primary/50 w-48 lg:w-64 text-sm transition-all text-slate-900 dark:text-slate-100"
           />
         </div>
         
-        <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-all relative">
-          <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
-        </button>
+        <div className="flex items-center gap-2 md:gap-4">
+          <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-all relative">
+            <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
+          </button>
+          
+          <UserAvatar />
+        </div>
       </div>
     </header>
   );

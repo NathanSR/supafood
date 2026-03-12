@@ -40,7 +40,9 @@ export default async function LocaleLayout({
       <body className={`${inter.variable} antialiased font-display`}>
         <NextIntlClientProvider messages={messages}>
           <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark">
-            <Sidebar />
+            <div className="hidden md:block h-full">
+              <Sidebar />
+            </div>
             <main className="flex-1 overflow-y-auto">
               {children}
             </main>

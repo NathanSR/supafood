@@ -31,7 +31,7 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-72 flex-shrink-0 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-surface-dark hidden md:flex flex-col h-full">
+    <aside className="w-72 flex-shrink-0 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-surface-dark flex flex-col h-full">
       <div className="p-8 flex items-center gap-3">
         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
           <Utensils className="w-6 h-6 stroke-[2.5]" />
