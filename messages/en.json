@@ -88,7 +88,12 @@
     "oldest": "Oldest first",
     "today": "Today",
     "yesterday": "Yesterday",
-    "thisWeek": "This Week"
+    "thisWeek": "This Week",
+    "dineIn": "Dine-in",
+    "takeaway": "Takeaway",
+    "confirmOrder": "Confirm Order",
+    "emptyCart": "Empty cart",
+    "orderDetails": "Order Details"
   },
   "Menu": {
     "title": "Menu Manager",
@@ -116,7 +121,14 @@
     "noItems": "No items in this category",
     "calories": "Calories",
     "prepTime": "Prep Time",
-    "mins": "mins"
+    "mins": "mins",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "save": "Save",
+    "categoryName": "Category Name",
+    "image": "Image",
+    "uploadImage": "Upload Image",
+    "spicy": "Spicy"
   },
   "Analytics": {
     "title": "Analytics",
@@ -176,7 +188,10 @@
     "searchStaff": "Search staff...",
     "totalStaff": "Total Staff",
     "onDutyNow": "On Duty Now",
-    "performance": "Performance"
+    "performance": "Performance",
+    "editMember": "Edit Member",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel"
   },
   "Tables": {
     "title": "Table Management",
@@ -203,7 +218,10 @@
     "totalTables": "Total Tables",
     "availableTables": "Available",
     "occupiedTables": "Occupied",
-    "reservedTables": "Reserved"
+    "reservedTables": "Reserved",
+    "editTable": "Edit Table",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel"
   },
   "Settings": {
     "title": "Settings",

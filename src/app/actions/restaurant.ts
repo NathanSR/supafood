@@ -187,9 +187,9 @@ export async function deleteTable(id: string) {
 }
 
 // CATEGORIES
-export async function createCategory(name: string, slug: string) {
+export async function createCategory(name: string, slug: string, emoji?: string) {
   const supabase = await createClient()
-  const { error } = await supabase.from('menu_categories').insert({ name, slug })
+  const { error } = await supabase.from('menu_categories').insert({ name, slug, emoji: emoji || '🍽️' })
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/menu', 'page')
   return { success: true }

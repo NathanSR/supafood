@@ -88,7 +88,12 @@
     "oldest": "Mais antigos",
     "today": "Hoje",
     "yesterday": "Ontem",
-    "thisWeek": "Esta Semana"
+    "thisWeek": "Esta Semana",
+    "dineIn": "No Local",
+    "takeaway": "Para Viagem",
+    "confirmOrder": "Confirmar Pedido",
+    "emptyCart": "Carrinho vazio",
+    "orderDetails": "Detalhes do Pedido"
   },
   "Menu": {
     "title": "Gerenciar Cardápio",
@@ -116,7 +121,14 @@
     "noItems": "Nenhum item nesta categoria",
     "calories": "Calorias",
     "prepTime": "Tempo de Preparo",
-    "mins": "min"
+    "mins": "min",
+    "saveChanges": "Salvar Alterações",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "categoryName": "Nome da Categoria",
+    "image": "Imagem",
+    "uploadImage": "Carregar Imagem",
+    "spicy": "Pimenta/Picante"
   },
   "Analytics": {
     "title": "Análise",
@@ -176,7 +188,10 @@
     "searchStaff": "Buscar funcionários...",
     "totalStaff": "Total de Funcionários",
     "onDutyNow": "Em Serviço Agora",
-    "performance": "Desempenho"
+    "performance": "Desempenho",
+    "editMember": "Editar Membro",
+    "saveChanges": "Salvar Alterações",
+    "cancel": "Cancelar"
   },
   "Tables": {
     "title": "Gestão de Mesas",
@@ -203,7 +218,10 @@
     "totalTables": "Total de Mesas",
     "availableTables": "Disponíveis",
     "occupiedTables": "Ocupadas",
-    "reservedTables": "Reservadas"
+    "reservedTables": "Reservadas",
+    "editTable": "Editar Mesa",
+    "saveChanges": "Salvar Alterações",
+    "cancel": "Cancelar"
   },
   "Settings": {
     "title": "Configurações",

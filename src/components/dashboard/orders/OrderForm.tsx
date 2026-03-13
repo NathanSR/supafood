@@ -1,25 +1,43 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { createOrder } from '@/app/actions/restaurant';
-import { Loader2, X, ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
+import { Loader2, X, ShoppingCart, Trash2, Plus, Minus, Search, Utensils, User, MapPin, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Modal } from '@/components/ui/Modal';
 
 interface OrderFormProps {
   tables: any[];
   menuItems: any[];
   onClose: () => void;
+  isOpen: boolean;
 }
 
-export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
+export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps) {
   const t = useTranslations('Orders');
+  const mt = useTranslations('Menu');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [tableId, setTableId] = useState<string>('');
   const [customerName, setCustomerName] = useState<string>('');
   const [orderType, setOrderType] = useState<'dine-in' | 'takeaway'>('dine-in');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(menuItems.map(item => item.menu_categories?.name).filter(Boolean)));
+    return ['all', ...cats];
+  }, [menuItems]);
+
+  const filteredItems = useMemo(() => {
+    return menuItems.filter(item => {
+      const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = activeCategory === 'all' || item.menu_categories?.name === activeCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [menuItems, searchTerm, activeCategory]);
 
   const addItem = (item: any) => {
     setSelectedItems(prev => {
@@ -41,20 +59,16 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
     });
   };
 
-  const deleteItem = (id: string) => {
-    setSelectedItems(prev => prev.filter(i => i.id !== id));
-  };
-
   const total = selectedItems.reduce((acc, i) => acc + (i.price * i.quantity), 0);
   const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const handleSubmit = async () => {
     if (selectedItems.length === 0) {
-      setError('Select at least one item');
+      setError('Selecione ao menos um item');
       return;
     }
     if (orderType === 'dine-in' && !tableId) {
-      setError('Select a table');
+      setError('Selecione uma mesa');
       return;
     }
 
@@ -73,77 +87,133 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
         setError(result.error);
       } else {
         onClose();
+        setSelectedItems([]);
+        setCustomerName('');
+        setTableId('');
       }
     });
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white dark:bg-slate-900 w-full max-w-4xl h-[85vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row"
-      >
-        {/* Left: Menu Items Selection */}
-        <div className="flex-1 flex flex-col min-w-0 border-r border-slate-100 dark:border-white/5">
-          <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              <Plus className="w-5 h-5 text-primary" />
-              {t('newOrder') || 'New Order'}
-            </h2>
-            <button onClick={onClose} className="md:hidden p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full">
-              <X className="w-5 h-5" />
-            </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('newOrder') || 'Novo Pedido'}
+      maxWidth="max-w-6xl"
+    >
+      <div className="flex flex-col lg:flex-row h-[75vh] md:h-[80vh] overflow-hidden">
+        {/* Left: Product Selection */}
+        <div className="flex-1 flex flex-col min-w-0 bg-slate-50 dark:bg-black/20 border-r border-slate-100 dark:border-white/5">
+          <div className="p-4 space-y-4">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Buscar itens no cardápio..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium text-sm"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${activeCategory === cat
+                      ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
+                      : 'bg-white dark:bg-white/5 text-slate-500 border-slate-100 dark:border-white/5 hover:border-primary/50'
+                    }`}
+                >
+                  {cat === 'all' ? 'Todos' : cat}
+                </button>
+              ))}
+            </div>
           </div>
-          
-          <div className="p-4 overflow-y-auto flex-1 grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {menuItems.map(item => (
-              <button
-                key={item.id}
-                onClick={() => addItem(item)}
-                className="p-3 bg-slate-50 dark:bg-white/5 rounded-2xl text-left hover:ring-2 hover:ring-primary/50 transition-all group"
-              >
-                <div className="w-full aspect-square rounded-xl bg-slate-200 dark:bg-white/10 mb-2 overflow-hidden">
-                  {item.image_url ? (
-                    <img src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-2xl">🍔</div>
-                  )}
-                </div>
-                <h3 className="font-bold text-xs truncate">{item.name}</h3>
-                <p className="text-xs text-primary font-bold">{formatter.format(item.price)}</p>
-              </button>
-            ))}
+
+          <div className="flex-1 overflow-y-auto p-4 pt-0">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredItems.map(item => (
+                <motion.button
+                  key={item.id}
+                  layout
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => addItem(item)}
+                  className="group relative bg-white dark:bg-white/5 p-2 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all text-left"
+                >
+                  <div className="aspect-square rounded-2xl bg-slate-100 dark:bg-white/5 overflow-hidden mb-3">
+                    {item.image_url ? (
+                      <img src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-3xl opacity-50">🍔</div>
+                    )}
+                  </div>
+                  <div className="px-1 space-y-1">
+                    <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate">{item.name}</h4>
+                    <p className="text-primary font-black text-sm">{formatter.format(item.price)}</p>
+                  </div>
+                  <div className="absolute top-4 right-4 bg-primary text-white p-1.5 rounded-xl opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all shadow-lg shadow-primary/30">
+                    <Plus className="w-3.5 h-3.5" />
+                  </div>
+                </motion.button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Right: Cart & Order Details */}
-        <div className="w-full md:w-80 flex flex-col bg-slate-50/50 dark:bg-slate-800/20">
-          <div className="p-6 border-b border-slate-100 dark:border-white/5">
-            <h3 className="font-bold">{t('orderDetails') || 'Order Details'}</h3>
+        {/* Right: Checkout */}
+        <div className="w-full lg:w-[400px] flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+          <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShoppingCart className="w-5 h-5 text-primary" />
+              <h3 className="font-black text-sm uppercase tracking-wider">Carrinho ({selectedItems.length})</h3>
+            </div>
+            {selectedItems.length > 0 && (
+              <button
+                onClick={() => setSelectedItems([])}
+                className="text-[10px] font-bold text-red-500 hover:opacity-80 transition-opacity"
+              >
+                LIMPAR TUDO
+              </button>
+            )}
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            <AnimatePresence mode="popLayout">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <AnimatePresence mode="popLayout" initial={false}>
               {selectedItems.map(item => (
-                <motion.div 
+                <motion.div
                   key={item.id}
+                  layout
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-white/5 flex items-center gap-3"
+                  exit={{ opacity: 0, scale: 0.9, x: -20 }}
+                  className="group flex items-center gap-4 bg-slate-50 dark:bg-white/5 p-3 rounded-[24px] border border-transparent hover:border-primary/20 transition-all"
                 >
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-xs font-bold truncate">{item.name}</h4>
-                    <p className="text-[10px] text-slate-500">{formatter.format(item.price)}</p>
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-white dark:bg-black/20 flex-shrink-0">
+                    {item.image_url ? (
+                      <img src={item.image_url} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xl">🍕</div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => removeItem(item.id)} className="p-1 hover:bg-slate-100 dark:hover:bg-white/10 rounded-md">
-                      <Minus className="w-3 h-3" />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{item.name}</h4>
+                    <p className="text-[11px] font-black text-primary">{formatter.format(item.price)}</p>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white dark:bg-white/10 p-1.5 rounded-2xl shadow-sm">
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 text-slate-400 group-hover:text-primary transition-all"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="text-xs font-bold w-4 text-center">{item.quantity}</span>
-                    <button onClick={() => addItem(item)} className="p-1 hover:bg-slate-100 dark:hover:bg-white/10 rounded-md">
-                      <Plus className="w-3 h-3 text-primary" />
+                    <span className="text-xs font-black min-w-[1.5rem] text-center">{item.quantity}</span>
+                    <button
+                      onClick={() => addItem(item)}
+                      className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 text-slate-400 group-hover:text-primary transition-all"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </motion.div>
@@ -151,89 +221,101 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
             </AnimatePresence>
 
             {selectedItems.length === 0 && (
-              <div className="text-center py-10 text-slate-400">
-                <ShoppingCart className="w-8 h-8 mx-auto mb-2 opacity-20" />
-                <p className="text-xs">{t('emptyCart') || 'Cart is empty'}</p>
+              <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 opacity-30">
+                <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center">
+                  <Utensils className="w-10 h-10" />
+                </div>
+                <div>
+                  <p className="font-black text-sm">CARRINHO VAZIO</p>
+                  <p className="text-[10px]">Escolha alguns deliciosos itens do cardápio</p>
+                </div>
               </div>
             )}
           </div>
 
-          <div className="p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-white/5 space-y-4">
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('customer') || 'Customer'}</label>
-                <input 
-                  type="text"
-                  value={customerName}
-                  onChange={e => setCustomerName(e.target.value)}
-                  placeholder="Ex: John Doe"
-                  className="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-white/5 rounded-xl">
-                 <button 
+          <div className="p-6 bg-slate-50 dark:bg-black/20 border-t border-slate-100 dark:border-white/5 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 p-1 bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-slate-100 dark:border-white/5">
+                <button
                   onClick={() => setOrderType('dine-in')}
-                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${orderType === 'dine-in' ? 'bg-white dark:bg-white/10 shadow-sm text-primary' : 'text-slate-500'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${orderType === 'dine-in' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  {t('dineIn') || 'Dine-in'}
+                  <Utensils className="w-3.5 h-3.5" />
+                  No Local
                 </button>
-                <button 
+                <button
                   onClick={() => setOrderType('takeaway')}
-                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${orderType === 'takeaway' ? 'bg-white dark:bg-white/10 shadow-sm text-primary' : 'text-slate-500'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${orderType === 'takeaway' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  {t('takeaway') || 'Takeaway'}
+                  <CreditCard className="w-3.5 h-3.5" />
+                  Para Viagem
                 </button>
               </div>
 
-              {orderType === 'dine-in' && (
-                <div className="space-y-1">
-                   <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('table') || 'Table'}</label>
-                  <select 
-                    value={tableId}
-                    onChange={e => setTableId(e.target.value)}
-                    className="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30"
-                  >
-                    <option value="">{t('selectTable') || 'Select Table'}</option>
-                    {tables.map(table => (
-                      <option key={table.id} value={table.id}>{table.number || table.name}</option>
-                    ))}
-                  </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5 flex-1">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Cliente</label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-3.5 h-3.5" />
+                    <input
+                      type="text"
+                      value={customerName}
+                      onChange={e => setCustomerName(e.target.value)}
+                      placeholder="Nome"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-bold"
+                    />
+                  </div>
                 </div>
-              )}
+
+                {orderType === 'dine-in' && (
+                  <div className="space-y-1.5 flex-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mesa</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-3.5 h-3.5" />
+                      <select
+                        value={tableId}
+                        onChange={e => setTableId(e.target.value)}
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-black appearance-none"
+                      >
+                        <option value="">Nº</option>
+                        {tables.map(table => (
+                          <option key={table.id} value={table.id}>{table.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs text-slate-500">
-                <span>Subtotal</span>
-                <span>{formatter.format(total)}</span>
-              </div>
-              <div className="flex justify-between font-black text-lg">
-                <span>Total</span>
-                <span className="text-primary">{formatter.format(total)}</span>
+            <div className="p-5 bg-primary rounded-[28px] text-white shadow-2xl shadow-primary/20 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
+
+              <div className="relative flex items-center justify-between gap-6">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest">Valor Total</span>
+                  <h2 className="text-2xl font-black">{formatter.format(total)}</h2>
+                </div>
+
+                <button
+                  onClick={handleSubmit}
+                  disabled={isPending || selectedItems.length === 0}
+                  className="bg-white text-primary px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3 shadow-xl"
+                >
+                  {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Confirmar Pedido
+                </button>
               </div>
             </div>
 
-            {error && <p className="text-[10px] text-red-500 text-center">{error}</p>}
-
-            <button 
-              onClick={handleSubmit}
-              disabled={isPending || selectedItems.length === 0}
-              className="w-full py-3 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-              {t('confirmOrder') || 'Confirm Order'}
-            </button>
-            
-            <button 
-              onClick={onClose}
-              className="w-full py-2.5 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
-            >
-              {t('cancel') || 'Cancel'}
-            </button>
+            {error && (
+              <p className="text-[10px] text-red-500 font-bold text-center uppercase tracking-tighter">
+                {error}
+              </p>
+            )}
           </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </Modal>
   );
 }
