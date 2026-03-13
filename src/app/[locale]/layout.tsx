@@ -26,27 +26,17 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
   const messages = await getMessages();
 
   return (
     <html lang={locale} className="dark">
-      <body className={`${inter.variable} antialiased font-display`}>
+      <body className={`${inter.variable} antialiased font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100`}>
         <NextIntlClientProvider messages={messages}>
-          <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark">
-            <div className="hidden md:block h-full">
-              <Sidebar />
-            </div>
-            <main className="flex-1 overflow-y-auto">
-              {children}
-            </main>
-          </div>
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

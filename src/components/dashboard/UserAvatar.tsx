@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, Settings, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/routing';
 
 export function UserAvatar() {
   const t = useTranslations('Profile');
@@ -39,9 +40,11 @@ export function UserAvatar() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-white/5" />
-        <DropdownMenuItem className="focus:bg-white/5 focus:text-primary rounded-lg cursor-pointer py-3 transition-colors">
-          <Settings className="mr-2 h-4 w-4" />
-          <span>{t('settings')}</span>
+        <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-primary rounded-lg cursor-pointer py-3 transition-colors">
+          <Link href="/settings" className="flex items-center">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>{t('settings')}</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="focus:bg-white/5 focus:text-primary rounded-lg cursor-pointer py-3 transition-colors">
           <Building2 className="mr-2 h-4 w-4" />

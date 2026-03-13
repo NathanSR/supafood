@@ -21,9 +21,8 @@ export function MobileNav() {
       <SheetContent side="left" className="p-0 border-none bg-background-light dark:bg-background-dark w-72">
         <SheetTitle className="sr-only">Menu</SheetTitle>
         <div className="h-full flex flex-col">
-          {/* We can reuse the Sidebar component, but we might need to hide its 'desktop-only' classes */}
-          <div className="flex-1 [&_aside]:md:flex [&_aside]:flex [&_aside]:border-none [&_aside]:w-full">
-            <Sidebar />
+          <div className="flex-1 overflow-hidden">
+            <Sidebar className="w-full border-none shadow-none" />
           </div>
         </div>
       </SheetContent>
