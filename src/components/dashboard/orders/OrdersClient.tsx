@@ -21,7 +21,7 @@ import { useTranslations } from 'next-intl';
 import { updateOrderStatus } from '@/app/actions/restaurant';
 import { OrderForm } from './OrderForm';
 
-type OrderStatus = 'all' | 'pending' | 'inPrep' | 'ready' | 'delivered' | 'cancelled';
+type OrderStatus = 'all' | 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
 type OrderSource = 'Tablet' | 'Takeaway' | 'Dine-in';
 
 interface OrdersClientProps {
@@ -32,7 +32,7 @@ interface OrdersClientProps {
 
 const statusStyles: Record<Exclude<OrderStatus, 'all'>, { bg: string; text: string; label: string; icon: React.ElementType }> = {
   pending: { bg: 'bg-blue-500/10', text: 'text-blue-500', label: 'pending', icon: Clock },
-  inPrep: { bg: 'bg-orange-500/10', text: 'text-orange-500', label: 'inPrep', icon: Timer },
+  preparing: { bg: 'bg-orange-500/10', text: 'text-orange-500', label: 'preparing', icon: Timer },
   ready: { bg: 'bg-green-500/10', text: 'text-green-500', label: 'ready', icon: CheckCircle2 },
   delivered: { bg: 'bg-slate-500/10', text: 'text-slate-400', label: 'delivered', icon: CheckCircle2 },
   cancelled: { bg: 'bg-red-500/10', text: 'text-red-500', label: 'cancelled', icon: XCircle },
@@ -44,7 +44,7 @@ const sourceIcons: Record<string, React.ElementType> = {
   'Dine-in': Utensils,
 };
 
-const tabs: OrderStatus[] = ['all', 'pending', 'inPrep', 'ready', 'delivered', 'cancelled'];
+const tabs: OrderStatus[] = ['all', 'pending', 'preparing', 'ready', 'delivered', 'cancelled'];
 
 export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientProps) {
   const t = useTranslations('Orders');
@@ -66,7 +66,7 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
   const tabCounts: Record<string, number> = {
     all: initialOrders.length,
     pending: initialOrders.filter(o => o.status === 'pending').length,
-    inPrep: initialOrders.filter(o => o.status === 'inPrep').length,
+    preparing: initialOrders.filter(o => o.status === 'preparing').length,
     ready: initialOrders.filter(o => o.status === 'ready').length,
     delivered: initialOrders.filter(o => o.status === 'delivered').length,
     cancelled: initialOrders.filter(o => o.status === 'cancelled').length,

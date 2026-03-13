@@ -17,9 +17,9 @@
     "mainCourses": "Main Courses",
     "sides": "Sides & Wraps",
     "drinks": "Drinks",
-    "inPrep": "In Prep",
+    "preparing": "In Prep",
     "ready": "Ready",
-    "received": "Order Received",
+    "pending": "Order Received",
     "search": "Search data..."
   },
   "Navigation": {
@@ -68,7 +68,7 @@
     "newOrder": "New Order",
     "all": "All",
     "pending": "Pending",
-    "inPrep": "In Prep",
+    "preparing": "In Prep",
     "ready": "Ready",
     "delivered": "Delivered",
     "cancelled": "Cancelled",

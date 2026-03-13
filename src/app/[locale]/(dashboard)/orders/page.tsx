@@ -24,7 +24,7 @@ export default async function OrdersPage() {
     total: Number(order.total_amount),
     source: order.type === 'dine-in' ? 'Dine-in' : 'Takeaway',
     timeAgoInMins: Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000),
-    status: order.status === 'pending' ? 'pending' : order.status === 'preparing' ? 'inPrep' : order.status === 'ready' ? 'ready' : order.status === 'delivered' ? 'delivered' : 'cancelled'
+    status: order.status
   }));
 
   return (

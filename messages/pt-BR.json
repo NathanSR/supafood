@@ -17,9 +17,9 @@
     "mainCourses": "Pratos Principais",
     "sides": "Acompanhamentos",
     "drinks": "Bebidas",
-    "inPrep": "Em Preparo",
+    "preparing": "Em Preparo",
     "ready": "Pronto",
-    "received": "Recebido",
+    "pending": "Recebido",
     "search": "Buscar dados..."
   },
   "Navigation": {
@@ -68,7 +68,7 @@
     "newOrder": "Novo Pedido",
     "all": "Todos",
     "pending": "Pendente",
-    "inPrep": "Em Preparo",
+    "preparing": "Em Preparo",
     "ready": "Pronto",
     "delivered": "Entregue",
     "cancelled": "Cancelado",
