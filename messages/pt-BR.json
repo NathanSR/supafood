@@ -218,6 +218,8 @@
     "occupied": "Ocupada",
     "reserved": "Reservada",
     "cleaning": "Limpeza",
+    "maintenance": "Manutenção",
+    "out_of_service": "Fora de Serviço",
     "indoor": "Interno",
     "outdoor": "Externo",
     "bar": "Bar",
@@ -231,6 +233,7 @@
     "availableTables": "Disponíveis",
     "occupiedTables": "Ocupadas",
     "reservedTables": "Reservadas",
+    "maintenanceTables": "Manutenção",
     "editTable": "Editar Mesa",
     "saveChanges": "Salvar Alterações",
     "cancel": "Cancelar"

@@ -14,7 +14,8 @@ import {
   Trash2,
   MapPin,
   Coffee,
-  Info
+  Info,
+  Wrench
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TableForm } from './TableForm';
@@ -22,6 +23,17 @@ import { deleteTable } from '@/app/actions/restaurant';
 
 interface TablesClientProps {
   initialTables: any[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  summaryStats: {
+    total: number;
+    available: number;
+    occupied: number;
+    reserved: number;
+    cleaning: number;
+    maintenance: number;
+  };
 }
 
 const statusConfig: Record<string, any> = {
@@ -29,27 +41,56 @@ const statusConfig: Record<string, any> = {
   occupied: { bg: 'bg-primary/10', border: 'border-primary/20', text: 'text-primary', label: 'occupied', dot: 'bg-primary animate-pulse', icon: Coffee },
   reserved: { bg: 'bg-blue-500/10', border: 'border-blue-500/20', text: 'text-blue-500', label: 'reserved', dot: 'bg-blue-500', icon: Clock },
   cleaning: { bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-500', label: 'cleaning', dot: 'bg-amber-500 animate-pulse', icon: AlertCircle },
+  maintenance: { bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-500', label: 'maintenance', dot: 'bg-red-500', icon: Wrench },
 };
 
 const sections = ['all', 'Indoor', 'Outdoor', 'Bar', 'Terrace', 'VIP'];
 
-export function TablesClient({ initialTables }: TablesClientProps) {
+import { useRouter, useSearchParams } from 'next/navigation';
+import { 
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+export function TablesClient({ 
+  initialTables, 
+  totalCount, 
+  currentPage, 
+  pageSize, 
+  summaryStats 
+}: TablesClientProps) {
   const t = useTranslations('Tables');
-  const [activeSection, setActiveSection] = useState<string>('all');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const activeSection = searchParams.get('section') || 'all';
+  const activeStatus = searchParams.get('status') || 'all';
+  
   const [viewMode, setViewMode] = useState<'floorMap' | 'listView'>('floorMap');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTable, setEditingTable] = useState<any>(null);
+  const [selectedTable, setSelectedTable] = useState<any>(null);
 
-  const filtered = initialTables.filter(table => 
-    activeSection === 'all' || table.section === activeSection
-  );
-
-  const summaryStats = {
-    total: initialTables.length,
-    available: initialTables.filter(t => t.status === 'available').length,
-    occupied: initialTables.filter(t => t.status === 'occupied').length,
-    reserved: initialTables.filter(t => t.status === 'reserved').length,
+  const updateFilters = (updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === 'all') {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+    // Reset to page 1 when filters change
+    if (!updates.page) params.delete('page');
+    router.push(`?${params.toString()}`);
   };
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const handleDelete = async (id: string) => {
     if (confirm('Deseja realmente remover esta mesa?')) {
@@ -98,19 +139,21 @@ export function TablesClient({ initialTables }: TablesClientProps) {
       </motion.div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
         {[
-          { label: t('totalTables'), value: summaryStats.total, color: 'text-slate-600 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-white/5', icon: LayoutGrid },
-          { label: t('availableTables'), value: summaryStats.available, color: 'text-green-600', bg: 'bg-green-500/10', icon: CheckCircle },
-          { label: t('occupiedTables'), value: summaryStats.occupied, color: 'text-primary', bg: 'bg-primary/10', icon: Coffee },
-          { label: t('reservedTables'), value: summaryStats.reserved, color: 'text-blue-500', bg: 'bg-blue-500/10', icon: Clock },
+          { id: 'all', label: t('totalTables'), value: summaryStats.total, color: 'text-slate-600 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-white/5', icon: LayoutGrid },
+          { id: 'available', label: t('availableTables'), value: summaryStats.available, color: 'text-green-600', bg: 'bg-green-500/10', icon: CheckCircle },
+          { id: 'occupied', label: t('occupiedTables'), value: summaryStats.occupied, color: 'text-primary', bg: 'bg-primary/10', icon: Coffee },
+          { id: 'reserved', label: t('reservedTables'), value: summaryStats.reserved, color: 'text-blue-500', bg: 'bg-blue-500/10', icon: Clock },
+          { id: 'maintenance', label: t('maintenanceTables'), value: summaryStats.maintenance, color: 'text-red-500', bg: 'bg-red-500/10', icon: Wrench },
         ].map((s, i) => (
           <motion.div
             key={s.label}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.1 }}
-            className={`group ${s.bg} border border-[#00000005] dark:border-[#ffffff05] rounded-[32px] p-6 text-center hover:shadow-xl hover:shadow-black/[0.02] dark:hover:shadow-white/[0.02] transition-all`}
+            onClick={() => updateFilters({ status: s.id })}
+            className={`group ${s.bg} border ${activeStatus === s.id ? 'border-primary ring-2 ring-primary/20' : 'border-[#00000005] dark:border-[#ffffff05]'} rounded-[32px] p-6 text-center hover:shadow-xl hover:shadow-black/[0.02] dark:hover:shadow-white/[0.02] transition-all cursor-pointer`}
           >
             <div className={`w-12 h-12 mx-auto rounded-2xl ${s.bg} flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform`}>
                <s.icon className={`w-6 h-6 ${s.color}`} />
@@ -132,7 +175,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
           {sections.map(sec => (
             <button
               key={sec}
-              onClick={() => setActiveSection(sec)}
+              onClick={() => updateFilters({ section: sec })}
               className={`px-6 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 activeSection === sec
                   ? 'bg-primary text-white shadow-lg shadow-primary/20'
@@ -144,7 +187,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
           ))}
         </div>
         
-        <div className="flex items-center gap-5 pr-4 border-l border-slate-100 dark:border-white/10 pl-6 h-10 hidden lg:flex">
+        <div className="flex items-center gap-5 pr-4 border-l border-slate-100 dark:border-white/10 pl-6 h-10 overflow-x-auto no-scrollbar">
           {Object.entries(statusConfig).map(([key, config]: [string, any]) => (
             <div key={key} className="flex items-center gap-2 group cursor-help" title={t(config.label as any)}>
               <span className={`w-3 h-3 rounded-full ${config.dot} shadow-sm group-hover:scale-125 transition-transform`} />
@@ -164,7 +207,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
           className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-5"
         >
           <AnimatePresence mode="popLayout">
-            {filtered.map((table, i) => {
+            {initialTables.map((table, i) => {
               const config = statusConfig[table.status] || statusConfig.available;
               return (
                 <motion.div
@@ -174,6 +217,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ delay: i * 0.02 }}
+                  onClick={() => setSelectedTable(table)}
                   className={`${config.bg} border-2 ${config.border} rounded-[32px] p-6 flex flex-col items-center gap-3 hover:scale-105 transition-all duration-300 group cursor-pointer aspect-square justify-center relative shadow-sm overflow-hidden`}
                 >
                   <div className="absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-br from-white to-transparent dark:from-white/20"></div>
@@ -235,7 +279,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
             <span className="text-right">Ações</span>
           </div>
           <div className="divide-y divide-slate-50 dark:divide-white/5">
-            {filtered.map((table, i) => {
+            {initialTables.map((table, i) => {
               const config = statusConfig[table.status] || statusConfig.available;
               return (
                 <motion.div
@@ -243,7 +287,8 @@ export function TablesClient({ initialTables }: TablesClientProps) {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.02 }}
-                  className="grid grid-cols-1 md:grid-cols-[100px_120px_150px_180px_1fr_100px] gap-3 md:gap-4 px-8 py-5 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors group items-center"
+                  onClick={() => setSelectedTable(table)}
+                  className="grid grid-cols-1 md:grid-cols-[100px_120px_150px_180px_1fr_100px] gap-3 md:gap-4 px-8 py-5 hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors group items-center cursor-pointer"
                 >
                   <div className="flex items-center font-black text-lg text-slate-900 dark:text-white">
                     {table.name}
@@ -299,7 +344,123 @@ export function TablesClient({ initialTables }: TablesClientProps) {
         }}
       />
 
-      {filtered.length === 0 && (
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <Button
+            variant="outline"
+            disabled={currentPage <= 1}
+            onClick={() => updateFilters({ page: (currentPage - 1).toString() })}
+            className="rounded-xl"
+          >
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            Anterior
+          </Button>
+          <span className="text-sm font-bold text-slate-500">
+            Página {currentPage} de {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            disabled={currentPage >= totalPages}
+            onClick={() => updateFilters({ page: (currentPage + 1).toString() })}
+            className="rounded-xl"
+          >
+            Próxima
+            <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+      )}
+
+      {/* Table Details Drawer */}
+      <Sheet open={!!selectedTable} onOpenChange={(open) => !open && setSelectedTable(null)}>
+        <SheetContent className="sm:max-w-md border-l-0 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl">
+          {selectedTable && (
+            <div className="space-y-8 py-6">
+              <SheetHeader>
+                <div className="flex items-center justify-between">
+                  <div className={`w-16 h-16 rounded-2xl ${statusConfig[selectedTable.status].bg} flex items-center justify-center text-3xl`}>
+                    🪑
+                  </div>
+                  <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border ${statusConfig[selectedTable.status].bg} ${statusConfig[selectedTable.status].text} ${statusConfig[selectedTable.status].border}`}>
+                    {t(statusConfig[selectedTable.status].label)}
+                  </span>
+                </div>
+                <SheetTitle className="text-3xl font-black tracking-tight mt-4">
+                  Mesa {selectedTable.name}
+                </SheetTitle>
+                <SheetDescription className="text-slate-500 dark:text-slate-400">
+                  Detalhes e informações da mesa
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Capacidade</p>
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="font-bold">{selectedTable.capacity} pessoas</span>
+                  </div>
+                </div>
+                <div className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Setor</p>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-slate-400" />
+                    <span className="font-bold">{selectedTable.section}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-widest text-slate-400">Ações Rápidas</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button 
+                    variant="outline" 
+                    className="h-14 rounded-2xl font-bold bg-white dark:bg-white/5"
+                    onClick={() => {
+                      setEditingTable(selectedTable);
+                      setIsModalOpen(true);
+                      setSelectedTable(null);
+                    }}
+                  >
+                    <Edit2 className="w-4 h-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="h-14 rounded-2xl font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 border-red-100 dark:border-red-500/20"
+                    onClick={() => {
+                      handleDelete(selectedTable.id);
+                      setSelectedTable(null);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Remover
+                  </Button>
+                </div>
+              </div>
+
+              {selectedTable.status === 'occupied' && (
+                <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
+                   <div className="flex items-center gap-3">
+                     <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                       <Coffee className="w-5 h-5 text-primary" />
+                     </div>
+                     <div>
+                       <p className="text-xs font-bold text-primary uppercase tracking-wider">Mesa Ocupada</p>
+                       <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Há aproximadamente 45 minutos</p>
+                     </div>
+                   </div>
+                   <Button className="w-full h-12 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 font-bold">
+                     Ver Itens do Pedido
+                   </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+
+      {initialTables.length === 0 && (
         <motion.div
            initial={{ opacity: 0 }}
            animate={{ opacity: 1 }}
