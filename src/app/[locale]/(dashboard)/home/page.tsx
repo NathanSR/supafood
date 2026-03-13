@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
   // For demo purposes, we'll calculate some stats from the orders table
   const { data: orders } = await supabase
     .from('orders')
-    .select('*, order_items(*, menu_items(*))')
+    .select('*, tables(number), order_items(*, menu_items(*))')
     .order('created_at', { ascending: false })
     .limit(10);
 
@@ -21,27 +21,27 @@ export default async function AdminDashboardPage() {
   
   const stats = {
     todaysRevenue: totalRevenue,
-    revenueGrowth: 0,
+    revenueGrowth: 15.5, // Mock growth for UI
     onlineOrdersRevenue: orders?.filter(o => o.type !== 'dine-in').reduce((acc, o) => acc + Number(o.total_amount), 0) || 0,
     dineInRevenue: orders?.filter(o => o.type === 'dine-in').reduce((acc, o) => acc + Number(o.total_amount), 0) || 0,
     totalOrders: totalOrders,
-    avgWaitTimeMins: 0,
+    avgWaitTimeMins: 12, // Mock average
     avgRating: 4.8
   };
 
-  const formattedOrders = orders?.map(order => ({
+  const formattedOrders = orders?.map((order: any) => ({
     id: order.id,
-    orderNumber: order.order_number.toString(),
+    orderNumber: order.order_number?.toString() || '0',
     items: order.order_items?.map((oi: any) => ({
       id: oi.id,
       name: oi.menu_items?.name,
       quantity: oi.quantity
-    })),
-    tableNumber: order.tables?.name,
-    source: order.type,
+    })) || [],
+    tableNumber: order.tables?.number,
+    source: order.type === 'dine-in' ? 'Dine-in' : 'Takeaway',
     timeAgoInMins: Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000),
     status: order.status
-  })) as any[];
+  }));
 
   // Calculate top items (simplified)
   const itemCounts: Record<string, { name: string, count: number }> = {};

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
-import type { Order } from '@/lib/mock-data';
+import type { Order } from '@/types/restaurant';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -31,6 +31,24 @@ const statusConfig: Record<string, any> = {
     text: 'text-green-500',
     container: 'bg-green-500/20 text-green-500',
     key: 'ready'
+  },
+  'delivered': {
+    bg: 'bg-slate-500/10',
+    text: 'text-slate-500',
+    container: 'bg-slate-500/20 text-slate-500',
+    key: 'delivered'
+  },
+  'cancelled': {
+    bg: 'bg-red-500/10',
+    text: 'text-red-500',
+    container: 'bg-red-500/20 text-red-500',
+    key: 'cancelled'
+  },
+  'default': {
+    bg: 'bg-slate-500/10',
+    text: 'text-slate-500',
+    container: 'bg-slate-500/20 text-slate-500',
+    key: 'received'
   }
 };
 
@@ -56,10 +74,10 @@ export function LiveOrders({ orders }: { orders: Order[] }) {
       <div className="flex-1 overflow-y-auto p-2 space-y-2">
         <AnimatePresence>
           {orders.map((order, i) => {
-            const config = statusConfig[order.status];
+            const config = statusConfig[order.status] || statusConfig.default;
             // Format order summary
-            const primaryItem = order.items[0];
-            const hasMore = order.items.length > 1;
+            const primaryItem = order.items?.[0] || { name: 'Order', quantity: 0 };
+            const hasMore = order.items?.length > 1;
             
             return (
               <motion.div 

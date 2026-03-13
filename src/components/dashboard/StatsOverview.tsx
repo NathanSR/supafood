@@ -8,7 +8,7 @@ import {
   Clock, 
   Star 
 } from 'lucide-react';
-import type { DashboardStats } from '@/lib/mock-data';
+import type { DashboardStats } from '@/types/restaurant';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 

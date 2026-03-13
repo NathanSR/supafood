@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { TopSellingItem } from '@/lib/mock-data';
+import type { TopSellingItem } from '@/types/restaurant';
 import { motion } from 'framer-motion';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
