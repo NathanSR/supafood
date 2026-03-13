@@ -93,7 +93,10 @@
     "takeaway": "Takeaway",
     "confirmOrder": "Confirm Order",
     "emptyCart": "Empty cart",
-    "orderDetails": "Order Details"
+    "orderDetails": "Order Details",
+    "addItems": "Add Items",
+    "addedAmount": "Additional Amount",
+    "totalAmount": "Total Amount"
   },
   "Menu": {
     "title": "Menu Manager",

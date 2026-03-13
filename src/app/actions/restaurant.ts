@@ -96,6 +96,32 @@ export async function createOrder(data: any) {
   return { success: true, orderId: order.id }
 }
 
+export async function addItemsToOrder(orderId: string, items: any[], newTotal: number) {
+  const supabase = await createClient()
+
+  // 1. Insert new items
+  const orderItems = items.map((item: any) => ({
+    order_id: orderId,
+    menu_item_id: item.id,
+    quantity: item.quantity,
+    unit_price: item.price
+  }))
+
+  const { error: itemsError } = await supabase.from('order_items').insert(orderItems)
+  if (itemsError) return { error: itemsError.message }
+
+  // 2. Update total amount
+  const { error: updateError } = await supabase
+    .from('orders')
+    .update({ total_amount: newTotal })
+    .eq('id', orderId)
+
+  if (updateError) return { error: updateError.message }
+
+  revalidatePath('/[locale]/(dashboard)/orders', 'page')
+  return { success: true }
+}
+
 // STAFF
 export async function createStaffMember(formData: FormData) {
   const supabase = await createClient()

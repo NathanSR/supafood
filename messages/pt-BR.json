@@ -93,7 +93,10 @@
     "takeaway": "Para Viagem",
     "confirmOrder": "Confirmar Pedido",
     "emptyCart": "Carrinho vazio",
-    "orderDetails": "Detalhes do Pedido"
+    "orderDetails": "Detalhes do Pedido",
+    "addItems": "Adicionar Itens",
+    "addedAmount": "Valor Adicional",
+    "totalAmount": "Valor Total"
   },
   "Menu": {
     "title": "Gerenciar Cardápio",

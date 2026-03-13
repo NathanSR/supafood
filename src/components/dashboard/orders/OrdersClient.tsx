@@ -17,7 +17,8 @@ import {
   RefreshCw,
   Loader2,
   Calendar,
-  Wallet
+  Wallet,
+  PlusCircle
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { updateOrderStatus } from '@/app/actions/restaurant';
@@ -54,6 +55,7 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
   const [search, setSearch] = useState('');
   const [isPending, startTransition] = useTransition();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   const filtered = initialOrders.filter(order => {
     const matchesTab = activeTab === 'all' || order.status === activeTab;
@@ -76,6 +78,11 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
     startTransition(async () => {
       await updateOrderStatus(id, status);
     });
+  };
+
+  const handleAddItems = (order: any) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
   };
 
   const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -252,7 +259,14 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-end">
+                    <div className="flex items-center justify-end gap-2">
+                      <button 
+                        onClick={() => handleAddItems(order)}
+                        title="Adicionar Itens"
+                        className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-300 hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all flex items-center justify-center border border-transparent hover:border-slate-100 dark:hover:border-white/10"
+                      >
+                        <PlusCircle className="w-5 h-5" />
+                      </button>
                       <button className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-300 hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all flex items-center justify-center border border-transparent hover:border-slate-100 dark:hover:border-white/10">
                         <ChevronRight className="w-5 h-5" />
                       </button>
@@ -269,7 +283,11 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
         isOpen={isModalOpen}
         tables={tables}
         menuItems={menuItems}
-        onClose={() => setIsModalOpen(false)}
+        initialOrder={selectedOrder}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedOrder(null);
+        }}
       />
 
       {isPending && (

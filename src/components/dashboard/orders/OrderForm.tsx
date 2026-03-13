@@ -2,8 +2,8 @@
 
 import React, { useState, useTransition, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { createOrder } from '@/app/actions/restaurant';
-import { Loader2, X, ShoppingCart, Trash2, Plus, Minus, Search, Utensils, User, MapPin, CreditCard } from 'lucide-react';
+import { createOrder, addItemsToOrder } from '@/app/actions/restaurant';
+import { Loader2, X, ShoppingCart, Trash2, Plus, Minus, Search, Utensils, User, MapPin, CreditCard, PlusCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Modal } from '@/components/ui/Modal';
 
@@ -12,19 +12,30 @@ interface OrderFormProps {
   menuItems: any[];
   onClose: () => void;
   isOpen: boolean;
+  initialOrder?: any;
 }
 
-export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps) {
+export function OrderForm({ tables, menuItems, onClose, isOpen, initialOrder }: OrderFormProps) {
   const t = useTranslations('Orders');
   const mt = useTranslations('Menu');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
-  const [tableId, setTableId] = useState<string>('');
-  const [customerName, setCustomerName] = useState<string>('');
-  const [orderType, setOrderType] = useState<'dine-in' | 'takeaway'>('dine-in');
+  const [tableId, setTableId] = useState<string>(initialOrder?.table_id || '');
+  const [customerName, setCustomerName] = useState<string>(initialOrder?.customer_name || '');
+  const [orderType, setOrderType] = useState<'dine-in' | 'takeaway'>(initialOrder?.type || 'dine-in');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setTableId(initialOrder?.table_id || '');
+      setCustomerName(initialOrder?.customer_name || '');
+      setOrderType(initialOrder?.type || 'dine-in');
+      setSelectedItems([]);
+      setError(null);
+    }
+  }, [initialOrder, isOpen]);
 
   const categories = useMemo(() => {
     const cats = Array.from(new Set(menuItems.map(item => item.menu_categories?.name).filter(Boolean)));
@@ -73,6 +84,22 @@ export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps
     }
 
     startTransition(async () => {
+      if (initialOrder) {
+        const newTotal = (initialOrder.total_amount || 0) + total;
+        const result = await addItemsToOrder(
+          initialOrder.id, 
+          selectedItems.map(i => ({ id: i.id, quantity: i.quantity, price: i.price })),
+          newTotal
+        );
+        if (result?.error) {
+          setError(result.error);
+        } else {
+          onClose();
+          setSelectedItems([]);
+        }
+        return;
+      }
+
       const orderData = {
         table_id: orderType === 'dine-in' ? tableId : null,
         customer_name: customerName,
@@ -98,10 +125,10 @@ export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={t('newOrder') || 'Novo Pedido'}
+      title={initialOrder ? `${t('addItems')} #${initialOrder.orderNumber}` : (t('newOrder') || 'Novo Pedido')}
       maxWidth="max-w-6xl"
     >
-      <div className="flex flex-col lg:flex-row h-[75vh] md:h-[80vh] overflow-hidden">
+      <div className="flex flex-col lg:flex-row h-[75vh] md:h-[80vh] overflow-auto ">
         {/* Left: Product Selection */}
         <div className="flex-1 flex flex-col min-w-0 bg-slate-50 dark:bg-black/20 border-r border-slate-100 dark:border-white/5">
           <div className="p-4 space-y-4">
@@ -122,8 +149,8 @@ export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${activeCategory === cat
-                      ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
-                      : 'bg-white dark:bg-white/5 text-slate-500 border-slate-100 dark:border-white/5 hover:border-primary/50'
+                    ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
+                    : 'bg-white dark:bg-white/5 text-slate-500 border-slate-100 dark:border-white/5 hover:border-primary/50'
                     }`}
                 >
                   {cat === 'all' ? 'Todos' : cat}
@@ -163,7 +190,7 @@ export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps
         </div>
 
         {/* Right: Checkout */}
-        <div className="w-full lg:w-[400px] flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="flex-shrink-0 w-full lg:w-[400px] flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
           <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShoppingCart className="w-5 h-5 text-primary" />
@@ -252,40 +279,52 @@ export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1.5 flex-1">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Cliente</label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-3.5 h-3.5" />
-                    <input
-                      type="text"
-                      value={customerName}
-                      onChange={e => setCustomerName(e.target.value)}
-                      placeholder="Nome"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-bold"
-                    />
-                  </div>
+              {initialOrder ? (
+                <div className="p-4 bg-primary/5 border border-primary/10 rounded-2xl flex items-center gap-4">
+                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <PlusCircle className="w-5 h-5" />
+                   </div>
+                   <div>
+                      <p className="text-[10px] font-black uppercase text-primary tracking-widest leading-none mb-1">Modo Adição</p>
+                      <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400">Adicionando novos itens ao pedido #{initialOrder.orderNumber}</p>
+                   </div>
                 </div>
-
-                {orderType === 'dine-in' && (
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5 flex-1">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mesa</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Cliente</label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-3.5 h-3.5" />
-                      <select
-                        value={tableId}
-                        onChange={e => setTableId(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-black appearance-none"
-                      >
-                        <option value="">Nº</option>
-                        {tables.map(table => (
-                          <option key={table.id} value={table.id}>{table.name}</option>
-                        ))}
-                      </select>
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-3.5 h-3.5" />
+                      <input
+                        type="text"
+                        value={customerName}
+                        onChange={e => setCustomerName(e.target.value)}
+                        placeholder="Nome"
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-bold"
+                      />
                     </div>
                   </div>
-                )}
-              </div>
+
+                  {orderType === 'dine-in' && (
+                    <div className="space-y-1.5 flex-1">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mesa</label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-3.5 h-3.5" />
+                        <select
+                          value={tableId}
+                          onChange={e => setTableId(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-black appearance-none"
+                        >
+                          <option value="">Nº</option>
+                          {tables.map(table => (
+                            <option key={table.id} value={table.id}>{table.name || table.number}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="p-5 bg-primary rounded-[28px] text-white shadow-2xl shadow-primary/20 relative overflow-hidden">
@@ -293,7 +332,7 @@ export function OrderForm({ tables, menuItems, onClose, isOpen }: OrderFormProps
 
               <div className="relative flex items-center justify-between gap-6">
                 <div className="space-y-0.5">
-                  <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest">Valor Total</span>
+                  <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest">{initialOrder ? t('addedAmount') || 'Valor Adicional' : t('totalAmount') || 'Valor Total'}</span>
                   <h2 className="text-2xl font-black">{formatter.format(total)}</h2>
                 </div>
 

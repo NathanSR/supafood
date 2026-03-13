@@ -6,13 +6,30 @@ export default async function OrdersPage() {
   const supabase = await createClient();
 
   // Fetch orders with items and tables
-  const { data: orders } = await supabase
+  const { data: orders, error: ordersError } = await supabase
     .from('orders')
-    .select('*, tables(name, number), order_items(*, menu_items(name))')
+    .select('*, tables(number), order_items(*, menu_items(name))')
     .order('created_at', { ascending: false });
 
+  if (ordersError) console.error('Erro ao buscar pedidos:', ordersError);
+
   // Fetch tables and menu items for the new order form
-  const { data: tables } = await supabase.from('tables').select('id, number, name').eq('status', 'available');
+  const { data: tablesData, error: tablesError } = await supabase
+    .from('tables')
+    .select('id, number')
+    .order('number', { ascending: true });
+    
+  if (tablesError) {
+    console.error('Erro ao buscar mesas:', tablesError);
+  }
+
+  const tables = tablesData?.map(t => ({
+    ...t,
+    name: t.number
+  })) || [];
+
+  console.log('Mesas carregadas:', tables);
+
   const { data: menuItems } = await supabase
     .from('menu_items')
     .select('id, name, price, image_url, menu_categories(name)')
