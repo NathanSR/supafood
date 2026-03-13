@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { MobileNav } from './MobileNav';
 import { UserAvatar } from './UserAvatar';
 
-export function Header() {
+export function Header({ user }: { user: any }) {
   const t = useTranslations('Dashboard');
   
   const currentDate = new Date().toLocaleDateString(undefined, {
@@ -41,7 +41,7 @@ export function Header() {
             <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
           </button>
           
-          <UserAvatar />
+          <UserAvatar user={user} />
         </div>
       </div>
     </header>

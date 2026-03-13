@@ -59,7 +59,8 @@
     "noResults": "No results found",
     "confirm": "Confirm",
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "refresh": "Refresh"
   },
   "Orders": {
     "title": "Orders",
@@ -235,5 +236,22 @@
     "invoices": "Invoices",
     "saveChanges": "Save Changes",
     "saved": "Changes saved successfully!"
+  },
+  "Auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Login to manage your restaurant",
+    "registerTitle": "Create account",
+    "registerSubtitle": "Join Supafood and manage your business",
+    "email": "Email address",
+    "password": "Password",
+    "name": "Full name",
+    "avatar": "Profile picture",
+    "login": "Login",
+    "register": "Register",
+    "loading": "Connecting...",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorInvalid": "Invalid credentials"
   }
 }

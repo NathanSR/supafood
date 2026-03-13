@@ -13,24 +13,24 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const statusConfig = {
-  'In Prep': {
+const statusConfig: Record<string, any> = {
+  'pending': {
+    bg: 'bg-blue-500/10',
+    text: 'text-blue-500',
+    container: 'bg-blue-500/20 text-blue-500',
+    key: 'received'
+  },
+  'preparing': {
     bg: 'bg-primary/10',
     text: 'text-primary',
     container: 'bg-primary/20 text-primary',
     key: 'inPrep'
   },
-  'Ready': {
+  'ready': {
     bg: 'bg-green-500/10',
     text: 'text-green-500',
-    container: 'bg-slate-500/20 text-slate-400',
+    container: 'bg-green-500/20 text-green-500',
     key: 'ready'
-  },
-  'Order Received': {
-    bg: 'bg-blue-500/10',
-    text: 'text-blue-500',
-    container: 'bg-slate-500/20 text-slate-400',
-    key: 'received'
   }
 };
 

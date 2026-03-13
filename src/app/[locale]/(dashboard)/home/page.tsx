@@ -2,17 +2,78 @@ import React from 'react';
 import { StatsOverview } from '@/components/dashboard/StatsOverview';
 import { LiveOrders } from '@/components/dashboard/LiveOrders';
 import { TopSellingItems } from '@/components/dashboard/TopSellingItems';
-import { mockDashboardStats, mockLiveOrders, mockTopSellingItems } from '@/lib/mock-data';
+import { createClient } from '@/utils/supabase/server';
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const supabase = await createClient();
+
+  // Fetch real data
+  // For demo purposes, we'll calculate some stats from the orders table
+  const { data: orders } = await supabase
+    .from('orders')
+    .select('*, order_items(*, menu_items(*))')
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  // Calculate stats logic (simplified for now)
+  const totalRevenue = orders?.reduce((acc, order) => acc + Number(order.total_amount), 0) || 0;
+  const totalOrders = orders?.length || 0;
+  
+  const stats = {
+    todaysRevenue: totalRevenue,
+    revenueGrowth: 0,
+    onlineOrdersRevenue: orders?.filter(o => o.type !== 'dine-in').reduce((acc, o) => acc + Number(o.total_amount), 0) || 0,
+    dineInRevenue: orders?.filter(o => o.type === 'dine-in').reduce((acc, o) => acc + Number(o.total_amount), 0) || 0,
+    totalOrders: totalOrders,
+    avgWaitTimeMins: 0,
+    avgRating: 4.8
+  };
+
+  const formattedOrders = orders?.map(order => ({
+    id: order.id,
+    orderNumber: order.order_number.toString(),
+    items: order.order_items?.map((oi: any) => ({
+      id: oi.id,
+      name: oi.menu_items?.name,
+      quantity: oi.quantity
+    })),
+    tableNumber: order.tables?.name,
+    source: order.type,
+    timeAgoInMins: Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000),
+    status: order.status
+  })) as any[];
+
+  // Calculate top items (simplified)
+  const itemCounts: Record<string, { name: string, count: number }> = {};
+  orders?.forEach(order => {
+    order.order_items?.forEach((oi: any) => {
+      const id = oi.menu_item_id;
+      if (!itemCounts[id]) {
+        itemCounts[id] = { name: oi.menu_items?.name, count: 0 };
+      }
+      itemCounts[id].count += oi.quantity;
+    });
+  });
+
+  const sortedItems = Object.entries(itemCounts)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, 5)
+    .map(([id, data]) => ({
+      id,
+      name: data.name,
+      sold: data.count,
+      percentage: Math.min(100, (data.count / (totalOrders || 1)) * 100)
+    }));
+
   return (
     <div className="p-4 md:p-8 space-y-8">
-      <StatsOverview stats={mockDashboardStats} />
+      <StatsOverview stats={stats} />
       
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        <LiveOrders orders={mockLiveOrders} />
-        <TopSellingItems items={mockTopSellingItems} />
+        <LiveOrders orders={formattedOrders || []} />
+        <TopSellingItems items={sortedItems || []} />
       </div>
     </div>
   );
 }
+

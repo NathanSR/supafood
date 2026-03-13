@@ -15,9 +15,9 @@ import { useTranslations } from 'next-intl';
 export function StatsOverview({ stats }: { stats: DashboardStats }) {
   const t = useTranslations('Dashboard');
   
-  const formatter = new Intl.NumberFormat(undefined, {
+  const formatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'BRL',
   });
 
   return (
