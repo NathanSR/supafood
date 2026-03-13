@@ -18,6 +18,7 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [tableId, setTableId] = useState<string>('');
+  const [customerName, setCustomerName] = useState<string>('');
   const [orderType, setOrderType] = useState<'dine-in' | 'takeaway'>('dine-in');
 
   const addItem = (item: any) => {
@@ -60,6 +61,7 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
     startTransition(async () => {
       const orderData = {
         table_id: orderType === 'dine-in' ? tableId : null,
+        customer_name: customerName,
         status: 'pending',
         type: orderType,
         total_amount: total,
@@ -158,6 +160,17 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
 
           <div className="p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-white/5 space-y-4">
             <div className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('customer') || 'Customer'}</label>
+                <input 
+                  type="text"
+                  value={customerName}
+                  onChange={e => setCustomerName(e.target.value)}
+                  placeholder="Ex: John Doe"
+                  className="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+
               <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-white/5 rounded-xl">
                  <button 
                   onClick={() => setOrderType('dine-in')}
@@ -174,16 +187,19 @@ export function OrderForm({ tables, menuItems, onClose }: OrderFormProps) {
               </div>
 
               {orderType === 'dine-in' && (
-                <select 
-                  value={tableId}
-                  onChange={e => setTableId(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30"
-                >
-                  <option value="">{t('selectTable') || 'Select Table'}</option>
-                  {tables.map(table => (
-                    <option key={table.id} value={table.id}>{table.name}</option>
-                  ))}
-                </select>
+                <div className="space-y-1">
+                   <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('table') || 'Table'}</label>
+                  <select 
+                    value={tableId}
+                    onChange={e => setTableId(e.target.value)}
+                    className="w-full px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30"
+                  >
+                    <option value="">{t('selectTable') || 'Select Table'}</option>
+                    {tables.map(table => (
+                      <option key={table.id} value={table.id}>{table.number || table.name}</option>
+                    ))}
+                  </select>
+                </div>
               )}
             </div>
 

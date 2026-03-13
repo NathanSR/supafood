@@ -124,7 +124,12 @@ export async function createStaffMember(formData: FormData) {
 
 export async function updateStaffMember(id: string, updates: any) {
   const supabase = await createClient()
-  const { error } = await supabase.from('staff').update(updates).eq('id', id)
+  const data = { ...updates }
+  if (data.name) {
+    data.full_name = data.name
+    delete data.name
+  }
+  const { error } = await supabase.from('staff').update(data).eq('id', id)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/staff', 'page')
   return { success: true }
@@ -162,7 +167,12 @@ export async function createTable(formData: FormData) {
 
 export async function updateTable(id: string, updates: any) {
   const supabase = await createClient()
-  const { error } = await supabase.from('tables').update(updates).eq('id', id)
+  const data = { ...updates }
+  if (data.name) {
+    data.number = data.name
+    delete data.name
+  }
+  const { error } = await supabase.from('tables').update(data).eq('id', id)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/tables', 'page')
   return { success: true }

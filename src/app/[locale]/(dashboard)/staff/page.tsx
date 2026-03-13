@@ -8,11 +8,16 @@ export default async function StaffPage() {
   const { data: staff } = await supabase
     .from('staff')
     .select('*')
-    .order('name', { ascending: true });
+    .order('full_name', { ascending: true });
+
+  const formattedStaff = staff?.map(s => ({
+    ...s,
+    name: s.full_name // Map database full_name to UI name
+  }));
 
   return (
     <div className="p-4 md:p-8 space-y-6">
-      <StaffClient initialStaff={staff || []} />
+      <StaffClient initialStaff={formattedStaff || []} />
     </div>
   );
 }
