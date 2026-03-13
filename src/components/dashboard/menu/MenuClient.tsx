@@ -16,7 +16,8 @@ import {
   Loader2
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { deleteMenuItem, updateMenuItem } from '@/app/actions/restaurant';
+import { deleteMenuItem, updateMenuItem, createCategory } from '@/app/actions/restaurant';
+import { MenuItemForm } from './MenuItemForm';
 
 interface MenuClientProps {
   initialCategories: any[];
@@ -28,6 +29,8 @@ export function MenuClient({ initialCategories, initialItems }: MenuClientProps)
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [search, setSearch] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<any>(null);
 
   const filtered = initialItems.filter(item => {
     const matchesCat = activeCategory === 'all' || item.category_id === activeCategory;
@@ -46,6 +49,16 @@ export function MenuClient({ initialCategories, initialItems }: MenuClientProps)
     if (confirm('Are you sure you want to delete this item?')) {
       startTransition(async () => {
         await deleteMenuItem(id);
+      });
+    }
+  };
+
+  const handleAddCategory = async () => {
+    const name = prompt('Category name:');
+    if (name) {
+      const slug = name.toLowerCase().replace(/\s+/g, '-');
+      startTransition(async () => {
+        await createCategory(name, slug);
       });
     }
   };
@@ -73,11 +86,20 @@ export function MenuClient({ initialCategories, initialItems }: MenuClientProps)
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:border-primary/50 transition-all">
+          <button 
+            onClick={handleAddCategory}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:border-primary/50 transition-all"
+          >
             <Plus className="w-4 h-4" />
             {t('addCategory')}
           </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+          <button 
+            onClick={() => {
+              setEditingItem(null);
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
+          >
             <Plus className="w-4 h-4" />
             {t('addItem')}
           </button>
@@ -218,7 +240,13 @@ export function MenuClient({ initialCategories, initialItems }: MenuClientProps)
                   {item.is_available ? t('available') : t('unavailable')}
                 </button>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-all">
+                  <button 
+                     onClick={() => {
+                        setEditingItem(item);
+                        setIsModalOpen(true);
+                      }}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-primary hover:bg-primary/10 transition-all"
+                  >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button 
@@ -233,6 +261,17 @@ export function MenuClient({ initialCategories, initialItems }: MenuClientProps)
           ))}
         </AnimatePresence>
       </div>
+
+      {isModalOpen && (
+        <MenuItemForm 
+          categories={initialCategories}
+          initialData={editingItem}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingItem(null);
+          }}
+        />
+      )}
 
       {filtered.length === 0 && (
         <motion.div

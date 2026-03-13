@@ -72,11 +72,11 @@ export async function deleteMenuItem(id: string) {
 export async function createOrder(data: any) {
   const supabase = await createClient()
   
-  const { items, ...orderData } = data
+  const { items, customer_name, ...orderData } = data
   
   const { data: order, error } = await supabase
     .from('orders')
-    .insert(orderData)
+    .insert({ ...orderData, customer_name })
     .select()
     .single()
 
@@ -96,10 +96,99 @@ export async function createOrder(data: any) {
   return { success: true, orderId: order.id }
 }
 
+// STAFF
+export async function createStaffMember(formData: FormData) {
+  const supabase = await createClient()
+  
+  const name = formData.get('name') as string
+  const email = formData.get('email') as string
+  const phone = formData.get('phone') as string
+  const role = formData.get('role') as string
+  const shift = formData.get('shift') as string
+  const status = 'off_duty'
+
+  const { error } = await supabase.from('staff').insert({
+    full_name: name,
+    email,
+    phone,
+    role,
+    shift,
+    status
+  })
+
+  if (error) return { error: error.message }
+  
+  revalidatePath('/[locale]/(dashboard)/staff', 'page')
+  return { success: true }
+}
+
+export async function updateStaffMember(id: string, updates: any) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('staff').update(updates).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/[locale]/(dashboard)/staff', 'page')
+  return { success: true }
+}
+
+export async function deleteStaffMember(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('staff').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/[locale]/(dashboard)/staff', 'page')
+  return { success: true }
+}
+
+// TABLES
+export async function createTable(formData: FormData) {
+  const supabase = await createClient()
+  
+  const name = formData.get('name') as string
+  const capacity = parseInt(formData.get('capacity') as string)
+  const section = formData.get('section') as string
+  const status = 'available'
+
+  const { error } = await supabase.from('tables').insert({
+    number: name,
+    capacity,
+    section,
+    status
+  })
+
+  if (error) return { error: error.message }
+  
+  revalidatePath('/[locale]/(dashboard)/tables', 'page')
+  return { success: true }
+}
+
+export async function updateTable(id: string, updates: any) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('tables').update(updates).eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/[locale]/(dashboard)/tables', 'page')
+  return { success: true }
+}
+
+export async function deleteTable(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('tables').delete().eq('id', id)
+  if (error) return { error: error.message }
+  revalidatePath('/[locale]/(dashboard)/tables', 'page')
+  return { success: true }
+}
+
+// CATEGORIES
+export async function createCategory(name: string, slug: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('menu_categories').insert({ name, slug })
+  if (error) return { error: error.message }
+  revalidatePath('/[locale]/(dashboard)/menu', 'page')
+  return { success: true }
+}
+
 export async function updateOrderStatus(id: string, status: string) {
   const supabase = await createClient()
   const { error } = await supabase.from('orders').update({ status }).eq('id', id)
   if (error) return { error: error.message }
-  revalidatePath('/')
+  revalidatePath('/[locale]/(dashboard)/orders', 'page')
   return { success: true }
 }

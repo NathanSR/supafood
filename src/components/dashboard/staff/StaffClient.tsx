@@ -11,9 +11,13 @@ import {
   ChefHat,
   TrendingUp,
   Award,
-  Star
+  Star,
+  Edit2,
+  Trash2
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { StaffForm } from './StaffForm';
+import { deleteStaffMember } from '@/app/actions/restaurant';
 
 interface StaffClientProps {
   initialStaff: any[];
@@ -48,6 +52,8 @@ export function StaffClient({ initialStaff }: StaffClientProps) {
   const t = useTranslations('Staff');
   const [activeRole, setActiveRole] = useState<string>('all');
   const [search, setSearch] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState<any>(null);
 
   const filtered = initialStaff.filter(m => {
     const matchesRole = activeRole === 'all' || m.role === activeRole;
@@ -61,6 +67,12 @@ export function StaffClient({ initialStaff }: StaffClientProps) {
     ? Math.round(initialStaff.reduce((acc, m) => acc + (m.performance || 0), 0) / initialStaff.length)
     : 0;
 
+  const handleDelete = async (id: string) => {
+    if (confirm('Delete this member?')) {
+      await deleteStaffMember(id);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <motion.div
@@ -72,7 +84,13 @@ export function StaffClient({ initialStaff }: StaffClientProps) {
           <h1 className="text-2xl font-black tracking-tight">{t('title')}</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">{t('subtitle')}</p>
         </div>
-        <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform self-start">
+        <button 
+          onClick={() => {
+            setEditingMember(null);
+            setIsModalOpen(true);
+          }}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform self-start"
+        >
           <Plus className="w-4 h-4" />
           {t('addMember')}
         </button>
@@ -187,7 +205,23 @@ export function StaffClient({ initialStaff }: StaffClientProps) {
                   {shiftEmoji[member.shift]} {t(member.shift as any)}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp className="w-3.5 h-3.5 text-slate-400" />
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity mr-2">
+                    <button 
+                      onClick={() => {
+                        setEditingMember(member);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg text-slate-400 hover:text-primary transition-colors"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(member.id)}
+                      className="p-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg text-slate-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                   <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, si) => (
                       <Star
@@ -203,6 +237,16 @@ export function StaffClient({ initialStaff }: StaffClientProps) {
           ))}
         </AnimatePresence>
       </div>
+
+      {isModalOpen && (
+        <StaffForm 
+          initialData={editingMember}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingMember(null);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -19,12 +19,15 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { updateOrderStatus } from '@/app/actions/restaurant';
+import { OrderForm } from './OrderForm';
 
 type OrderStatus = 'all' | 'pending' | 'inPrep' | 'ready' | 'delivered' | 'cancelled';
 type OrderSource = 'Tablet' | 'Takeaway' | 'Dine-in';
 
 interface OrdersClientProps {
   initialOrders: any[];
+  tables: any[];
+  menuItems: any[];
 }
 
 const statusStyles: Record<Exclude<OrderStatus, 'all'>, { bg: string; text: string; label: string; icon: React.ElementType }> = {
@@ -43,12 +46,13 @@ const sourceIcons: Record<string, React.ElementType> = {
 
 const tabs: OrderStatus[] = ['all', 'pending', 'inPrep', 'ready', 'delivered', 'cancelled'];
 
-export function OrdersClient({ initialOrders }: OrdersClientProps) {
+export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientProps) {
   const t = useTranslations('Orders');
   const g = useTranslations('General');
   const [activeTab, setActiveTab] = useState<OrderStatus>('all');
   const [search, setSearch] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filtered = initialOrders.filter(order => {
     const matchesTab = activeTab === 'all' || order.status === activeTab;
@@ -93,12 +97,17 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
             <RefreshCw className="w-4 h-4" />
             <span className="hidden sm:inline">{g('refresh')}</span>
           </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
+          >
             <Plus className="w-4 h-4" />
             {t('newOrder')}
           </button>
         </div>
       </motion.div>
+
+      {/* ... previous code ... */}
 
       {/* Search & Filter Bar */}
       <motion.div
@@ -117,19 +126,11 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
             className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/30 transition-all"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:border-primary/50 transition-all">
-          <Filter className="w-4 h-4" />
-          {t('filterBy')}
-        </button>
+        {/* ... */}
       </motion.div>
 
       {/* Tabs */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="flex items-center gap-1 overflow-x-auto pb-1"
-      >
+      <div className="flex items-center gap-1 overflow-x-auto pb-1">
         {tabs.map(tab => (
           <button
             key={tab}
@@ -148,95 +149,62 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
             </span>
           </button>
         ))}
-      </motion.div>
+      </div>
 
-      {/* Orders Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="glass rounded-2xl overflow-hidden"
-      >
-        {/* Table Header */}
-        <div className="hidden md:grid grid-cols-[80px_1fr_1fr_120px_100px_140px_48px] gap-4 px-6 py-3 border-b border-slate-100 dark:border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-          <span>{t('orderNumber')}</span>
-          <span>{t('customer')}</span>
-          <span>{t('items')}</span>
-          <span>{t('source')}</span>
-          <span>{t('total')}</span>
-          <span>{t('status')}</span>
-          <span />
-        </div>
-
-        {/* Rows */}
-        <div className="divide-y divide-slate-100 dark:divide-white/5">
-          <AnimatePresence>
-            {filtered.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-16 text-slate-400"
-              >
-                <RefreshCw className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                <p className="font-semibold">{g('noResults')}</p>
-              </motion.div>
-            ) : filtered.map((order, i) => {
-              const style = statusStyles[order.status as Exclude<OrderStatus, 'all'>] || statusStyles.pending;
-              const StatusIcon = style.icon;
-              const SourceIcon = sourceIcons[order.source] || Utensils;
-
-              return (
-                <motion.div
-                  key={order.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ delay: i * 0.03 }}
-                  className="grid grid-cols-1 md:grid-cols-[80px_1fr_1fr_120px_100px_140px_48px] gap-2 md:gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors group"
+      {/* Row List */}
+      <div className="glass rounded-2xl overflow-hidden divide-y divide-slate-100 dark:divide-white/5">
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 text-slate-400 font-semibold">{g('noResults')}</div>
+        ) : filtered.map((order, i) => {
+           const style = statusStyles[order.status as Exclude<OrderStatus, 'all'>] || statusStyles.pending;
+           const StatusIcon = style.icon;
+           const SourceIcon = sourceIcons[order.source] || Utensils;
+           return (
+            <motion.div 
+              key={order.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="grid grid-cols-1 md:grid-cols-[80px_1fr_1fr_120px_100px_140px_48px] gap-2 md:gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors group"
+            >
+              <div className="flex items-center font-black text-sm text-slate-700 dark:text-slate-200">#{order.orderNumber}</div>
+              <div className="flex items-center">
+                <div>
+                  <p className="font-bold text-sm">{order.customer}</p>
+                  <p className="text-[10px] text-slate-400">{order.timeAgoInMins} min</p>
+                </div>
+              </div>
+              <div className="flex items-center text-sm truncate">{order.items.join(', ')}</div>
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <SourceIcon className="w-4 h-4" />
+                {order.source}
+              </div>
+              <div className="flex items-center font-bold">{formatter.format(order.total)}</div>
+              <div className="flex items-center">
+                <select 
+                  value={order.status}
+                  onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
+                  className={`px-3 py-1.5 rounded-full text-[10px] font-bold outline-none cursor-pointer ${style.bg} ${style.text}`}
                 >
-                  <div className="flex items-center">
-                    <span className="font-black text-sm text-slate-700 dark:text-slate-200">#{order.orderNumber}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div>
-                      <p className="font-semibold text-sm">{order.customer}</p>
-                      <p className="text-xs text-slate-400">
-                        {order.timeAgoInMins === 0 ? 'Agora' : `${order.timeAgoInMins} min atrás`}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 truncate">
-                      {order.items[0]}
-                      {order.items.length > 1 && (
-                        <span className="text-slate-400 text-xs ml-1">+{order.items.length - 1}</span>
-                      )}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <SourceIcon className="w-4 h-4 text-slate-400" />
-                    <span className="text-sm text-slate-600 dark:text-slate-300">{order.source}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="font-bold text-sm">{formatter.format(order.total)}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${style.bg} ${style.text}`}>
-                      <StatusIcon className="w-3 h-3" />
-                      {t(style.label as any)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-end">
-                    <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-all opacity-0 group-hover:opacity-100">
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-      </motion.div>
+                  {Object.entries(statusStyles).map(([key, cfg]) => (
+                    <option key={key} value={key}>{t(cfg.label as any)}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center justify-end">
+                <ChevronRight className="w-4 h-4 text-slate-300" />
+              </div>
+            </motion.div>
+           )
+        })}
+      </div>
+
+      {isModalOpen && (
+        <OrderForm 
+          tables={tables}
+          menuItems={menuItems}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -9,9 +9,13 @@ import {
   List,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Edit2,
+  Trash2
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { TableForm } from './TableForm';
+import { deleteTable } from '@/app/actions/restaurant';
 
 interface TablesClientProps {
   initialTables: any[];
@@ -24,12 +28,14 @@ const statusConfig: Record<string, any> = {
   cleaning: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', text: 'text-amber-500', label: 'cleaning', dot: 'bg-amber-500 animate-pulse' },
 };
 
-const sections = ['all', 'indoor', 'outdoor', 'bar', 'private'];
+const sections = ['all', 'Indoor', 'Outdoor', 'Bar', 'Terrace', 'VIP'];
 
 export function TablesClient({ initialTables }: TablesClientProps) {
   const t = useTranslations('Tables');
   const [activeSection, setActiveSection] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'floorMap' | 'listView'>('floorMap');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTable, setEditingTable] = useState<any>(null);
 
   const filtered = initialTables.filter(table => 
     activeSection === 'all' || table.section === activeSection
@@ -40,6 +46,12 @@ export function TablesClient({ initialTables }: TablesClientProps) {
     available: initialTables.filter(t => t.status === 'available').length,
     occupied: initialTables.filter(t => t.status === 'occupied').length,
     reserved: initialTables.filter(t => t.status === 'reserved').length,
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Delete table?')) {
+      await deleteTable(id);
+    }
   };
 
   return (
@@ -68,7 +80,13 @@ export function TablesClient({ initialTables }: TablesClientProps) {
               <List className="w-4 h-4" />
             </button>
           </div>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+          <button 
+            onClick={() => {
+              setEditingTable(null);
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
+          >
             <Plus className="w-4 h-4" />
             {t('addTable')}
           </button>
@@ -137,14 +155,14 @@ export function TablesClient({ initialTables }: TablesClientProps) {
             {filtered.map((table, i) => {
               const config = statusConfig[table.status] || statusConfig.available;
               return (
-                <motion.button
+                <motion.div
                   key={table.id}
                   layout
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ delay: i * 0.03 }}
-                  className={`${config.bg} border ${config.border} rounded-2xl p-4 flex flex-col items-center gap-2 hover:scale-105 transition-transform cursor-pointer aspect-square justify-center`}
+                  className={`${config.bg} border ${config.border} rounded-2xl p-4 flex flex-col items-center gap-2 hover:scale-105 transition-transform group cursor-pointer aspect-square justify-center relative`}
                 >
                   <span className="text-2xl">🪑</span>
                   <span className={`font-black text-lg ${config.text}`}>{table.name}</span>
@@ -152,7 +170,29 @@ export function TablesClient({ initialTables }: TablesClientProps) {
                     <Users className="w-3 h-3 text-slate-400" />
                     <span className="text-xs text-slate-500">{table.capacity}</span>
                   </div>
-                </motion.button>
+                  
+                  <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingTable(table);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-1 bg-white dark:bg-slate-800 rounded-md shadow-sm text-slate-400 hover:text-primary"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(table.id);
+                      }}
+                      className="p-1 bg-white dark:bg-slate-800 rounded-md shadow-sm text-slate-400 hover:text-red-500"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                </motion.div>
               );
             })}
           </AnimatePresence>
@@ -163,7 +203,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
           animate={{ opacity: 1 }}
           className="glass rounded-2xl overflow-hidden"
         >
-          <div className="hidden md:grid grid-cols-[80px_100px_120px_150px_1fr_48px] gap-4 px-6 py-3 border-b border-slate-100 dark:border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="hidden md:grid grid-cols-[80px_100px_120px_150px_1fr_80px] gap-4 px-6 py-3 border-b border-slate-100 dark:border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400">
             <span>{t('tableNumber')}</span>
             <span>{t('capacity')}</span>
             <span>{t('section')}</span>
@@ -180,7 +220,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.03 }}
-                  className="grid grid-cols-1 md:grid-cols-[80px_100px_120px_150px_1fr_48px] gap-2 md:gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors group"
+                  className="grid grid-cols-1 md:grid-cols-[80px_100px_120px_150px_1fr_80px] gap-2 md:gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors group"
                 >
                   <div className="flex items-center font-black text-slate-700 dark:text-slate-200">
                     {table.name}
@@ -190,7 +230,7 @@ export function TablesClient({ initialTables }: TablesClientProps) {
                     {table.capacity}
                   </div>
                   <div className="flex items-center text-sm text-slate-600 dark:text-slate-300 capitalize">
-                    {t(table.section as any)}
+                    {table.section}
                   </div>
                   <div className="flex items-center">
                     <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${config.bg} ${config.text}`}>
@@ -198,12 +238,22 @@ export function TablesClient({ initialTables }: TablesClientProps) {
                       {t(config.label as any)}
                     </span>
                   </div>
-                  <div className="flex items-center text-xs text-slate-500">
-                    {/* Additional info could go here */}
-                  </div>
-                  <div className="flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="text-xs font-semibold text-primary hover:underline">
-                      Editar
+                  <div className="flex items-center text-xs text-slate-500" />
+                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={() => {
+                        setEditingTable(table);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg text-slate-400 hover:text-primary transition-colors"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(table.id)}
+                      className="p-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg text-slate-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </motion.div>
@@ -211,6 +261,16 @@ export function TablesClient({ initialTables }: TablesClientProps) {
             })}
           </div>
         </motion.div>
+      )}
+
+      {isModalOpen && (
+        <TableForm 
+          initialData={editingTable}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingTable(null);
+          }}
+        />
       )}
 
       {filtered.length === 0 && (
