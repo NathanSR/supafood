@@ -95,3 +95,41 @@ export async function getUser() {
 
   return { ...user, profile }
 }
+export async function updateProfile(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  const fullName = formData.get('fullName') as string
+  const avatarFile = formData.get('avatar') as File
+
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .update({ full_name: fullName })
+    .eq('id', user.id)
+
+  if (profileError) return { error: profileError.message }
+
+  if (avatarFile && avatarFile.size > 0) {
+    const fileExt = avatarFile.name.split('.').pop()
+    const filePath = `${user.id}-${Math.random()}.${fileExt}`
+    
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, avatarFile)
+
+    if (!uploadError) {
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath)
+
+      await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user.id)
+    }
+  }
+
+  revalidatePath('/', 'layout')
+  return { success: true }
+}

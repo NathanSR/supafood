@@ -274,5 +274,15 @@
     "hasAccount": "Already have an account?",
     "errorGeneric": "Something went wrong. Please try again.",
     "errorInvalid": "Invalid credentials"
+  },
+  "Validation": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "minLength": "Must be at least {count} characters",
+    "maxLength": "Must be at most {count} characters",
+    "invalidNumber": "Please enter a valid number",
+    "positiveNumber": "Value must be greater than zero",
+    "fileTooLarge": "File is too large (max {size}MB)",
+    "invalidFileType": "Invalid file type. Allowed: {types}"
   }
 }

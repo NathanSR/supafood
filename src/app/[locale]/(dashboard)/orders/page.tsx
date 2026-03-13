@@ -18,7 +18,7 @@ export default async function OrdersPage() {
     .from('tables')
     .select('id, number')
     .order('number', { ascending: true });
-    
+
   if (tablesError) {
     console.error('Erro ao buscar mesas:', tablesError);
   }
@@ -27,8 +27,6 @@ export default async function OrdersPage() {
     ...t,
     name: t.number
   })) || [];
-
-  console.log('Mesas carregadas:', tables);
 
   const { data: menuItems } = await supabase
     .from('menu_items')

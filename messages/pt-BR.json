@@ -274,5 +274,15 @@
     "hasAccount": "Já tem uma conta?",
     "errorGeneric": "Ocorreu um erro. Tente novamente.",
     "errorInvalid": "Credenciais inválidas"
+  },
+  "Validation": {
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Por favor, insira um e-mail válido",
+    "minLength": "Deve ter pelo menos {count} caracteres",
+    "maxLength": "Deve ter no máximo {count} caracteres",
+    "invalidNumber": "Por favor, insira um número válido",
+    "positiveNumber": "O valor deve ser maior que zero",
+    "fileTooLarge": "O arquivo é muito grande (máx {size}MB)",
+    "invalidFileType": "Tipo de arquivo inválido. Permitidos: {types}"
   }
 }
