@@ -21,6 +21,8 @@ import {
   PlusCircle
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Link, useRouter, usePathname } from '@/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import { updateOrderStatus } from '@/app/actions/restaurant';
 import { OrderForm } from './OrderForm';
 
@@ -30,6 +32,10 @@ interface OrdersClientProps {
   initialOrders: any[];
   tables: any[];
   menuItems: any[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  tabCounts: Record<string, number>;
 }
 
 const statusStyles: Record<Exclude<OrderStatus, 'all'>, { bg: string; border: string; text: string; label: string; icon: React.ElementType }> = {
@@ -48,35 +54,71 @@ const sourceIcons: Record<string, React.ElementType> = {
 
 const tabs: OrderStatus[] = ['all', 'pending', 'preparing', 'ready', 'delivered', 'cancelled'];
 
-export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientProps) {
+export function OrdersClient({ initialOrders, tables, menuItems, totalCount, currentPage, pageSize, tabCounts }: OrdersClientProps) {
   const t = useTranslations('Orders');
   const g = useTranslations('General');
-  const [activeTab, setActiveTab] = useState<OrderStatus>('all');
-  const [search, setSearch] = useState('');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [isPending, startTransition] = useTransition();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [viewingOrder, setViewingOrder] = useState<any>(null);
 
-  const filtered = initialOrders.filter(order => {
-    const matchesTab = activeTab === 'all' || order.status === activeTab;
-    const matchesSearch = 
-      String(order.orderNumber).includes(search) || 
-      order.customer.toLowerCase().includes(search.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
+  const activeTab = (searchParams.get('status') as OrderStatus) || 'all';
+  const query = searchParams.get('query') || '';
+  const [localSearch, setLocalSearch] = useState(query);
 
-  const tabCounts: Record<string, number> = {
-    all: initialOrders.length,
-    pending: initialOrders.filter(o => o.status === 'pending').length,
-    preparing: initialOrders.filter(o => o.status === 'preparing').length,
-    ready: initialOrders.filter(o => o.status === 'ready').length,
-    delivered: initialOrders.filter(o => o.status === 'delivered').length,
-    cancelled: initialOrders.filter(o => o.status === 'cancelled').length,
+  const createQueryString = (params: Record<string, string | null>) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+    });
+    return newParams.toString();
+  };
+
+  const handleSearch = (val: string) => {
+    router.push(`${pathname}?${createQueryString({ query: val || null, page: '1' })}`);
+  };
+
+  // Debounce search
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearch !== query) {
+        handleSearch(localSearch);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [localSearch]);
+
+  // Sync local search when query param changes externally (e.g. back button)
+  React.useEffect(() => {
+    setLocalSearch(query);
+  }, [query]);
+
+  const handleTabChange = (status: OrderStatus) => {
+    router.push(`${pathname}?${createQueryString({ status: status === 'all' ? null : status, page: '1' })}`);
+  };
+
+  const handlePageChange = (page: number) => {
+    router.push(`${pathname}?${createQueryString({ page: page.toString() })}`);
+  };
+
+  const handleReload = () => {
+    startTransition(() => {
+      router.refresh();
+    });
   };
 
   const handleUpdateStatus = async (id: string, status: string) => {
     startTransition(async () => {
       await updateOrderStatus(id, status);
+      router.refresh();
     });
   };
 
@@ -85,7 +127,7 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
     setIsModalOpen(true);
   };
 
-  const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+  const formatter = React.useMemo(() => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }), []);
 
   return (
     <div className="space-y-8">
@@ -100,9 +142,13 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
           <p className="text-slate-500 dark:text-slate-400 mt-1">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 text-sm font-bold shadow-sm hover:border-primary/50 transition-all active:scale-95">
-            <RefreshCw className="w-4 h-4" />
-            <span className="hidden sm:inline">Recarregar</span>
+          <button 
+            onClick={handleReload}
+            disabled={isPending}
+            className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 text-sm font-bold shadow-sm hover:border-primary/50 transition-all active:scale-95 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${isPending ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{t('reload')}</span>
           </button>
           <button 
             onClick={() => setIsModalOpen(true)}
@@ -127,7 +173,7 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
           return (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`p-4 rounded-[28px] border-2 transition-all flex flex-col items-center gap-2 ${
                 activeTab === tab 
                   ? `${style.bg} ${style.border.replace('/20', '/50')} shadow-lg shadow-black/[0.02]` 
@@ -157,15 +203,15 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Buscar por número do pedido ou cliente..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
+            placeholder={t('searchHint')}
+            value={localSearch}
+            onChange={e => setLocalSearch(e.target.value)}
             className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-white/5 border-none rounded-2xl text-sm outline-none focus:ring-2 focus:ring-primary/30 transition-all font-medium"
           />
         </div>
         <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
           <button
-            onClick={() => setActiveTab('all')}
+            onClick={() => handleTabChange('all')}
             className={`px-6 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'all'
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
@@ -179,7 +225,7 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
           
           <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 transition-all">
             <Calendar className="w-4 h-4" />
-            Hoje
+            {t('today')}
           </button>
         </div>
       </motion.div>
@@ -188,7 +234,7 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
       <div className="bg-white dark:bg-white/5 rounded-[32px] overflow-hidden border border-slate-100 dark:border-white/5 shadow-sm">
         <div className="hidden lg:grid grid-cols-[100px_1fr_180px_150px_160px_60px] gap-6 px-8 py-5 border-b border-slate-100 dark:border-white/5 text-[10px] font-black uppercase tracking-widest text-slate-400">
           <span>{t('orderNumber')}</span>
-          <span>Cliente / Itens</span>
+          <span>{t('customer')} / {t('items')}</span>
           <span>Origem / Tempo</span>
           <span>Status</span>
           <span>Valor Total</span>
@@ -196,14 +242,14 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
         </div>
 
         <div className="divide-y divide-slate-50 dark:divide-white/5">
-          {filtered.length === 0 ? (
+          {initialOrders.length === 0 ? (
             <div className="text-center py-40 flex flex-col items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-5xl grayscale opacity-30">📦</div>
               <p className="text-xl font-black text-slate-400 tracking-tight">{g('noResults')}</p>
             </div>
           ) : (
             <AnimatePresence mode="popLayout">
-              {filtered.map((order, i) => {
+              {initialOrders.map((order, i) => {
                 const style = statusStyles[order.status as Exclude<OrderStatus, 'all'>] || statusStyles.pending;
                 const StatusIcon = style.icon;
                 const SourceIcon = sourceIcons[order.type] || Utensils;
@@ -267,7 +313,10 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
                       >
                         <PlusCircle className="w-5 h-5" />
                       </button>
-                      <button className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-300 hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all flex items-center justify-center border border-transparent hover:border-slate-100 dark:hover:border-white/10">
+                      <button 
+                        onClick={() => setViewingOrder(order)}
+                        className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-300 hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all flex items-center justify-center border border-transparent hover:border-slate-100 dark:hover:border-white/10"
+                      >
                         <ChevronRight className="w-5 h-5" />
                       </button>
                     </div>
@@ -277,7 +326,99 @@ export function OrdersClient({ initialOrders, tables, menuItems }: OrdersClientP
             </AnimatePresence>
           )}
         </div>
+
+        {/* Pagination */}
+        {totalCount > pageSize && (
+          <div className="px-8 py-5 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
+            <p className="text-xs font-bold text-slate-500">
+              {t('page', { current: currentPage, total: Math.ceil(totalCount / pageSize) })}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                disabled={currentPage <= 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="px-4 py-2 rounded-xl bg-slate-50 dark:bg-white/5 text-xs font-bold text-slate-600 dark:text-slate-400 disabled:opacity-30 transition-all"
+              >
+                {g('previous')}
+              </button>
+              <button
+                disabled={currentPage >= Math.ceil(totalCount / pageSize)}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="px-4 py-2 rounded-xl bg-slate-50 dark:bg-white/5 text-xs font-bold text-slate-600 dark:text-slate-400 disabled:opacity-30 transition-all"
+              >
+                {g('next')}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      <AnimatePresence>
+        {viewingOrder && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-end">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setViewingOrder(null)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
+            />
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-md h-full bg-white dark:bg-slate-900 shadow-2xl p-8 overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-black">{t('orderDetails')}</h2>
+                <button onClick={() => setViewingOrder(null)} className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center">
+                  <Plus className="w-5 h-5 rotate-45" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div className="p-6 rounded-3xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</span>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${statusStyles[viewingOrder.status as Exclude<OrderStatus, 'all'>]?.bg} ${statusStyles[viewingOrder.status as Exclude<OrderStatus, 'all'>]?.text}`}>
+                      {t(viewingOrder.status)}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-black">#{viewingOrder.orderNumber}</h3>
+                  <p className="font-bold text-slate-500 mt-1">{viewingOrder.customer}</p>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t('items')}</h4>
+                  <div className="divide-y divide-slate-100 dark:divide-white/5">
+                    {viewingOrder.order_items?.map((item: any, idx: number) => (
+                      <div key={idx} className="py-4 flex items-center justify-between">
+                        <div>
+                          <p className="font-bold text-sm tracking-tight">{item.menu_items?.name}</p>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">x{item.quantity}</p>
+                        </div>
+                        <span className="font-black text-sm">{formatter.format(item.unit_price * item.quantity)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-slate-100 dark:border-white/5">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-slate-500">Subtotal</span>
+                    <span className="font-bold">{formatter.format(viewingOrder.total_amount)}</span>
+                  </div>
+                  <div className="flex items-center justify-between mt-4 p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                    <span className="text-lg font-black">{t('totalAmount')}</span>
+                    <span className="text-2xl font-black text-primary">{formatter.format(viewingOrder.total_amount)}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <OrderForm 
         isOpen={isModalOpen}

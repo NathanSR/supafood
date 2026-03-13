@@ -60,7 +60,9 @@
     "confirm": "Confirmar",
     "active": "Ativo",
     "inactive": "Inativo",
-    "refresh": "Atualizar"
+    "refresh": "Atualizar",
+    "previous": "Anterior",
+    "next": "Próximo"
   },
   "Orders": {
     "title": "Pedidos",
@@ -96,7 +98,14 @@
     "orderDetails": "Detalhes do Pedido",
     "addItems": "Adicionar Itens",
     "addedAmount": "Valor Adicional",
-    "totalAmount": "Valor Total"
+    "totalAmount": "Valor Total",
+    "reload": "Recarregar",
+    "searchHint": "Buscar por número do pedido ou cliente...",
+    "sourceDineIn": "Mesa {table}",
+    "sourceTakeaway": "Para Viagem",
+    "statusUpdating": "Atualizando Status...",
+    "page": "Página {current} de {total}",
+    "viewDetails": "Ver Detalhes"
   },
   "Menu": {
     "title": "Gerenciar Cardápio",

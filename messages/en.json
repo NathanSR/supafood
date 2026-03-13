@@ -60,7 +60,9 @@
     "confirm": "Confirm",
     "active": "Active",
     "inactive": "Inactive",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "previous": "Previous",
+    "next": "Next"
   },
   "Orders": {
     "title": "Orders",
@@ -96,7 +98,14 @@
     "orderDetails": "Order Details",
     "addItems": "Add Items",
     "addedAmount": "Additional Amount",
-    "totalAmount": "Total Amount"
+    "totalAmount": "Total Amount",
+    "reload": "Reload",
+    "searchHint": "Search by order number or customer...",
+    "sourceDineIn": "Table {table}",
+    "sourceTakeaway": "Takeaway",
+    "statusUpdating": "Updating Status...",
+    "page": "Page {current} of {total}",
+    "viewDetails": "View Details"
   },
   "Menu": {
     "title": "Menu Manager",
