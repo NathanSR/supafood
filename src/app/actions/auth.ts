@@ -102,32 +102,51 @@ export async function updateProfile(formData: FormData) {
 
   const fullName = formData.get('fullName') as string
   const avatarFile = formData.get('avatar') as File
+  
+  let avatarUrl = undefined
 
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .update({ full_name: fullName })
-    .eq('id', user.id)
-
-  if (profileError) return { error: profileError.message }
-
-  if (avatarFile && avatarFile.size > 0) {
+  // 1. Upload avatar if provided
+  if (avatarFile && avatarFile.size > 0 && typeof avatarFile !== 'string') {
     const fileExt = avatarFile.name.split('.').pop()
-    const filePath = `${user.id}-${Math.random()}.${fileExt}`
+    const filePath = `${user.id}/${Math.random()}.${fileExt}`
     
     const { error: uploadError } = await supabase.storage
       .from('avatars')
-      .upload(filePath, avatarFile)
+      .upload(filePath, avatarFile, {
+        upsert: true,
+        contentType: avatarFile.type
+      })
 
-    if (!uploadError) {
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath)
-
-      await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user.id)
+    if (uploadError) {
+      console.error('Upload error:', uploadError)
+      return { error: `Upload failed: ${uploadError.message}` }
     }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(filePath)
+    
+    avatarUrl = publicUrl
+  }
+
+  // 2. Update/Upsert profile
+  const updateData: any = { 
+    id: user.id,
+    full_name: fullName,
+    updated_at: new Date().toISOString() // Just to force update timestamp
+  }
+  
+  if (avatarUrl) {
+    updateData.avatar_url = avatarUrl
+  }
+
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .upsert(updateData)
+
+  if (profileError) {
+    console.error('Profile update error:', profileError)
+    return { error: profileError.message }
   }
 
   revalidatePath('/', 'layout')
