@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { 
-  Utensils, 
-  LayoutDashboard, 
-  ClipboardList, 
-  Settings, 
+import {
+  Utensils,
+  LayoutDashboard,
+  ClipboardList,
+  Settings,
   ChevronLeft,
   ChevronRight,
   TrendingUp,
@@ -70,19 +70,19 @@ export function Sidebar({ className }: { className?: string }) {
   };
 
   return (
-    <motion.aside 
+    <motion.aside
       initial={false}
       animate={isMobile ? 'mobile' : (isCollapsed ? 'collapsed' : 'expanded')}
       variants={sidebarVariants}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className={cn(
-        "relative flex-shrink-0 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-surface-dark flex flex-col h-full z-20 shadow-xl overflow-hidden",
+        "relative flex-shrink-0 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-surface-dark flex flex-col h-full z-20 shadow-xl",
         className
       )}
     >
       {/* Toggle Button - Hide on Mobile */}
       {!isMobile && (
-        <button 
+        <button
           onClick={toggle}
           className="absolute -right-3 top-20 bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center border-2 border-white dark:border-background-dark shadow-md z-30 hover:scale-110 transition-transform"
         >
@@ -97,12 +97,12 @@ export function Sidebar({ className }: { className?: string }) {
         </div>
         <AnimatePresence>
           {(!isCollapsed || isMobile) && (
-            <motion.span 
+            <motion.span
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
-              className="text-2xl font-black italic tracking-tighter whitespace-nowrap overflow-hidden"
+              className="text-2xl font-black italic tracking-tighter whitespace-nowrap"
             >
               SUPAFOOD
             </motion.span>
@@ -139,7 +139,7 @@ export function Sidebar({ className }: { className?: string }) {
               {/* Items */}
               <div className="space-y-1">
                 {group.items.map((item) => {
-                  const isActive = normalizedPathname === item.href || 
+                  const isActive = normalizedPathname === item.href ||
                     (normalizedPathname.startsWith(item.href) && item.href !== '/home');
                   const isHomeActive = item.href === '/home' && normalizedPathname === '/home';
                   const active = item.href === '/home' ? isHomeActive : isActive;
