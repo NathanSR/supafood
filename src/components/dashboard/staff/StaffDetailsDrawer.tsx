@@ -52,13 +52,13 @@ export function StaffDetailsDrawer({ member, isOpen, onClose }: StaffDetailsDraw
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-white dark:bg-slate-900 p-0">
+      <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-card dark:bg-card p-0">
         {/* Header/Cover */}
         <div className="relative h-48 w-full bg-primary/5 dark:bg-primary/10">
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card dark:from-card to-transparent" />
           <div className="absolute -bottom-12 left-8">
             <div className="relative">
-              <div className="w-24 h-24 rounded-[32px] bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center text-4xl overflow-hidden border-4 border-white dark:border-slate-900">
+              <div className="w-24 h-24 rounded-[32px] bg-card dark:bg-card shadow-2xl flex items-center justify-center text-4xl overflow-hidden border-4 border-card dark:border-card">
                 {member.avatar_url ? (
                   <img src={member.avatar_url} alt={member.name} className="w-full h-full object-cover" />
                 ) : (

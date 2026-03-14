@@ -167,7 +167,7 @@ export function OrderForm({ tables, menuItems, onClose, isOpen, initialOrder }: 
                   layout
                   whileTap={{ scale: 0.95 }}
                   onClick={() => addItem(item)}
-                  className="group relative bg-white dark:bg-white/5 p-2 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all text-left"
+                  className="group relative bg-background dark:bg-white/5 p-2 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all text-left"
                 >
                   <div className="aspect-square rounded-2xl bg-slate-100 dark:bg-white/5 overflow-hidden mb-3">
                     {item.image_url ? (
@@ -190,7 +190,7 @@ export function OrderForm({ tables, menuItems, onClose, isOpen, initialOrder }: 
         </div>
 
         {/* Right: Checkout */}
-        <div className="flex-shrink-0 w-full lg:w-[400px] flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="flex-shrink-0 w-full lg:w-[400px] flex flex-col bg-card dark:bg-card overflow-hidden">
           <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShoppingCart className="w-5 h-5 text-primary" />

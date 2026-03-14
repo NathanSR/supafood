@@ -19,7 +19,9 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TableForm } from './TableForm';
+import { TableDetailsDrawer } from './TableDetailsDrawer';
 import { deleteTable } from '@/app/actions/restaurant';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface TablesClientProps {
   initialTables: any[];
@@ -46,14 +48,6 @@ const statusConfig: Record<string, any> = {
 
 const sections = ['all', 'Indoor', 'Outdoor', 'Bar', 'Terrace', 'VIP'];
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { 
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -268,7 +262,7 @@ export function TablesClient({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-white/5 rounded-[32px] overflow-hidden border border-slate-100 dark:border-white/5 shadow-sm"
+          className="bg-background dark:bg-background rounded-[32px] overflow-hidden border border-slate-100 dark:border-white/5 shadow-sm"
         >
           <div className="hidden md:grid grid-cols-[100px_120px_150px_180px_1fr_100px] gap-4 px-8 py-5 border-b border-slate-100 dark:border-white/5 text-[10px] font-black uppercase tracking-widest text-slate-400">
             <span>{t('tableNumber')}</span>
@@ -372,93 +366,20 @@ export function TablesClient({
       )}
 
       {/* Table Details Drawer */}
-      <Sheet open={!!selectedTable} onOpenChange={(open) => !open && setSelectedTable(null)}>
-        <SheetContent className="sm:max-w-md border-l-0 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl">
-          {selectedTable && (
-            <div className="space-y-8 py-6">
-              <SheetHeader>
-                <div className="flex items-center justify-between">
-                  <div className={`w-16 h-16 rounded-2xl ${statusConfig[selectedTable.status].bg} flex items-center justify-center text-3xl`}>
-                    🪑
-                  </div>
-                  <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border ${statusConfig[selectedTable.status].bg} ${statusConfig[selectedTable.status].text} ${statusConfig[selectedTable.status].border}`}>
-                    {t(statusConfig[selectedTable.status].label)}
-                  </span>
-                </div>
-                <SheetTitle className="text-3xl font-black tracking-tight mt-4">
-                  Mesa {selectedTable.name}
-                </SheetTitle>
-                <SheetDescription className="text-slate-500 dark:text-slate-400">
-                  Detalhes e informações da mesa
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Capacidade</p>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-primary" />
-                    <span className="font-bold">{selectedTable.capacity} pessoas</span>
-                  </div>
-                </div>
-                <div className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Setor</p>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-slate-400" />
-                    <span className="font-bold">{selectedTable.section}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-sm font-black uppercase tracking-widest text-slate-400">Ações Rápidas</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button 
-                    variant="outline" 
-                    className="h-14 rounded-2xl font-bold bg-white dark:bg-white/5"
-                    onClick={() => {
-                      setEditingTable(selectedTable);
-                      setIsModalOpen(true);
-                      setSelectedTable(null);
-                    }}
-                  >
-                    <Edit2 className="w-4 h-4 mr-2" />
-                    Editar
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="h-14 rounded-2xl font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 border-red-100 dark:border-red-500/20"
-                    onClick={() => {
-                      handleDelete(selectedTable.id);
-                      setSelectedTable(null);
-                    }}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Remover
-                  </Button>
-                </div>
-              </div>
-
-              {selectedTable.status === 'occupied' && (
-                <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
-                   <div className="flex items-center gap-3">
-                     <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-                       <Coffee className="w-5 h-5 text-primary" />
-                     </div>
-                     <div>
-                       <p className="text-xs font-bold text-primary uppercase tracking-wider">Mesa Ocupada</p>
-                       <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Há aproximadamente 45 minutos</p>
-                     </div>
-                   </div>
-                   <Button className="w-full h-12 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 font-bold">
-                     Ver Itens do Pedido
-                   </Button>
-                </div>
-              )}
-            </div>
-          )}
-        </SheetContent>
-      </Sheet>
+      <TableDetailsDrawer 
+        table={selectedTable}
+        onClose={() => setSelectedTable(null)}
+        statusConfig={statusConfig}
+        onEdit={(table) => {
+          setEditingTable(table);
+          setIsModalOpen(true);
+          setSelectedTable(null);
+        }}
+        onDelete={(id) => {
+          handleDelete(id);
+          setSelectedTable(null);
+        }}
+      />
 
       {initialTables.length === 0 && (
         <motion.div

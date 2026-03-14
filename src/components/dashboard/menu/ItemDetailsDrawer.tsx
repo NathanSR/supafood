@@ -36,7 +36,7 @@ export function ItemDetailsDrawer({ item, isOpen, onClose }: ItemDetailsDrawerPr
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-white dark:bg-slate-900 p-0">
+      <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-card dark:bg-card p-0">
         <div className="relative h-64 w-full">
           {item.image_url ? (
             <img 
@@ -49,7 +49,7 @@ export function ItemDetailsDrawer({ item, isOpen, onClose }: ItemDetailsDrawerPr
               🍽️
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card dark:from-card via-transparent to-transparent" />
           <div className="absolute bottom-6 left-6 right-6">
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 rounded-full bg-primary/20 backdrop-blur-md text-primary text-[10px] font-bold uppercase tracking-wider border border-primary/30">

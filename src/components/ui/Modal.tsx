@@ -60,7 +60,7 @@ export function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className={cn(
-              "bg-white dark:bg-slate-900 w-full rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col",
+              "bg-card dark:bg-card text-foreground w-full rounded-[40px] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.7)] relative z-10 flex flex-col border border-white/20 dark:border-white/10",
               maxWidth,
               className
             )}

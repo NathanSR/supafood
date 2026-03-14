@@ -25,6 +25,7 @@ import { Link, useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import { updateOrderStatus } from '@/app/actions/restaurant';
 import { OrderForm } from './OrderForm';
+import { OrderDetailsDrawer } from './OrderDetailsDrawer';
 
 type OrderStatus = 'all' | 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
 
@@ -353,72 +354,12 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
         )}
       </div>
 
-      <AnimatePresence>
-        {viewingOrder && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-end">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setViewingOrder(null)}
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
-            />
-            <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-md h-full bg-white dark:bg-slate-900 shadow-2xl p-8 overflow-y-auto"
-            >
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-black">{t('orderDetails')}</h2>
-                <button onClick={() => setViewingOrder(null)} className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center">
-                  <Plus className="w-5 h-5 rotate-45" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <div className="p-6 rounded-3xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</span>
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${statusStyles[viewingOrder.status as Exclude<OrderStatus, 'all'>]?.bg} ${statusStyles[viewingOrder.status as Exclude<OrderStatus, 'all'>]?.text}`}>
-                      {t(viewingOrder.status)}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-black">#{viewingOrder.orderNumber}</h3>
-                  <p className="font-bold text-slate-500 mt-1">{viewingOrder.customer}</p>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t('items')}</h4>
-                  <div className="divide-y divide-slate-100 dark:divide-white/5">
-                    {viewingOrder.order_items?.map((item: any, idx: number) => (
-                      <div key={idx} className="py-4 flex items-center justify-between">
-                        <div>
-                          <p className="font-bold text-sm tracking-tight">{item.menu_items?.name}</p>
-                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">x{item.quantity}</p>
-                        </div>
-                        <span className="font-black text-sm">{formatter.format(item.unit_price * item.quantity)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-slate-100 dark:border-white/5">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold text-slate-500">Subtotal</span>
-                    <span className="font-bold">{formatter.format(viewingOrder.total_amount)}</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-4 p-4 rounded-2xl bg-primary/5 border border-primary/10">
-                    <span className="text-lg font-black">{t('totalAmount')}</span>
-                    <span className="text-2xl font-black text-primary">{formatter.format(viewingOrder.total_amount)}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <OrderDetailsDrawer 
+        order={viewingOrder}
+        onClose={() => setViewingOrder(null)}
+        statusStyles={statusStyles}
+        formatter={formatter}
+      />
 
       <OrderForm 
         isOpen={isModalOpen}
@@ -433,7 +374,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
 
       {isPending && (
         <div className="fixed inset-0 bg-black/10 backdrop-blur-[2px] z-[110] flex items-center justify-center">
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-4 border border-slate-100 dark:border-white/5">
+          <div className="bg-background dark:bg-background p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-4 border border-slate-100 dark:border-white/5">
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
             <p className="text-sm font-black uppercase tracking-widest text-slate-500">Atualizando Status...</p>
           </div>
