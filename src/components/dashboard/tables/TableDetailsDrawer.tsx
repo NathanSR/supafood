@@ -70,10 +70,10 @@ export function TableDetailsDrawer({ table, onClose, statusConfig, onEdit, onDel
             <div className="grid grid-cols-2 gap-3">
               <Button 
                 variant="outline" 
-                className="h-14 rounded-2xl font-bold bg-background dark:bg-white/5 border-slate-100 dark:border-white/5"
+                className="h-14 rounded-2xl font-bold bg-background dark:bg-white/5 border-slate-100 dark:border-white/5 text-foreground"
                 onClick={() => onEdit(table)}
               >
-                <Edit2 className="w-4 h-4 mr-2" />
+                <Edit2 className="w-4 h-4 mr-2 text-primary" />
                 Editar
               </Button>
               <Button 
@@ -85,6 +85,12 @@ export function TableDetailsDrawer({ table, onClose, statusConfig, onEdit, onDel
                 Remover
               </Button>
             </div>
+            <button 
+              onClick={onClose}
+              className="w-full py-4 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-white/10 transition-all border border-slate-200 dark:border-white/10"
+            >
+              Fechar Visualização
+            </button>
           </div>
 
           {table.status === 'occupied' && (

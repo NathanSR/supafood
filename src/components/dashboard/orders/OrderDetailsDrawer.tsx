@@ -2,17 +2,20 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus, Edit2, CheckCircle2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
 
 interface OrderDetailsDrawerProps {
   order: any;
   onClose: () => void;
   statusStyles: any;
   formatter: Intl.NumberFormat;
+  onEdit: (order: any) => void;
+  onUpdateStatus: (id: string, status: string) => void;
 }
 
-export function OrderDetailsDrawer({ order, onClose, statusStyles, formatter }: OrderDetailsDrawerProps) {
+export function OrderDetailsDrawer({ order, onClose, statusStyles, formatter, onEdit, onUpdateStatus }: OrderDetailsDrawerProps) {
   const t = useTranslations('Orders');
 
   return (
@@ -31,7 +34,7 @@ export function OrderDetailsDrawer({ order, onClose, statusStyles, formatter }: 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="relative w-full max-w-md h-full bg-card dark:bg-card shadow-2xl p-8 overflow-y-auto"
+            className="relative w-full max-w-md h-full bg-card dark:bg-card shadow-2xl p-8 overflow-y-auto no-scrollbar"
           >
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-black text-foreground">{t('orderDetails')}</h2>
@@ -80,6 +83,35 @@ export function OrderDetailsDrawer({ order, onClose, statusStyles, formatter }: 
                   <span className="text-lg font-black text-foreground">{t('totalAmount')}</span>
                   <span className="text-2xl font-black text-primary">{formatter.format(order.total_amount)}</span>
                 </div>
+              </div>
+
+              <div className="space-y-4 pt-6">
+                <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-1">Ações Rápidas</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button 
+                    variant="outline" 
+                    className="h-14 rounded-2xl font-bold bg-background dark:bg-white/5 border-slate-100 dark:border-white/10 text-foreground"
+                    onClick={() => onEdit(order)}
+                  >
+                    <Edit2 className="w-4 h-4 mr-2 text-primary" />
+                    Adicionar Itens
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="h-14 rounded-2xl font-bold text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10 border-green-100 dark:border-green-500/20"
+                    onClick={() => onUpdateStatus(order.id, 'delivered')}
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Entregar
+                  </Button>
+                </div>
+                
+                <button 
+                  onClick={onClose}
+                  className="w-full py-4 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-white/10 transition-all border border-slate-200 dark:border-white/10"
+                >
+                  {t('close') || 'Fechar Detalhes'}
+                </button>
               </div>
             </div>
           </motion.div>

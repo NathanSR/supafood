@@ -19,14 +19,19 @@ import {
   Calendar,
   CheckCircle2,
   XCircle,
-  Award
+  Award,
+  Edit2,
+  Trash2
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 interface StaffDetailsDrawerProps {
   member: any | null;
   isOpen: boolean;
   onClose: () => void;
+  onEdit: (member: any) => void;
+  onDelete: (member: any) => void;
 }
 
 const roleColors: Record<string, string> = {
@@ -45,7 +50,7 @@ const shiftColors: Record<string, string> = {
   night: 'text-indigo-400 bg-indigo-400/10',
 };
 
-export function StaffDetailsDrawer({ member, isOpen, onClose }: StaffDetailsDrawerProps) {
+export function StaffDetailsDrawer({ member, isOpen, onClose, onEdit, onDelete }: StaffDetailsDrawerProps) {
   const t = useTranslations('Staff');
 
   if (!member) return null;
@@ -165,7 +170,27 @@ export function StaffDetailsDrawer({ member, isOpen, onClose }: StaffDetailsDraw
             </div>
           </div>
           
-          <div className="pt-4">
+          <div className="space-y-4">
+            <h3 className="text-sm font-black uppercase tracking-widest text-slate-400">Ações Rápidas</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <Button 
+                variant="outline" 
+                className="h-14 rounded-2xl font-bold bg-background dark:bg-white/5 border-slate-100 dark:border-white/5 text-foreground"
+                onClick={() => onEdit(member)}
+              >
+                <Edit2 className="w-4 h-4 mr-2 text-primary" />
+                Editar
+              </Button>
+              <Button 
+                variant="outline" 
+                className="h-14 rounded-2xl font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 border-red-100 dark:border-red-500/20"
+                onClick={() => onDelete(member)}
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Remover
+              </Button>
+            </div>
+            
             <button 
               onClick={onClose}
               className="w-full py-4 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-white/10 transition-all border border-slate-200 dark:border-white/10"

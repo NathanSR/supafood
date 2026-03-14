@@ -359,6 +359,14 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
         onClose={() => setViewingOrder(null)}
         statusStyles={statusStyles}
         formatter={formatter}
+        onEdit={(order) => {
+          handleAddItems(order);
+          setViewingOrder(null);
+        }}
+        onUpdateStatus={(id, status) => {
+          handleUpdateStatus(id, status);
+          setViewingOrder(null);
+        }}
       />
 
       <OrderForm 

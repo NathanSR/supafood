@@ -365,6 +365,15 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
         member={viewingMember}
         isOpen={!!viewingMember}
         onClose={() => setViewingMember(null)}
+        onEdit={(member) => {
+          setEditingMember(member);
+          setIsModalOpen(true);
+          setViewingMember(null);
+        }}
+        onDelete={(member) => {
+          handleDelete(member);
+          setViewingMember(null);
+        }}
       />
 
       {isPending && (

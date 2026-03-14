@@ -396,6 +396,15 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
           setIsDetailsOpen(false);
           setSelectedItem(null);
         }}
+        onEdit={(item) => {
+          setEditingItem(item);
+          setIsItemModalOpen(true);
+          setIsDetailsOpen(false);
+        }}
+        onDelete={(id) => {
+          handleDelete(id);
+          setIsDetailsOpen(false);
+        }}
       />
     </div>
   );
