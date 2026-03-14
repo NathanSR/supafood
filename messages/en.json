@@ -110,7 +110,8 @@
     "sourceTakeaway": "Takeaway",
     "statusUpdating": "Updating Status...",
     "page": "Page {current} of {total}",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "close": "Close View"
   },
   "Menu": {
     "title": "Menu Manager",

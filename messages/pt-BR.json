@@ -110,7 +110,8 @@
     "sourceTakeaway": "Para Viagem",
     "statusUpdating": "Atualizando Status...",
     "page": "Página {current} de {total}",
-    "viewDetails": "Ver Detalhes"
+    "viewDetails": "Ver Detalhes",
+    "close": "Fechar Visualização"
   },
   "Menu": {
     "title": "Gerenciar Cardápio",
