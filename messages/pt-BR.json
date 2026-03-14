@@ -287,7 +287,8 @@
     "paymentMethod": "Método de Pagamento",
     "invoices": "Faturas",
     "saveChanges": "Salvar Alterações",
-    "saved": "Alterações salvas com sucesso!"
+    "saved": "Alterações salvas com sucesso!",
+    "profile": "Perfil"
   },
   "Auth": {
     "loginTitle": "Bem-vindo de volta",

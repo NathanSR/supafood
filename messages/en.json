@@ -287,7 +287,8 @@
     "paymentMethod": "Payment Method",
     "invoices": "Invoices",
     "saveChanges": "Save Changes",
-    "saved": "Changes saved successfully!"
+    "saved": "Changes saved successfully!",
+    "profile": "Profile"
   },
   "Auth": {
     "loginTitle": "Welcome back",
