@@ -15,19 +15,19 @@ export function Toggle({ enabled, onChange, disabled }: ToggleProps) {
       onClick={() => !disabled && onChange(!enabled)}
       type="button"
       disabled={disabled}
-      className={`relative w-12 h-6.5 rounded-full transition-all duration-300 ease-in-out outline-none focus:ring-4 focus:ring-primary/20 ${
-        enabled 
-          ? 'bg-[#FF5F15]' 
-          : 'bg-slate-200 dark:bg-white/10'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:brightness-110'}`}
+      className={`relative w-12 h-6 rounded-full transition-all duration-300 ease-in-out outline-none focus:ring-4 focus:ring-primary/20 ${enabled
+        ? 'bg-[#FF5F15]'
+        : 'bg-slate-200 dark:bg-white/10'
+        } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:brightness-110'}`}
     >
       <motion.span
-        animate={{ 
-          x: enabled ? 24 : 4,
-          scale: enabled ? 1 : 0.8
+        initial={false}
+        animate={{
+          x: enabled ? 4 : -20,
+          scale: enabled ? 1 : 0.9
         }}
         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-        className="absolute top-1.5 w-4 h-4 bg-white rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
+        className="absolute top-1 w-4 h-4 bg-white rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
       />
       {/* Visual indicator for interactive feel */}
       <span className={`absolute inset-0 rounded-full transition-opacity duration-300 ${enabled ? 'opacity-20 bg-white' : 'opacity-0'}`} />
@@ -61,7 +61,7 @@ export function SettingRow({ label, description, children, error }: SettingRowPr
         </div>
       </div>
       {error && (
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-red-500 text-[10px] mt-2 font-bold uppercase tracking-wider text-right"
