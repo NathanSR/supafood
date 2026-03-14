@@ -14,7 +14,7 @@ import { NotificationsSection } from '@/components/dashboard/settings/Notificati
 import { AppearanceSection } from '@/components/dashboard/settings/AppearanceSection';
 import { BillingSection } from '@/components/dashboard/settings/BillingSection';
 import { type UserProfileInput, type RestaurantSettingsInput, type PasswordInput } from '@/lib/validations/profile';
-import { updateProfile } from '@/app/actions/auth';
+import { updateProfile, updatePassword } from '@/app/actions/auth';
 import { updateRestaurantSettings } from '@/app/actions/restaurant';
 
 type Section = 'profile' | 'restaurant' | 'notifications' | 'appearance' | 'billing';
@@ -54,9 +54,8 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
 
   const handleUpdatePassword = async (data: PasswordInput) => {
     startTransition(async () => {
-      // In a real app, you'd call a server action to change password
-      await new Promise(r => setTimeout(r, 1000));
-      showSaved();
+      const result = await updatePassword(data.password);
+      if (result?.success) showSaved();
     });
   };
 
