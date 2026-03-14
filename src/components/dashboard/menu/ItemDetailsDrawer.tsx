@@ -42,6 +42,10 @@ export function ItemDetailsDrawer({ item, isOpen, onClose, onEdit, onDelete }: I
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-card dark:bg-card p-0">
+        <SheetHeader className="sr-only">
+          <SheetTitle>{item.name}</SheetTitle>
+          <SheetDescription>{item.description || 'Detalhes do item'}</SheetDescription>
+        </SheetHeader>
         <div className="relative h-64 w-full">
           {item.image_url ? (
             <img 

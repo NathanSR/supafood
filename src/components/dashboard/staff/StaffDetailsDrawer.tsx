@@ -6,6 +6,7 @@ import {
   SheetContent, 
   SheetHeader, 
   SheetTitle,
+  SheetDescription
 } from '@/components/ui/sheet';
 import { useTranslations } from 'next-intl';
 import { 
@@ -81,15 +82,20 @@ export function StaffDetailsDrawer({ member, isOpen, onClose, onEdit, onDelete }
 
         <div className="px-8 pt-16 pb-8 space-y-8">
           {/* Main Info */}
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">{member.name}</h2>
+          <SheetHeader className="text-left space-y-1">
+            <SheetTitle className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
+              {member.name}
+            </SheetTitle>
+            <SheetDescription className="sr-only">
+              {t('details') || 'Detalhes do funcionário'}
+            </SheetDescription>
             <div className="flex items-center gap-3">
               <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg border uppercase tracking-wider ${roleColors[member.role]}`}>
                 {t(member.role as any)}
               </span>
               <span className="text-xs font-bold text-slate-400">ID: {member.id.split('-')[0].toUpperCase()}</span>
             </div>
-          </div>
+          </SheetHeader>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
