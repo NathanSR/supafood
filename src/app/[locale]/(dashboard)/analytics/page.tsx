@@ -1,18 +1,18 @@
 import React, { Suspense } from 'react';
-import { 
-  getStats, 
-  getRevenueChartData, 
-  getCategoryDistribution, 
-  getPeakHours, 
-  getTopItems, 
-  Period 
+import {
+  getStats,
+  getRevenueChartData,
+  getCategoryDistribution,
+  getPeakHours,
+  getTopItems,
+  Period
 } from '@/lib/actions/analytics';
-import { StatsCards, StatsCardsSkeleton } from '@/components/analytics/StatsCards';
-import { RevenueChart, RevenueChartSkeleton } from '@/components/analytics/RevenueChart';
-import { CategoryDistribution, CategoryDistributionSkeleton } from '@/components/analytics/CategoryDistribution';
-import { PeakHours, PeakHoursSkeleton } from '@/components/analytics/PeakHours';
-import { TopSellingItems, TopSellingItemsSkeleton } from '@/components/analytics/TopSellingItems';
-import { AnalyticsClient } from '@/components/analytics/AnalyticsClient';
+import { StatsCards, StatsCardsSkeleton } from '@/components/dashboard/analytics/StatsCards';
+import { RevenueChart, RevenueChartSkeleton } from '@/components/dashboard/analytics/RevenueChart';
+import { CategoryDistribution, CategoryDistributionSkeleton } from '@/components/dashboard/analytics/CategoryDistribution';
+import { PeakHours, PeakHoursSkeleton } from '@/components/dashboard/analytics/PeakHours';
+import { TopSellingItems, TopSellingItemsSkeleton } from '@/components/dashboard/analytics/TopSellingItems';
+import { AnalyticsClient } from '@/components/dashboard/analytics/AnalyticsClient';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -34,7 +34,7 @@ export default async function AnalyticsPage({ params, searchParams }: PageProps)
         <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChartContainer period={period as Period} />
         </Suspense>
-        
+
         <Suspense fallback={<CategoryDistributionSkeleton />}>
           <CategoryDistributionContainer period={period as Period} />
         </Suspense>
@@ -44,7 +44,7 @@ export default async function AnalyticsPage({ params, searchParams }: PageProps)
         <Suspense fallback={<PeakHoursSkeleton />}>
           <PeakHoursContainer period={period as Period} />
         </Suspense>
-        
+
         <Suspense fallback={<TopSellingItemsSkeleton />}>
           <TopSellingItemsContainer period={period as Period} />
         </Suspense>

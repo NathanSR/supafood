@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: 'Restaurant Admin Dashboard for Supafood',
 };
 
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
+
 export default async function LocaleLayout({
   children,
   params
@@ -33,11 +35,18 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="dark">
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${inter.variable} antialiased font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100`}>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
