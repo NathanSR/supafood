@@ -27,6 +27,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<MenuItemInput>({
     resolver: zodResolver(menuItemSchema),
@@ -41,6 +42,24 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
       is_spicy: initialData?.is_spicy || false,
     },
   });
+
+  // Update form values when initialData changes
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: initialData?.name || '',
+        category_id: initialData?.category_id || (categories.length > 0 ? categories[0].id : ''),
+        description: initialData?.description || '',
+        price: initialData?.price || 0,
+        prep_time: initialData?.prep_time || 15,
+        calories: initialData?.calories || 0,
+        is_popular: initialData?.is_popular || false,
+        is_spicy: initialData?.is_spicy || false,
+      });
+      setPreview(initialData?.image_url || null);
+      setServerError(null);
+    }
+  }, [initialData, isOpen, reset, categories]);
 
   const imageFile = watch('image');
 
