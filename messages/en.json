@@ -176,7 +176,8 @@
     "thu": "Thu",
     "fri": "Fri",
     "sat": "Sat",
-    "sun": "Sun"
+    "sun": "Sun",
+    "noResults": "No results found"
   },
   "Staff": {
     "title": "Staff Management",

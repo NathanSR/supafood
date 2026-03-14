@@ -176,7 +176,8 @@
     "thu": "Qui",
     "fri": "Sex",
     "sat": "Sáb",
-    "sun": "Dom"
+    "sun": "Dom",
+    "noResults": "Nenhum resultado encontrado"
   },
   "Staff": {
     "title": "Gestão de Equipe",
