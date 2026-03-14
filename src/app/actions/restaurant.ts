@@ -200,6 +200,45 @@ export async function addItemsToOrder(orderId: string, items: any[], newTotal: n
 }
 
 // STAFF
+export async function getStaff(options?: {
+  search?: string;
+  role?: string;
+  page?: number;
+  limit?: number;
+}) {
+  const supabase = await createClient()
+  const { search, role, page = 1, limit = 12 } = options || {}
+
+  let query = supabase
+    .from('staff')
+    .select('*', { count: 'exact' })
+
+  if (search) {
+    query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%`)
+  }
+
+  if (role && role !== 'all') {
+    query = query.eq('role', role)
+  }
+
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+
+  const { data, count, error } = await query
+    .order('full_name', { ascending: true })
+    .range(from, to)
+
+  if (error) throw new Error(error.message)
+
+  return {
+    staff: data?.map(s => ({ ...s, name: s.full_name })) || [],
+    total: count || 0,
+    page,
+    limit,
+    totalPages: Math.ceil((count || 0) / limit)
+  }
+}
+
 export async function createStaffMember(formData: FormData) {
   const supabase = await createClient()
   

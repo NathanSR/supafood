@@ -206,7 +206,19 @@
     "performance": "Performance",
     "editMember": "Edit Member",
     "saveChanges": "Save Changes",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "details": "Staff Details",
+    "noStaff": "No staff members found",
+    "tryAdjustFilters": "Try adjusting your filters or search.",
+    "showingMembers": "Showing {count} members",
+    "page": "Page {current} of {total}",
+    "performanceScore": "Performance Score",
+    "contactInfo": "Contact Information",
+    "workInfo": "Work Information",
+    "address": "Address",
+    "birthDate": "Date of Birth",
+    "close": "Close View",
+    "confirmDelete": "Are you sure you want to remove {name}?"
   },
   "Tables": {
     "title": "Table Management",

@@ -206,7 +206,19 @@
     "performance": "Desempenho",
     "editMember": "Editar Membro",
     "saveChanges": "Salvar Alterações",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "details": "Detalhes do Funcionário",
+    "noStaff": "Nenhum colaborador encontrado",
+    "tryAdjustFilters": "Tente ajustar seus filtros ou busca.",
+    "showingMembers": "Mostrando {count} membros",
+    "page": "Página {current} de {total}",
+    "performanceScore": "Pontuação de Desempenho",
+    "contactInfo": "Informações de Contato",
+    "workInfo": "Informações de Trabalho",
+    "address": "Endereço",
+    "birthDate": "Data de Nascimento",
+    "close": "Fechar Visualização",
+    "confirmDelete": "Deseja realmente remover {name}?"
   },
   "Tables": {
     "title": "Gestão de Mesas",
