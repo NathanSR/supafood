@@ -85,9 +85,9 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           <div className="relative w-full sm:w-80">
             <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
             <select {...register('currency')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none">
-              <option>BRL — Real Brasileiro</option>
-              <option>USD — US Dollar</option>
-              <option>EUR — Euro</option>
+              <option value="BRL">BRL — Real Brasileiro</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
             </select>
           </div>
         </SettingRow>
@@ -96,9 +96,19 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           <div className="relative w-full sm:w-80">
             <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
             <select {...register('timezone')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none">
-              <option>America/Sao_Paulo (GMT-3)</option>
-              <option>America/New_York (GMT-5)</option>
-              <option>Europe/London (GMT+0)</option>
+              <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</option>
+              <option value="America/New_York">America/New_York (GMT-5)</option>
+              <option value="Europe/London">Europe/London (GMT+0)</option>
+            </select>
+          </div>
+        </SettingRow>
+
+        <SettingRow label={t('language')} description="Idioma oficial do estabelecimento">
+          <div className="relative w-full sm:w-80">
+            <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
+            <select {...register('language')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none">
+              <option value="pt-BR">Português (Brasil)</option>
+              <option value="en">English (US)</option>
             </select>
           </div>
         </SettingRow>

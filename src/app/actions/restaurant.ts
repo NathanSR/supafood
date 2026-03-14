@@ -337,6 +337,34 @@ export async function createCategory(name: string, slug: string, emoji?: string)
   return { success: true }
 }
 
+export async function getRestaurantSettings() {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('restaurant_settings')
+    .select('*')
+    .maybeSingle()
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
+export async function updateRestaurantSettings(data: any) {
+  const supabase = await createClient()
+  
+  // Get the first record ID (singleton)
+  const { data: settings } = await supabase.from('restaurant_settings').select('id').single()
+  
+  const { error } = await supabase
+    .from('restaurant_settings')
+    .update(data)
+    .eq('id', settings?.id)
+
+  if (error) return { error: error.message }
+  
+  revalidatePath('/', 'layout')
+  return { success: true }
+}
+
 export async function updateOrderStatus(id: string, status: string) {
   const supabase = await createClient()
   const { error } = await supabase.from('orders').update({ status }).eq('id', id)

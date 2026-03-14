@@ -12,6 +12,10 @@ export const restaurantSettingsSchema = z.object({
 
 export const passwordSchema = z.object({
   password: z.string().nonempty('required').min(6, { message: 'minLength' }),
+  confirmPassword: z.string().nonempty('required'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "passwordsDoNotMatch",
+  path: ["confirmPassword"],
 });
 
 export const userProfileSchema = z.object({
