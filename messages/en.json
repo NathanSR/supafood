@@ -62,7 +62,10 @@
     "inactive": "Inactive",
     "refresh": "Refresh",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "showing": "Showing",
+    "of": "of",
+    "items": "items"
   },
   "Orders": {
     "title": "Orders",

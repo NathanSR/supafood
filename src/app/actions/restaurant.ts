@@ -4,6 +4,45 @@ import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 // MENU ITEMS
+export async function getMenuItems(options?: {
+  search?: string;
+  categoryId?: string;
+  page?: number;
+  limit?: number;
+}) {
+  const supabase = await createClient()
+  const { search, categoryId, page = 1, limit = 12 } = options || {}
+
+  let query = supabase
+    .from('menu_items')
+    .select('*, menu_categories(name, slug)', { count: 'exact' })
+
+  if (search) {
+    query = query.ilike('name', `%${search}%`)
+  }
+
+  if (categoryId && categoryId !== 'all') {
+    query = query.eq('category_id', categoryId)
+  }
+
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+
+  const { data, count, error } = await query
+    .order('created_at', { ascending: false })
+    .range(from, to)
+
+  if (error) throw new Error(error.message)
+
+  return {
+    items: data || [],
+    total: count || 0,
+    page,
+    limit,
+    totalPages: Math.ceil((count || 0) / limit)
+  }
+}
+
 export async function createMenuItem(formData: FormData) {
   const supabase = await createClient()
   
@@ -48,15 +87,53 @@ export async function createMenuItem(formData: FormData) {
 
   if (error) return { error: error.message }
   
-  revalidatePath('/')
+  revalidatePath('/[locale]/(dashboard)/menu', 'page')
   return { success: true }
 }
 
-export async function updateMenuItem(id: string, updates: any) {
+export async function updateMenuItem(id: string, data: any) {
   const supabase = await createClient()
+  
+  let updates = { ...data }
+  let image_url = updates.image_url
+
+  if (data instanceof FormData) {
+    const formData = data
+    updates = {
+      name: formData.get('name') as string,
+      category_id: formData.get('category_id') as string,
+      description: formData.get('description') as string,
+      price: parseFloat(formData.get('price') as string),
+      prep_time: parseInt(formData.get('prep_time') as string),
+      calories: parseInt(formData.get('calories') as string),
+      is_popular: formData.get('is_popular') === 'on',
+      is_spicy: formData.get('is_spicy') === 'on',
+    }
+
+    const imageFile = formData.get('image') as File
+    if (imageFile && imageFile.size > 0) {
+      const fileExt = imageFile.name.split('.').pop()
+      const filePath = `${Math.random()}.${fileExt}`
+      const { error: uploadError } = await supabase.storage
+        .from('menu-items')
+        .upload(filePath, imageFile)
+
+      if (!uploadError) {
+        const { data: { publicUrl } } = supabase.storage
+          .from('menu-items')
+          .getPublicUrl(filePath)
+        image_url = publicUrl
+      }
+    }
+  }
+
+  if (image_url) {
+    updates.image_url = image_url
+  }
+
   const { error } = await supabase.from('menu_items').update(updates).eq('id', id)
   if (error) return { error: error.message }
-  revalidatePath('/')
+  revalidatePath('/[locale]/(dashboard)/menu', 'page')
   return { success: true }
 }
 
@@ -64,7 +141,7 @@ export async function deleteMenuItem(id: string) {
   const supabase = await createClient()
   const { error } = await supabase.from('menu_items').delete().eq('id', id)
   if (error) return { error: error.message }
-  revalidatePath('/')
+  revalidatePath('/[locale]/(dashboard)/menu', 'page')
   return { success: true }
 }
 

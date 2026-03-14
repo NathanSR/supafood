@@ -74,19 +74,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
     startTransition(async () => {
       let result;
       if (initialData?.id) {
-        // For update, the current updateMenuItem seems to expect an object for updates, but handles image differently
-        // Looking at original code, it was doing entries and deleting image
-        const updates: any = { 
-          name: data.name,
-          category_id: data.category_id,
-          description: data.description,
-          price: data.price,
-          prep_time: data.prep_time,
-          calories: data.calories,
-          is_popular: data.is_popular,
-          is_spicy: data.is_spicy
-        };
-        result = await updateMenuItem(initialData.id, updates);
+        result = await updateMenuItem(initialData.id, formData);
       } else {
         result = await createMenuItem(formData);
       }

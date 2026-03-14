@@ -62,7 +62,10 @@
     "inactive": "Inativo",
     "refresh": "Atualizar",
     "previous": "Anterior",
-    "next": "Próximo"
+    "next": "Próximo",
+    "showing": "Mostrando",
+    "of": "de",
+    "items": "itens"
   },
   "Orders": {
     "title": "Pedidos",
