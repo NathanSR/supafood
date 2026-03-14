@@ -102,6 +102,17 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
     setLocalSearch(query);
   }, [query]);
 
+  // Handle orderId from URL to open drawer
+  const orderIdFromUrl = searchParams.get('orderId');
+  React.useEffect(() => {
+    if (orderIdFromUrl && initialOrders.length > 0) {
+      const order = initialOrders.find(o => o.id === orderIdFromUrl);
+      if (order) {
+        setViewingOrder(order);
+      }
+    }
+  }, [orderIdFromUrl, initialOrders]);
+
   const handleTabChange = (status: OrderStatus) => {
     router.push(`${pathname}?${createQueryString({ status: status === 'all' ? null : status, page: '1' })}`);
   };

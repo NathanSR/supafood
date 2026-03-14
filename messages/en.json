@@ -20,6 +20,8 @@
     "preparing": "In Prep",
     "ready": "Ready",
     "pending": "Order Received",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
     "search": "Search data..."
   },
   "Navigation": {

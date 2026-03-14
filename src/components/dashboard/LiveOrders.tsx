@@ -8,6 +8,8 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useTranslations } from 'next-intl';
 
+import { Link } from '@/i18n/routing';
+
 // Helper for Tailwind classes
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,13 +20,13 @@ const statusConfig: Record<string, any> = {
     bg: 'bg-blue-500/10',
     text: 'text-blue-500',
     container: 'bg-blue-500/20 text-blue-500',
-    key: 'received'
+    key: 'pending'
   },
   'preparing': {
     bg: 'bg-primary/10',
     text: 'text-primary',
     container: 'bg-primary/20 text-primary',
-    key: 'inPrep'
+    key: 'preparing'
   },
   'ready': {
     bg: 'bg-green-500/10',
@@ -48,7 +50,7 @@ const statusConfig: Record<string, any> = {
     bg: 'bg-slate-500/10',
     text: 'text-slate-500',
     container: 'bg-slate-500/20 text-slate-500',
-    key: 'received'
+    key: 'pending'
   }
 };
 
@@ -68,7 +70,7 @@ export function LiveOrders({ orders }: { orders: Order[] }) {
           <h3 className="font-bold text-lg">{t('liveOrders')}</h3>
           <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
         </div>
-        <button className="text-primary text-sm font-bold hover:underline">{t('viewAll')}</button>
+        <Link href="/orders" className="text-primary text-sm font-bold hover:underline">{t('viewAll')}</Link>
       </div>
       
       <div className="flex-1 overflow-y-auto p-2 space-y-2">
@@ -111,9 +113,9 @@ export function LiveOrders({ orders }: { orders: Order[] }) {
                   )}>
                     {t(config.key as any)}
                   </span>
-                  <button className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                  <Link href={`/orders?orderId=${order.id}`} className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                     <ChevronRight className="w-5 h-5 pointer-events-none" />
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             );

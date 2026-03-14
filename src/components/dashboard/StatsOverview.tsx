@@ -11,6 +11,7 @@ import {
 import type { DashboardStats } from '@/types/restaurant';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
 export function StatsOverview({ stats }: { stats: DashboardStats }) {
   const t = useTranslations('Dashboard');
@@ -63,9 +64,9 @@ export function StatsOverview({ stats }: { stats: DashboardStats }) {
             </div>
             
             <div className="ml-auto">
-              <button className="px-6 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+              <Link href="/analytics" className="px-6 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform inline-block">
                 {t('viewReport')}
-              </button>
+              </Link>
             </div>
           </div>
         </div>

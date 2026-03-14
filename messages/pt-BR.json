@@ -20,6 +20,8 @@
     "preparing": "Em Preparo",
     "ready": "Pronto",
     "pending": "Recebido",
+    "delivered": "Entregue",
+    "cancelled": "Cancelado",
     "search": "Buscar dados..."
   },
   "Navigation": {
