@@ -6,6 +6,7 @@ import {
   User, Store, Bell, Palette, CreditCard, Check, ChevronRight, Loader2
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 // Components
 import { ProfileSection } from '@/components/dashboard/settings/ProfileSection';
@@ -35,10 +36,27 @@ interface SettingsClientProps {
 
 export function SettingsClient({ initialProfile, initialRestaurant, locale }: SettingsClientProps) {
   const t = useTranslations('Settings');
-  
-  const [activeSection, setActiveSection] = useState<Section>('profile');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const isValidSection = (value: string | null): value is Section =>
+    !!value && ['profile', 'restaurant', 'notifications', 'appearance', 'billing'].includes(value);
+
+  const urlSection = searchParams.get('section');
+  const activeSection: Section = isValidSection(urlSection) ? urlSection : 'profile';
   const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const handleSectionChange = (section: Section) => {
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    params.set('section', section);
+
+    const queryString = params.toString();
+    const url = queryString ? `${pathname}?${queryString}` : pathname;
+
+    router.replace(url, { scroll: false });
+  };
 
   const handleUpdateProfile = async (data: UserProfileInput) => {
     startTransition(async () => {
@@ -150,7 +168,7 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
           {sectionConfig.map(({ key, icon: Icon, color, bg }) => (
             <button
               key={key}
-              onClick={() => setActiveSection(key)}
+              onClick={() => handleSectionChange(key)}
               className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-black transition-all whitespace-nowrap lg:w-full text-left group box-border border-2 ${
                 activeSection === key
                   ? `bg-white/5 border-${color.split('-')[1]}-500/30 ${color}`
