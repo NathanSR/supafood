@@ -178,7 +178,7 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
               <span className={`w-10 h-10 rounded-xl ${activeSection === key ? bg : 'bg-white/5 group-hover:bg-white/10'} ${activeSection === key ? color : 'text-slate-400'} flex items-center justify-center flex-shrink-0 transition-all`}>
                 <Icon className="w-5 h-5" />
               </span>
-              <span className="flex-1">{t(key as any)}</span>
+              <span className="flex-1">{t(key as string)}</span>
               {activeSection === key && (
                 <motion.div layoutId="active-indicator">
                   <ChevronRight className={`w-5 h-5 ${color}`} />
@@ -210,7 +210,7 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
                       <Icon className="w-6 h-6" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-black text-white">{t(activeSection as any)}</h2>
+                      <h2 className="text-xl font-black text-white">{t(activeSection as string)}</h2>
                       <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Configurações de {activeSection}</p>
                     </div>
                   </>
