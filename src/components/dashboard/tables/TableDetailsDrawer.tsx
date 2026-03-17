@@ -1,13 +1,7 @@
 'use client';
 
 import React from 'react';
-import { 
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet';
+import { Drawer } from '@/components/ui/Drawer';
 import { Button } from '@/components/ui/button';
 import { Users, MapPin, Edit2, Trash2, Coffee } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -28,10 +22,9 @@ export function TableDetailsDrawer({ table, onClose, statusConfig, onEdit, onDel
   const config = statusConfig[table.status] || statusConfig.available;
 
   return (
-    <Sheet open={!!table} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="sm:max-w-md border-none bg-card dark:bg-card overflow-y-auto no-scrollbar">
-        <div className="space-y-8 py-6">
-          <SheetHeader>
+    <Drawer isOpen={!!table} onClose={onClose} showClose={true}>
+        <div className="space-y-8 p-8">
+          <div>
             <div className="flex items-center justify-between">
               <div className={`w-16 h-16 rounded-2xl ${config.bg} flex items-center justify-center text-3xl`}>
                 🪑
@@ -40,13 +33,13 @@ export function TableDetailsDrawer({ table, onClose, statusConfig, onEdit, onDel
                 {t(config.label)}
               </span>
             </div>
-            <SheetTitle className="text-3xl font-black tracking-tight mt-4 text-foreground text-left">
+            <h2 className="text-3xl font-black tracking-tight mt-4 text-foreground text-left">
               Mesa {table.name}
-            </SheetTitle>
-            <SheetDescription className="text-slate-500 dark:text-slate-400 text-left">
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 text-left">
               Detalhes e informações da mesa
-            </SheetDescription>
-          </SheetHeader>
+            </p>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
@@ -110,7 +103,6 @@ export function TableDetailsDrawer({ table, onClose, statusConfig, onEdit, onDel
             </div>
           )}
         </div>
-      </SheetContent>
-    </Sheet>
+    </Drawer>
   );
 }

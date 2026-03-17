@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, CheckCircle2 } from 'lucide-react';
+import { Drawer } from '@/components/ui/Drawer';
+import { Edit2, CheckCircle2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
@@ -18,40 +18,22 @@ interface OrderDetailsDrawerProps {
 export function OrderDetailsDrawer({ order, onClose, statusStyles, formatter, onEdit, onUpdateStatus }: OrderDetailsDrawerProps) {
   const t = useTranslations('Orders');
 
-  return (
-    <AnimatePresence>
-      {order && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-end">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
-          />
-          <motion.div 
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="relative w-full max-w-md h-full bg-card dark:bg-card shadow-2xl p-8 overflow-y-auto no-scrollbar"
-          >
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-black text-foreground">{t('orderDetails')}</h2>
-              <button 
-                onClick={onClose} 
-                className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-foreground hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
-                aria-label="Close"
-              >
-                <Plus className="w-5 h-5 rotate-45" />
-              </button>
-            </div>
+  if (!order) return null;
+  
+  const statusStyle = statusStyles[order.status] || statusStyles.pending;
 
-            <div className="space-y-6">
+  return (
+    <Drawer 
+      isOpen={!!order} 
+      onClose={onClose} 
+      title={t('orderDetails')}
+      className="p-8"
+    >
+      <div className="space-y-6">
               <div className="p-6 rounded-3xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</span>
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${statusStyles[order.status]?.bg} ${statusStyles[order.status]?.text}`}>
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${statusStyle.bg} ${statusStyle.text}`}>
                     {t(order.status)}
                   </span>
                 </div>
@@ -114,9 +96,6 @@ export function OrderDetailsDrawer({ order, onClose, statusStyles, formatter, on
                 </button>
               </div>
             </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+    </Drawer>
   );
 }

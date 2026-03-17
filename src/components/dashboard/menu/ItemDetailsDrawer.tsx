@@ -1,13 +1,7 @@
 'use client';
 
 import React from 'react';
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle,
-  SheetDescription 
-} from '@/components/ui/sheet';
+import { Drawer } from '@/components/ui/Drawer';
 import { useTranslations } from 'next-intl';
 import { 
   Clock, 
@@ -40,13 +34,8 @@ export function ItemDetailsDrawer({ item, isOpen, onClose, onEdit, onDelete }: I
   if (!item) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-card dark:bg-card p-0">
-        <SheetHeader className="sr-only">
-          <SheetTitle>{item.name}</SheetTitle>
-          <SheetDescription>{item.description || 'Detalhes do item'}</SheetDescription>
-        </SheetHeader>
-        <div className="relative h-64 w-full">
+    <Drawer isOpen={isOpen} onClose={onClose} showClose={false}>
+      <div className="relative h-64 w-full">
           {item.image_url ? (
             <img 
               src={item.image_url} 
@@ -174,7 +163,6 @@ export function ItemDetailsDrawer({ item, isOpen, onClose, onEdit, onDelete }: I
             </button>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+    </Drawer>
   );
 }

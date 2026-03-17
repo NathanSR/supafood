@@ -1,13 +1,7 @@
 'use client';
 
 import React from 'react';
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle,
-  SheetDescription
-} from '@/components/ui/sheet';
+import { Drawer } from '@/components/ui/Drawer';
 import { useTranslations } from 'next-intl';
 import { 
   Phone, 
@@ -57,8 +51,7 @@ export function StaffDetailsDrawer({ member, isOpen, onClose, onEdit, onDelete }
   if (!member) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="sm:max-w-md overflow-y-auto no-scrollbar border-none bg-card dark:bg-card p-0">
+    <Drawer isOpen={isOpen} onClose={onClose} showClose={false}>
         {/* Header/Cover */}
         <div className="relative h-48 w-full bg-primary/5 dark:bg-primary/10">
           <div className="absolute inset-0 bg-gradient-to-t from-card dark:from-card to-transparent" />
@@ -82,20 +75,17 @@ export function StaffDetailsDrawer({ member, isOpen, onClose, onEdit, onDelete }
 
         <div className="px-8 pt-16 pb-8 space-y-8">
           {/* Main Info */}
-          <SheetHeader className="text-left space-y-1">
-            <SheetTitle className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
+          <div className="text-left space-y-1">
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
               {member.name}
-            </SheetTitle>
-            <SheetDescription className="sr-only">
-              {t('details') || 'Detalhes do funcionário'}
-            </SheetDescription>
+            </h2>
             <div className="flex items-center gap-3">
               <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg border uppercase tracking-wider ${roleColors[member.role]}`}>
                 {t(member.role as any)}
               </span>
               <span className="text-xs font-bold text-slate-400">ID: {member.id.split('-')[0].toUpperCase()}</span>
             </div>
-          </SheetHeader>
+          </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
@@ -205,7 +195,6 @@ export function StaffDetailsDrawer({ member, isOpen, onClose, onEdit, onDelete }
             </button>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+    </Drawer>
   );
 }
