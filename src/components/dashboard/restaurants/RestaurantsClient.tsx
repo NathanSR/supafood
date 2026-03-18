@@ -2,10 +2,12 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { Building2, Plus, Star, MapPin, Mail, Phone, Pencil, Trash2, X, Check, Loader2 } from 'lucide-react';
+import { Building2, Plus, Star, MapPin, Mail, Phone, Trash2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createRestaurant, updateRestaurant, deleteRestaurant, switchRestaurant } from '@/app/actions/restaurant';
+import { deleteRestaurant, switchRestaurant } from '@/app/actions/restaurant';
 import { useRouter } from '@/i18n/routing';
+import { RestaurantForm } from './RestaurantForm';
+import { RestaurantDetailsDrawer } from './RestaurantDetailsDrawer';
 
 interface Restaurant {
   id: string;
@@ -31,41 +33,22 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
   const router = useRouter();
 
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [editName, setEditName] = useState('');
+  const [editingRestaurant, setEditingRestaurant] = useState<Restaurant | null>(null);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const handleCreate = () => {
-    if (!name.trim()) return;
+  const handleDelete = (restaurant: Restaurant) => {
+    if (restaurant.is_primary) {
+      alert(t('cannotDeletePrimary'));
+      return;
+    }
+    if (!confirm(t('confirmDelete', { name: restaurant.name }))) return;
     startTransition(async () => {
-      const result = await createRestaurant({ name: name.trim(), currency: 'BRL', timezone: 'America/Sao_Paulo', language: 'pt-BR' });
-      if (!result.error) {
-        setName('');
-        setShowForm(false);
-        router.refresh();
-      }
-    });
-  };
-
-  const handleUpdate = (id: string) => {
-    if (!editName.trim()) return;
-    startTransition(async () => {
-      const result = await updateRestaurant(id, { name: editName.trim() });
-      if (!result.error) {
-        setEditingId(null);
-        router.refresh();
-      }
-    });
-  };
-
-  const handleDelete = (id: string, restaurantName: string) => {
-    if (!confirm(t('confirmDelete', { name: restaurantName }))) return;
-    startTransition(async () => {
-      const result = await deleteRestaurant(id);
+      const result = await deleteRestaurant(restaurant.id);
       if (result.error) {
         alert(result.error);
       } else {
+        setSelectedRestaurant(null);
         router.refresh();
       }
     });
@@ -76,6 +59,17 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
       await switchRestaurant(id);
       router.refresh();
     });
+  };
+
+  const handleEdit = (restaurant: Restaurant) => {
+    setSelectedRestaurant(null);
+    setEditingRestaurant(restaurant);
+  };
+
+  const handleFormClose = () => {
+    setShowForm(false);
+    setEditingRestaurant(null);
+    router.refresh();
   };
 
   const containerVariants = {
@@ -102,57 +96,13 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => setShowForm(true)}
           className="flex items-center gap-2 bg-[#FF5F15] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-[#FF5F15]/20 hover:shadow-[#FF5F15]/30 transition-all"
         >
           <Plus className="w-4 h-4" />
           {t('addRestaurant')}
         </motion.button>
       </div>
-
-      {/* Create Form */}
-      <AnimatePresence>
-        {showForm && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-white dark:bg-surface-dark rounded-2xl border border-slate-200 dark:border-white/5 p-5 shadow-sm">
-              <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-[#FF5F15]">
-                <Plus className="w-4 h-4" />
-                {t('newRestaurant')}
-              </h3>
-              <div className="flex gap-3">
-                <div className="relative flex-1">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder={t('namePlaceholder')}
-                    className="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-[#FF5F15]/20 font-semibold transition-all"
-                    onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-                  />
-                </div>
-                <button
-                  onClick={handleCreate}
-                  disabled={isPending || !name.trim()}
-                  className="bg-[#FF5F15] text-white px-5 py-2.5 rounded-xl font-bold text-sm disabled:opacity-50 transition-all hover:bg-[#FF5F15]/90"
-                >
-                  {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : gt('save')}
-                </button>
-                <button
-                  onClick={() => { setShowForm(false); setName(''); }}
-                  className="px-3 py-2.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Restaurant Cards */}
       <motion.div
@@ -163,14 +113,14 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
       >
         {initialRestaurants.map((restaurant) => {
           const isActive = activeRestaurantId === restaurant.id;
-          const isEditing = editingId === restaurant.id;
 
           return (
             <motion.div
               key={restaurant.id}
               variants={itemVariants}
               layout
-              className={`relative bg-white dark:bg-surface-dark rounded-2xl border-2 p-5 shadow-sm transition-all ${
+              onClick={() => setSelectedRestaurant(restaurant)}
+              className={`relative bg-white dark:bg-surface-dark rounded-2xl border-2 p-5 shadow-sm transition-all cursor-pointer hover:shadow-md ${
                 isActive
                   ? 'border-[#FF5F15] shadow-[#FF5F15]/10'
                   : 'border-slate-200 dark:border-white/5 hover:border-[#FF5F15]/30'
@@ -191,28 +141,10 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
               )}
 
               <div className="space-y-3 mt-1">
-                {isEditing ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="flex-1 px-3 py-1.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-sm font-bold outline-none focus:ring-2 focus:ring-[#FF5F15]/30"
-                      onKeyDown={(e) => e.key === 'Enter' && handleUpdate(restaurant.id)}
-                      autoFocus
-                    />
-                    <button onClick={() => handleUpdate(restaurant.id)} className="text-green-500 hover:text-green-600">
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button onClick={() => setEditingId(null)} className="text-slate-400 hover:text-slate-600">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <h3 className="text-base font-black flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-[#FF5F15]" />
-                    {restaurant.name}
-                  </h3>
-                )}
+                <h3 className="text-base font-black flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-[#FF5F15]" />
+                  {restaurant.name}
+                </h3>
 
                 <div className="space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
                   {restaurant.email && (
@@ -239,23 +171,16 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
                 <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-white/5">
                   {!isActive && (
                     <button
-                      onClick={() => handleSwitch(restaurant.id)}
+                      onClick={(e) => { e.stopPropagation(); handleSwitch(restaurant.id); }}
                       disabled={isPending}
                       className="flex-1 text-xs font-bold text-[#FF5F15] bg-[#FF5F15]/5 hover:bg-[#FF5F15]/10 px-3 py-2 rounded-lg transition-all"
                     >
-                      {t('switchTo')}
+                      {isPending ? <Loader2 className="w-3 h-3 animate-spin mx-auto" /> : t('switchTo')}
                     </button>
                   )}
-                  <button
-                    onClick={() => { setEditingId(restaurant.id); setEditName(restaurant.name); }}
-                    className="p-2 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all"
-                    title={gt('edit')}
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                  </button>
                   {!restaurant.is_primary && (
                     <button
-                      onClick={() => handleDelete(restaurant.id, restaurant.name)}
+                      onClick={(e) => { e.stopPropagation(); handleDelete(restaurant); }}
                       disabled={isPending}
                       className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
                       title={gt('delete')}
@@ -281,6 +206,23 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
           <p className="text-sm font-bold">{t('noRestaurants')}</p>
         </motion.div>
       )}
+
+      {/* Restaurant Form Modal */}
+      <RestaurantForm
+        isOpen={showForm || !!editingRestaurant}
+        onClose={handleFormClose}
+        initialData={editingRestaurant}
+      />
+
+      {/* Restaurant Details Drawer */}
+      <RestaurantDetailsDrawer
+        restaurant={selectedRestaurant}
+        isOpen={!!selectedRestaurant}
+        onClose={() => setSelectedRestaurant(null)}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        isActive={selectedRestaurant?.id === activeRestaurantId}
+      />
     </div>
   );
 }
