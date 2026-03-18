@@ -11,13 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Settings, Building2 } from 'lucide-react';
+import { LogOut, Settings, Building2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, useRouter } from '@/i18n/routing';
 import { logout } from '@/app/actions/auth';
+import { switchRestaurant } from '@/app/actions/restaurant';
 import { useParams } from 'next/navigation';
 
-export function UserAvatar({ user }: { user: any }) {
+export function UserAvatar({ user, restaurants, activeRestaurant }: { user: any, restaurants?: any[], activeRestaurant?: any }) {
   const t = useTranslations('Profile');
   const router = useRouter();
   const params = useParams();
@@ -31,6 +32,10 @@ export function UserAvatar({ user }: { user: any }) {
 
   const handleLogout = async () => {
     await logout(locale);
+  };
+
+  const handleSwitchRestaurant = async (id: string) => {
+    await switchRestaurant(id);
   };
 
   return (
@@ -58,10 +63,28 @@ export function UserAvatar({ user }: { user: any }) {
             <span>{t('settings')}</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="focus:bg-white/5 focus:text-primary rounded-lg cursor-pointer py-3 transition-colors">
-          <Building2 className="mr-2 h-4 w-4" />
-          <span>{t('switchUnit')}</span>
-        </DropdownMenuItem>
+        {restaurants && restaurants.length > 0 && (
+          <>
+            <DropdownMenuLabel className="font-normal px-2 py-2 text-xs text-slate-400">
+              {t('switchUnit')}
+            </DropdownMenuLabel>
+            {restaurants.map((restaurant) => (
+              <DropdownMenuItem 
+                key={restaurant.id}
+                onClick={() => handleSwitchRestaurant(restaurant.id)}
+                className="focus:bg-white/5 focus:text-primary rounded-lg cursor-pointer py-2 transition-colors flex items-center justify-between"
+              >
+                <div className="flex items-center">
+                  <Building2 className="mr-2 h-4 w-4" />
+                  <span className={activeRestaurant?.id === restaurant.id ? "font-bold text-primary" : ""}>
+                    {restaurant.name}
+                  </span>
+                </div>
+                {activeRestaurant?.id === restaurant.id && <Check className="h-4 w-4 text-primary" />}
+              </DropdownMenuItem>
+            ))}
+          </>
+        )}
         <DropdownMenuSeparator className="bg-white/5" />
         <DropdownMenuItem 
           onClick={handleLogout}

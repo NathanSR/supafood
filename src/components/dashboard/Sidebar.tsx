@@ -12,6 +12,7 @@ import {
   BookOpen,
   Users,
   LayoutGrid,
+  Building2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, usePathname } from '@/i18n/routing';
@@ -45,6 +46,7 @@ const navGroups: NavGroup[] = [
     items: [
       { name: 'Menu', href: '/menu', icon: BookOpen, key: 'menu' },
       { name: 'Staff', href: '/staff', icon: Users, key: 'staff' },
+      { name: 'Restaurants', href: '/restaurants', icon: Building2, key: 'restaurants' },
       { name: 'Analytics', href: '/analytics', icon: TrendingUp, key: 'analytics' },
     ],
   },

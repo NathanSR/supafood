@@ -33,6 +33,7 @@
     "settings": "Configurações",
     "staff": "Equipe",
     "tables": "Mesas",
+    "restaurants": "Unidades",
     "groupOperations": "Operações",
     "groupManagement": "Gerenciamento",
     "groupSystem": "Sistema"
@@ -316,5 +317,26 @@
     "positiveNumber": "O valor deve ser maior que zero",
     "fileTooLarge": "O arquivo é muito grande (máx {size}MB)",
     "invalidFileType": "Tipo de arquivo inválido. Permitidos: {types}"
+  },
+  "Onboarding": {
+    "title": "Bem-vindo ao Supafood",
+    "subtitle": "Para começar, crie o seu primeiro restaurante.",
+    "restaurantNameLabel": "Nome do Restaurante",
+    "restaurantNamePlaceholder": "Ex: Pizzaria do João",
+    "createButton": "Criar Restaurante",
+    "logoutButton": "Sair da conta",
+    "errorGeneric": "Ocorreu um erro. Tente novamente."
+  },
+  "Restaurants": {
+    "title": "Gerenciar Unidades",
+    "subtitle": "Gerencie todas as unidades do seu restaurante",
+    "addRestaurant": "Nova Unidade",
+    "newRestaurant": "Nova Unidade",
+    "namePlaceholder": "Nome da unidade...",
+    "active": "Ativa",
+    "switchTo": "Ativar esta unidade",
+    "noRestaurants": "Nenhuma unidade cadastrada",
+    "confirmDelete": "Deseja realmente excluir '{name}'?",
+    "cannotDeletePrimary": "Não é possível excluir a unidade principal"
   }
 }

@@ -145,7 +145,8 @@ export async function updateMenuItem(id: string, data: any) {
     updates.image_url = image_url
   }
 
-  const { error } = await supabase.from('menu_items').update(updates).eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('menu_items').update(updates).eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/menu', 'page')
   return { success: true }
@@ -153,7 +154,8 @@ export async function updateMenuItem(id: string, data: any) {
 
 export async function deleteMenuItem(id: string) {
   const supabase = await createClient()
-  const { error } = await supabase.from('menu_items').delete().eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('menu_items').delete().eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/menu', 'page')
   return { success: true }
@@ -293,7 +295,8 @@ export async function updateStaffMember(id: string, updates: any) {
     data.full_name = data.name
     delete data.name
   }
-  const { error } = await supabase.from('staff').update(data).eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('staff').update(data).eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/staff', 'page')
   return { success: true }
@@ -301,7 +304,8 @@ export async function updateStaffMember(id: string, updates: any) {
 
 export async function deleteStaffMember(id: string) {
   const supabase = await createClient()
-  const { error } = await supabase.from('staff').delete().eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('staff').delete().eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/staff', 'page')
   return { success: true }
@@ -338,7 +342,8 @@ export async function updateTable(id: string, updates: any) {
     data.number = data.name
     delete data.name
   }
-  const { error } = await supabase.from('tables').update(data).eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('tables').update(data).eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/tables', 'page')
   return { success: true }
@@ -346,7 +351,8 @@ export async function updateTable(id: string, updates: any) {
 
 export async function deleteTable(id: string) {
   const supabase = await createClient()
-  const { error } = await supabase.from('tables').delete().eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('tables').delete().eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/tables', 'page')
   return { success: true }
@@ -368,7 +374,7 @@ export async function getRestaurantSettings() {
 
   if (restaurantId) {
     const { data, error } = await supabase
-      .from('restaurant_settings')
+      .from('restaurants')
       .select('*')
       .eq('id', restaurantId)
       .maybeSingle()
@@ -382,7 +388,7 @@ export async function getRestaurantSettings() {
   if (!user) return null
 
   const { data, error } = await supabase
-    .from('restaurant_settings')
+    .from('restaurants')
     .select('*')
     .eq('owner_id', user.id)
     .limit(1)
@@ -398,7 +404,7 @@ export async function getAllRestaurants() {
   if (!user) return []
 
   const { data, error } = await supabase
-    .from('restaurant_settings')
+    .from('restaurants')
     .select('*')
     .eq('owner_id', user.id)
     .order('name')
@@ -412,16 +418,83 @@ export async function createRestaurant(data: any) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Unauthorized' }
 
+  // Check if they already have restaurants
+  const { count } = await supabase
+    .from('restaurants')
+    .select('*', { count: 'exact', head: true })
+    .eq('owner_id', user.id)
+
+  const isPrimary = count === 0
+
   const { error, data: restaurant } = await supabase
-    .from('restaurant_settings')
-    .insert({ ...data, owner_id: user.id })
+    .from('restaurants')
+    .insert({ ...data, owner_id: user.id, is_primary: isPrimary })
     .select()
     .single()
 
   if (error) return { error: error.message }
   
-  revalidatePath('/[locale]/(dashboard)/settings', 'page')
+  // Auto-switch to the newly created restaurant
+  const cookieStore = await cookies()
+  cookieStore.set('active_restaurant_id', restaurant.id, { 
+    path: '/',
+    maxAge: 60 * 60 * 24 * 30
+  })
+
+  revalidatePath('/', 'layout')
   return { success: true, restaurant }
+}
+
+export async function updateRestaurant(id: string, data: any) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  const { error } = await supabase
+    .from('restaurants')
+    .update(data)
+    .eq('id', id)
+    .eq('owner_id', user.id)
+
+  if (error) return { error: error.message }
+  
+  revalidatePath('/', 'layout')
+  return { success: true }
+}
+
+export async function deleteRestaurant(id: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  // Prevent deleting the primary restaurant
+  const { data: restaurant } = await supabase
+    .from('restaurants')
+    .select('is_primary')
+    .eq('id', id)
+    .single()
+
+  if (restaurant?.is_primary) {
+    return { error: 'Cannot delete the primary restaurant' }
+  }
+
+  const { error } = await supabase
+    .from('restaurants')
+    .delete()
+    .eq('id', id)
+    .eq('owner_id', user.id)
+
+  if (error) return { error: error.message }
+  
+  // If deleted restaurant was active, clear cookie
+  const cookieStore = await cookies()
+  const activeId = cookieStore.get('active_restaurant_id')?.value
+  if (activeId === id) {
+    cookieStore.delete('active_restaurant_id')
+  }
+
+  revalidatePath('/', 'layout')
+  return { success: true }
 }
 
 export async function switchRestaurant(id: string) {
@@ -441,7 +514,7 @@ export async function updateRestaurantSettings(data: any) {
   if (!restaurantId) return { error: 'No active restaurant' }
   
   const { error } = await supabase
-    .from('restaurant_settings')
+    .from('restaurants')
     .update(data)
     .eq('id', restaurantId)
 
@@ -453,7 +526,8 @@ export async function updateRestaurantSettings(data: any) {
 
 export async function updateOrderStatus(id: string, status: string) {
   const supabase = await createClient()
-  const { error } = await supabase.from('orders').update({ status }).eq('id', id)
+  const restaurantId = await getActiveRestaurantId()
+  const { error } = await supabase.from('orders').update({ status }).eq('id', id).eq('restaurant_id', restaurantId)
   if (error) return { error: error.message }
   revalidatePath('/[locale]/(dashboard)/orders', 'page')
   return { success: true }

@@ -33,6 +33,7 @@
     "settings": "Settings",
     "staff": "Staff",
     "tables": "Tables",
+    "restaurants": "Restaurants",
     "groupOperations": "Operations",
     "groupManagement": "Management",
     "groupSystem": "System"
@@ -316,5 +317,26 @@
     "positiveNumber": "Value must be greater than zero",
     "fileTooLarge": "File is too large (max {size}MB)",
     "invalidFileType": "Invalid file type. Allowed: {types}"
+  },
+  "Onboarding": {
+    "title": "Welcome to Supafood",
+    "subtitle": "To get started, create your first restaurant.",
+    "restaurantNameLabel": "Restaurant Name",
+    "restaurantNamePlaceholder": "e.g. Joe's Pizzeria",
+    "createButton": "Create Restaurant",
+    "logoutButton": "Log out",
+    "errorGeneric": "Something went wrong. Please try again."
+  },
+  "Restaurants": {
+    "title": "Manage Restaurants",
+    "subtitle": "Manage all your restaurant branches",
+    "addRestaurant": "New Branch",
+    "newRestaurant": "New Branch",
+    "namePlaceholder": "Branch name...",
+    "active": "Active",
+    "switchTo": "Switch to this branch",
+    "noRestaurants": "No branches found",
+    "confirmDelete": "Are you sure you want to delete '{name}'?",
+    "cannotDeletePrimary": "Cannot delete the primary restaurant"
   }
 }

@@ -23,6 +23,14 @@ export const userProfileSchema = z.object({
   avatar: z.any().optional(),
 });
 
+export const onboardingRestaurantSchema = z.object({
+  name: z.string().nonempty('required').min(3, { message: 'minLength' }),
+  currency: z.string(),
+  timezone: z.string(),
+  language: z.string(),
+});
+
 export type RestaurantSettingsInput = z.infer<typeof restaurantSettingsSchema>;
+export type OnboardingRestaurantInput = z.infer<typeof onboardingRestaurantSchema>;
 export type PasswordInput = z.infer<typeof passwordSchema>;
 export type UserProfileInput = z.infer<typeof userProfileSchema>;

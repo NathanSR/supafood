@@ -4,6 +4,7 @@ import { Header } from '@/components/dashboard/Header';
 import { SidebarProvider } from '@/context/SidebarContext';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { getAllRestaurants, getRestaurantSettings } from '@/app/actions/restaurant';
 
 export default async function DashboardLayout({
   children,
@@ -21,11 +22,19 @@ export default async function DashboardLayout({
     redirect(`/${locale}/login`);
   }
 
+  const restaurants = await getAllRestaurants();
+  
+  if (restaurants.length === 0) {
+    redirect(`/${locale}/onboarding`);
+  }
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single();
+
+  const activeRestaurant = await getRestaurantSettings();
 
   return (
     <SidebarProvider>
@@ -34,7 +43,7 @@ export default async function DashboardLayout({
           <Sidebar />
         </div>
         <main className="flex-1 overflow-y-auto flex flex-col">
-          <Header user={{ ...user, profile }} />
+          <Header user={{ ...user, profile }} restaurants={restaurants} activeRestaurant={activeRestaurant} />
           <div className="flex-1">
             {children}
           </div>
