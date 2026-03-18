@@ -3,15 +3,23 @@ import { StatsOverview } from '@/components/dashboard/StatsOverview';
 import { LiveOrders } from '@/components/dashboard/LiveOrders';
 import { TopSellingItems } from '@/components/dashboard/TopSellingItems';
 import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
+  const cookieStore = await cookies();
+  const restaurantId = cookieStore.get('active_restaurant_id')?.value;
 
-  // Fetch real data
-  // For demo purposes, we'll calculate some stats from the orders table
-  const { data: orders } = await supabase
+  // Fetch orders scoped to the active restaurant
+  let query = supabase
     .from('orders')
-    .select('*, tables(number), order_items(*, menu_items(*))')
+    .select('*, tables(number), order_items(*, menu_items(*))');
+
+  if (restaurantId) {
+    query = query.eq('restaurant_id', restaurantId);
+  }
+
+  const { data: orders } = await query
     .order('created_at', { ascending: false })
     .limit(10);
 
