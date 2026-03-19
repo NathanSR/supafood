@@ -71,7 +71,7 @@ export async function createMenuItem(formData: FormData) {
 
   if (imageFile && imageFile.size > 0) {
     const fileExt = imageFile.name.split('.').pop()
-    const filePath = `${Math.random()}.${fileExt}`
+    const filePath = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
     const { error: uploadError } = await supabase.storage
       .from('menu-items')
       .upload(filePath, imageFile)
@@ -124,10 +124,47 @@ export async function updateMenuItem(id: string, data: any) {
       is_spicy: formData.get('is_spicy') === 'on',
     }
 
+    const shouldRemoveImage = formData.get('remove_image') === 'true'
+
+    // If removing image, delete from storage and set null
+    if (shouldRemoveImage) {
+      // Get current item to find existing image URL
+      const { data: currentItem } = await supabase
+        .from('menu_items')
+        .select('image_url')
+        .eq('id', id)
+        .single()
+
+      if (currentItem?.image_url) {
+        // Extract file path from the public URL
+        const urlParts = currentItem.image_url.split('/menu-items/')
+        if (urlParts.length > 1) {
+          const filePath = urlParts[urlParts.length - 1]
+          await supabase.storage.from('menu-items').remove([filePath])
+        }
+      }
+      updates.image_url = null
+    }
+
     const imageFile = formData.get('image') as File
     if (imageFile && imageFile.size > 0) {
+      // Delete old image if exists before uploading new one
+      const { data: currentItem } = await supabase
+        .from('menu_items')
+        .select('image_url')
+        .eq('id', id)
+        .single()
+
+      if (currentItem?.image_url) {
+        const urlParts = currentItem.image_url.split('/menu-items/')
+        if (urlParts.length > 1) {
+          const filePath = urlParts[urlParts.length - 1]
+          await supabase.storage.from('menu-items').remove([filePath])
+        }
+      }
+
       const fileExt = imageFile.name.split('.').pop()
-      const filePath = `${Math.random()}.${fileExt}`
+      const filePath = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
       const { error: uploadError } = await supabase.storage
         .from('menu-items')
         .upload(filePath, imageFile)
@@ -136,12 +173,12 @@ export async function updateMenuItem(id: string, data: any) {
         const { data: { publicUrl } } = supabase.storage
           .from('menu-items')
           .getPublicUrl(filePath)
-        image_url = publicUrl
+        updates.image_url = publicUrl
       }
     }
   }
 
-  if (image_url) {
+  if (image_url && !updates.image_url) {
     updates.image_url = image_url
   }
 

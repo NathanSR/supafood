@@ -147,7 +147,9 @@
     "categoryName": "Category Name",
     "image": "Image",
     "uploadImage": "Upload Image",
-    "spicy": "Spicy"
+    "spicy": "Spicy",
+    "removeImage": "Remove Image",
+    "dragOrClick": "Drag & drop or click to browse"
   },
   "Analytics": {
     "title": "Analytics",

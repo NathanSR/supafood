@@ -147,7 +147,9 @@
     "categoryName": "Nome da Categoria",
     "image": "Imagem",
     "uploadImage": "Carregar Imagem",
-    "spicy": "Pimenta/Picante"
+    "spicy": "Pimenta/Picante",
+    "removeImage": "Remover Imagem",
+    "dragOrClick": "Arraste ou clique para selecionar"
   },
   "Analytics": {
     "title": "Análise",
