@@ -9,9 +9,10 @@ export async function getOrders(options?: {
   status?: string;
   page?: number;
   limit?: number;
+  today?: boolean;
 }) {
   const supabase = await createClient()
-  const { query, status, page = 1, limit = 10 } = options || {}
+  const { query, status, page = 1, limit = 10, today = false } = options || {}
   const restaurantId = await getActiveRestaurantId()
 
   if (!restaurantId) return { 
@@ -21,10 +22,18 @@ export async function getOrders(options?: {
   }
 
   // 1. Get counts for status badges
-  const { data: countsData } = await supabase
+  let countsQuery = supabase
     .from('orders')
     .select('status')
     .eq('restaurant_id', restaurantId)
+
+  if (today) {
+    const startOfDay = new Date()
+    startOfDay.setHours(0, 0, 0, 0)
+    countsQuery = countsQuery.gte('created_at', startOfDay.toISOString())
+  }
+
+  const { data: countsData } = await countsQuery
     
   const tabCounts: Record<string, number> = {
     all: countsData?.length || 0,
@@ -43,6 +52,12 @@ export async function getOrders(options?: {
 
   if (status && status !== 'all') {
     dbQuery = dbQuery.eq('status', status)
+  }
+
+  if (today) {
+    const startOfDay = new Date()
+    startOfDay.setHours(0, 0, 0, 0)
+    dbQuery = dbQuery.gte('created_at', startOfDay.toISOString())
   }
 
   if (query) {

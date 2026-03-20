@@ -69,6 +69,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
 
   const activeTab = (searchParams.get('status') as OrderStatus) || 'all';
   const query = searchParams.get('query') || '';
+  const isToday = searchParams.get('today') === 'true';
   const [localSearch, setLocalSearch] = useState(query);
 
   const createQueryString = (params: Record<string, string | null>) => {
@@ -115,6 +116,10 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
 
   const handleTabChange = (status: OrderStatus) => {
     router.push(`${pathname}?${createQueryString({ status: status === 'all' ? null : status, page: '1' })}`);
+  };
+
+  const handleTodayToggle = () => {
+    router.push(`${pathname}?${createQueryString({ today: isToday ? null : 'true', page: '1' })}`);
   };
 
   const handlePageChange = (page: number) => {
@@ -220,20 +225,31 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
             className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-white/5 border-none rounded-2xl text-sm outline-none focus:ring-2 focus:ring-primary/30 transition-all font-medium"
           />
         </div>
-        <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+        <div className="flex items-center gap-3 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-white/5 rounded-xl border border-transparent focus-within:border-primary/30 transition-all min-w-[160px]">
+            <Filter className="w-4 h-4 text-primary shrink-0" />
+            <select
+              value={activeTab}
+              onChange={(e) => handleTabChange(e.target.value as OrderStatus)}
+              className="w-full bg-transparent border-none outline-none cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-400 py-1"
+            >
+              {tabs.map(tab => (
+                <option key={tab} value={tab} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                  {t(tab as any)} ({tabCounts[tab]})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="h-6 w-px bg-slate-100 dark:bg-white/10 mx-1 hidden lg:block" />
+
           <button
-            onClick={() => handleTabChange('all')}
-            className={`px-6 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeTab === 'all'
+            onClick={handleTodayToggle}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${isToday
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10'
+                : 'text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10'
               }`}
           >
-            {t('all')} ({tabCounts.all})
-          </button>
-
-          <div className="h-6 w-px bg-slate-100 dark:bg-white/10 mx-2 hidden lg:block" />
-
-          <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 transition-all">
             <Calendar className="w-4 h-4" />
             {t('today')}
           </button>

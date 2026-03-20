@@ -7,9 +7,9 @@ import { OrdersClient } from '@/components/dashboard/orders/OrdersClient';
 export default async function OrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string; status?: string; page?: string }>;
+  searchParams: Promise<{ query?: string; status?: string; page?: string; today?: string }>;
 }) {
-  const { query, status, page } = await searchParams;
+  const { query, status, page, today } = await searchParams;
   const currentPage = parseInt(page || '1');
   const pageSize = 10;
   
@@ -18,7 +18,8 @@ export default async function OrdersPage({
     query,
     status,
     page: currentPage,
-    limit: pageSize
+    limit: pageSize,
+    today: today === 'true'
   });
 
   // 2. Fetch tables and menu items for the new order form (filtered by restaurant_id in actions)
