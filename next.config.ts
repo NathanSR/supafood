@@ -16,6 +16,16 @@ const nextConfig: NextConfig = {
   },
   // Ensure we use standalone output for potential simpler deployments (optional)
   // output: 'standalone',
+  experimental: {
+    // No Next.js 16+, perfis de cache customizados devem ser registrados aqui
+    cacheLife: {
+      layout: {
+        stale: 3600,    // Tempo em segundos que o dado é considerado 'fresco' (1 hora)
+        revalidate: 86400, // Tempo para revalidação total (24 horas)
+        expire: 604800,   // Tempo máximo de vida no cache (1 semana)
+      },
+    },
+  },
 };
 
 export default withNextIntl(nextConfig);
