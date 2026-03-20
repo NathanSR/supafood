@@ -171,7 +171,7 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
               onClick={() => handleSectionChange(key)}
               className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-black transition-all whitespace-nowrap lg:w-full text-left group box-border border-2 ${activeSection === key
                 ? `bg-white/5 border-${color.split('-')[1]}-500/30 ${color}`
-                : 'bg-transparent border-transparent text-slate-500 dark:text-slate-400 hover:bg-white/5 hover:text-white'
+                : 'bg-transparent border-transparent text-slate-500 dark:text-slate-400 hover:bg-white/5 hover:text-primary'
                 }`}
             >
               <span className={`w-10 h-10 rounded-xl ${activeSection === key ? bg : 'bg-white/5 group-hover:bg-white/10'} ${activeSection === key ? color : 'text-slate-400'} flex items-center justify-center flex-shrink-0 transition-all`}>

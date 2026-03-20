@@ -42,7 +42,11 @@
     "settings": "Account Settings",
     "switchUnit": "Switch Unit",
     "logout": "Logout",
-    "manager": "General Manager"
+    "manager": "General Manager",
+    "admin": "Super Admin",
+    "chef": "Head Chef",
+    "waiter": "Server",
+    "defaultUser": "User"
   },
   "General": {
     "minsAgo": "{mins} mins ago",

@@ -42,7 +42,11 @@
     "settings": "Configurações da Conta",
     "switchUnit": "Trocar Unidade",
     "logout": "Sair",
-    "manager": "Gerente Geral"
+    "manager": "Gerente Geral",
+    "admin": "Super Administrador",
+    "chef": "Chef de Cozinha",
+    "waiter": "Garçom",
+    "defaultUser": "Usuário"
   },
   "General": {
     "minsAgo": "{mins} min atrás",
