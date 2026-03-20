@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createRestaurant, updateRestaurant } from '@/app/actions/restaurant';
+import { createRestaurant, updateRestaurant } from '@/lib/actions/restaurant';
 import { Loader2, X, Building2, Mail, Phone, MapPin, Globe, Clock, DollarSign } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 
@@ -82,7 +82,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
           <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('name')}</label>
           <div className="relative">
             <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <input 
+            <input
               name="name"
               defaultValue={initialData?.name}
               required
@@ -97,7 +97,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('email')}</label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <input 
+              <input
                 name="email"
                 type="email"
                 defaultValue={initialData?.email}
@@ -110,7 +110,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('phone')}</label>
             <div className="relative">
               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <input 
+              <input
                 name="phone"
                 defaultValue={initialData?.phone}
                 placeholder="(00) 00000-0000"
@@ -124,7 +124,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
           <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('address')}</label>
           <div className="relative">
             <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <input 
+            <input
               name="address"
               defaultValue={initialData?.address}
               placeholder={t('addressPlaceholder')}
@@ -138,7 +138,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('currency')}</label>
             <div className="relative">
               <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <select 
+              <select
                 name="currency"
                 defaultValue={initialData?.currency || 'BRL'}
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
@@ -153,7 +153,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('timezone')}</label>
             <div className="relative">
               <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <select 
+              <select
                 name="timezone"
                 defaultValue={initialData?.timezone || 'America/Sao_Paulo'}
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
@@ -168,7 +168,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('language')}</label>
             <div className="relative">
               <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <select 
+              <select
                 name="language"
                 defaultValue={initialData?.language || 'pt-BR'}
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
@@ -182,14 +182,14 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
         </div>
 
         <div className="pt-4 flex items-center gap-4">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 dark:border-white/10 font-bold hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-sm"
           >
             {t('cancel')}
           </button>
-          <button 
+          <button
             type="submit"
             disabled={isPending}
             className="flex-[2] px-6 py-4 rounded-2xl bg-primary text-white font-bold shadow-xl shadow-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:scale-100 text-sm"

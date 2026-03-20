@@ -1,6 +1,6 @@
 import React from 'react';
 import { StaffClient } from '@/components/dashboard/staff/StaffClient';
-import { getStaff } from '@/app/actions/restaurant';
+import { getStaff } from '@/lib/actions/restaurant';
 
 export default async function StaffPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -20,8 +20,8 @@ export default async function StaffPage(props: {
 
   return (
     <div className="p-4 md:p-8 space-y-6">
-      <StaffClient 
-        initialStaff={staff} 
+      <StaffClient
+        initialStaff={staff}
         totalCount={total}
         totalPages={totalPages}
         currentPage={page}

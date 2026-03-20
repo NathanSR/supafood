@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useCallback, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Plus, 
-  Edit2, 
-  Trash2, 
+import {
+  Search,
+  Plus,
+  Edit2,
+  Trash2,
   ToggleLeft,
   ToggleRight,
   Star,
@@ -19,7 +19,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { deleteMenuItem, updateMenuItem, getMenuItems } from '@/app/actions/restaurant';
+import { deleteMenuItem, updateMenuItem, getMenuItems } from '@/lib/actions/restaurant';
 import { MenuItemForm } from './MenuItemForm';
 import { CategoryForm } from './CategoryForm';
 import { ItemDetailsDrawer } from './ItemDetailsDrawer';
@@ -34,7 +34,7 @@ interface MenuClientProps {
 export function MenuClient({ initialCategories, initialItems, initialTotal, initialPages }: MenuClientProps) {
   const t = useTranslations('Menu');
   const g = useTranslations('General');
-  
+
   // State for filters and pagination
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [search, setSearch] = useState('');
@@ -46,7 +46,7 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
   const [items, setItems] = useState(initialItems);
   const [total, setTotal] = useState(initialTotal);
   const [totalPages, setTotalPages] = useState(initialPages);
-  
+
   const [isPending, startTransition] = useTransition();
   const [isFetching, setIsFetching] = useState(false);
 
@@ -122,14 +122,14 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
           <p className="text-slate-500 dark:text-slate-400 mt-1">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => setIsCategoryModalOpen(true)}
             className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 text-sm font-bold shadow-sm hover:border-primary/50 hover:text-primary transition-all active:scale-95"
           >
             <Plus className="w-4 h-4" />
             {t('addCategory')}
           </button>
-          <button 
+          <button
             onClick={() => {
               setEditingItem(null);
               setIsItemModalOpen(true);
@@ -164,16 +164,15 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
           />
         </div>
         <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 md:pb-0">
-           <button
+          <button
             onClick={() => {
               setActiveCategory('all');
               setPage(1);
             }}
-            className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${
-              activeCategory === 'all'
+            className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${activeCategory === 'all'
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
                 : 'bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10'
-            }`}
+              }`}
           >
             {t('all')}
           </button>
@@ -184,11 +183,10 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
                 setActiveCategory(cat.id);
                 setPage(1);
               }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${
-                activeCategory === cat.id
+              className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${activeCategory === cat.id
                   ? 'bg-primary text-white shadow-lg shadow-primary/20'
                   : 'bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10'
-              }`}
+                }`}
             >
               <span className="text-base">{cat.emoji || '🍽️'}</span>
               {cat.name}
@@ -207,10 +205,10 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
 
         {isPending && (
           <div className="fixed inset-0 bg-black/10 backdrop-blur-[2px] z-[110] flex items-center justify-center">
-             <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
-               <Loader2 className="w-10 h-10 animate-spin text-primary" />
-               <p className="text-sm font-bold text-slate-600 dark:text-slate-300">Atualizando...</p>
-             </div>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
+              <Loader2 className="w-10 h-10 animate-spin text-primary" />
+              <p className="text-sm font-bold text-slate-600 dark:text-slate-300">Atualizando...</p>
+            </div>
           </div>
         )}
 
@@ -232,27 +230,27 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-5xl">🍽️</div>
                   )}
-                  
+
                   <div className="absolute top-4 right-4 flex flex-col gap-2 translate-x-12 group-hover:translate-x-0 transition-transform duration-500">
-                    <button 
-                       onClick={() => {
-                          setSelectedItem(item);
-                          setIsDetailsOpen(true);
-                        }}
+                    <button
+                      onClick={() => {
+                        setSelectedItem(item);
+                        setIsDetailsOpen(true);
+                      }}
                       className="w-10 h-10 rounded-full bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-lg flex items-center justify-center text-slate-600 dark:text-slate-200 hover:bg-primary hover:text-white transition-all transform hover:rotate-12"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
-                    <button 
-                       onClick={() => {
-                          setEditingItem(item);
-                          setIsItemModalOpen(true);
-                        }}
+                    <button
+                      onClick={() => {
+                        setEditingItem(item);
+                        setIsItemModalOpen(true);
+                      }}
                       className="w-10 h-10 rounded-full bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-lg flex items-center justify-center text-slate-600 dark:text-slate-200 hover:bg-primary hover:text-white transition-all transform hover:rotate-12"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(item.id)}
                       className="w-10 h-10 rounded-full bg-white/90 dark:bg-black/80 backdrop-blur-md shadow-lg flex items-center justify-center text-slate-600 dark:text-slate-200 hover:bg-red-500 hover:text-white transition-all transform hover:-rotate-12"
                     >
@@ -302,11 +300,10 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
 
                   <button
                     onClick={() => handleToggleAvailability(item.id, item.is_available)}
-                    className={`w-full mt-2 py-3.5 rounded-2xl flex items-center justify-center gap-3 font-bold transition-all border ${
-                      item.is_available 
-                        ? 'bg-green-500/5 text-green-600 border-green-500/10 hover:bg-green-500 hover:text-white hover:shadow-lg hover:shadow-green-500/20' 
+                    className={`w-full mt-2 py-3.5 rounded-2xl flex items-center justify-center gap-3 font-bold transition-all border ${item.is_available
+                        ? 'bg-green-500/5 text-green-600 border-green-500/10 hover:bg-green-500 hover:text-white hover:shadow-lg hover:shadow-green-500/20'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-200'
-                    }`}
+                      }`}
                   >
                     {item.is_available ? <ToggleRight className="w-6 h-6" /> : <ToggleLeft className="w-6 h-6" />}
                     {item.is_available ? t('available') : t('unavailable')}
@@ -351,11 +348,10 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
                 <button
                   key={p}
                   onClick={() => setPage(p)}
-                  className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
-                    page === p
+                  className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${page === p
                       ? 'bg-primary text-white shadow-lg shadow-primary/20'
                       : 'bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-primary hover:text-primary'
-                  }`}
+                    }`}
                 >
                   {p}
                 </button>
@@ -373,7 +369,7 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
       )}
 
       {/* Forms & Drawers */}
-      <MenuItemForm 
+      <MenuItemForm
         isOpen={isItemModalOpen}
         categories={initialCategories}
         initialData={editingItem}
@@ -384,12 +380,12 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
         }}
       />
 
-      <CategoryForm 
+      <CategoryForm
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
       />
 
-      <ItemDetailsDrawer 
+      <ItemDetailsDrawer
         item={selectedItem}
         isOpen={isDetailsOpen}
         onClose={() => {

@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { createOrder, addItemsToOrder } from '@/app/actions/restaurant';
+import { createOrder, addItemsToOrder } from '@/lib/actions/restaurant';
 import { Loader2, X, ShoppingCart, Trash2, Plus, Minus, Search, Utensils, User, MapPin, CreditCard, PlusCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Modal } from '@/components/ui/Modal';
@@ -87,7 +87,7 @@ export function OrderForm({ tables, menuItems, onClose, isOpen, initialOrder }: 
       if (initialOrder) {
         const newTotal = (initialOrder.total_amount || 0) + total;
         const result = await addItemsToOrder(
-          initialOrder.id, 
+          initialOrder.id,
           selectedItems.map(i => ({ id: i.id, quantity: i.quantity, price: i.price })),
           newTotal
         );
@@ -281,13 +281,13 @@ export function OrderForm({ tables, menuItems, onClose, isOpen, initialOrder }: 
 
               {initialOrder ? (
                 <div className="p-4 bg-primary/5 border border-primary/10 rounded-2xl flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <PlusCircle className="w-5 h-5" />
-                   </div>
-                   <div>
-                      <p className="text-[10px] font-black uppercase text-primary tracking-widest leading-none mb-1">Modo Adição</p>
-                      <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400">Adicionando novos itens ao pedido #{initialOrder.orderNumber}</p>
-                   </div>
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <PlusCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase text-primary tracking-widest leading-none mb-1">Modo Adição</p>
+                    <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400">Adicionando novos itens ao pedido #{initialOrder.orderNumber}</p>
+                  </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-4">

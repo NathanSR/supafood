@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { signup } from '@/app/actions/auth';
+import { signup } from '@/lib/actions/auth';
 import { useParams } from 'next/navigation';
 import { Loader2, Camera, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -47,11 +47,11 @@ export default function RegisterPage() {
     formData.append('fullName', data.fullName);
     formData.append('email', data.email);
     formData.append('password', data.password);
-    
+
     if (data.avatar && data.avatar[0]) {
       formData.append('avatar', data.avatar[0]);
     }
-    
+
     startTransition(async () => {
       const result = await signup(formData, locale);
       if (result?.error) {
@@ -64,13 +64,13 @@ export default function RegisterPage() {
     <div>
       <h1 className="text-2xl font-bold text-center mb-6">{t('registerTitle')}</h1>
       <p className="text-slate-500 text-center -mt-4 mb-6">{t('registerSubtitle')}</p>
-      
+
       {serverError && (
         <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded-lg text-sm mb-4">
           {serverError}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Avatar Upload */}
         <div className="flex flex-col items-center gap-4 mb-6">
@@ -83,11 +83,11 @@ export default function RegisterPage() {
             </Avatar>
             <label className="absolute bottom-0 right-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:scale-110 transition-transform">
               <Camera className="w-4 h-4" />
-              <input 
+              <input
                 {...register('avatar')}
-                type="file" 
-                accept="image/*" 
-                className="hidden" 
+                type="file"
+                accept="image/*"
+                className="hidden"
               />
             </label>
           </div>
@@ -96,11 +96,11 @@ export default function RegisterPage() {
 
         <div>
           <label className="block text-sm font-medium mb-1">{t('name')}</label>
-          <input 
+          <input
             {...register('fullName')}
-            type="text" 
-            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100" 
-            placeholder="John Doe" 
+            type="text"
+            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100"
+            placeholder="John Doe"
           />
           {errors.fullName && (
             <p className="text-red-500 text-xs mt-1">
@@ -110,11 +110,11 @@ export default function RegisterPage() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">{t('email')}</label>
-          <input 
+          <input
             {...register('email')}
-            type="email" 
-            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100" 
-            placeholder="john@example.com" 
+            type="email"
+            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100"
+            placeholder="john@example.com"
           />
           {errors.email && (
             <p className="text-red-500 text-xs mt-1">
@@ -124,11 +124,11 @@ export default function RegisterPage() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">{t('password')}</label>
-          <input 
+          <input
             {...register('password')}
-            type="password" 
-            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100" 
-            placeholder="••••••••" 
+            type="password"
+            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100"
+            placeholder="••••••••"
           />
           {errors.password && (
             <p className="text-red-500 text-xs mt-1">
@@ -136,8 +136,8 @@ export default function RegisterPage() {
             </p>
           )}
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isPending || isSubmitting}
           className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
         >

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 import { MenuClient } from '@/components/dashboard/menu/MenuClient';
-import { getMenuItems } from '@/app/actions/restaurant';
+import { getMenuItems } from '@/lib/actions/restaurant';
 
 export default async function MenuPage() {
   const supabase = await createClient();
@@ -17,9 +17,9 @@ export default async function MenuPage() {
 
   return (
     <div className="p-4 md:p-8 space-y-6">
-      <MenuClient 
-        initialCategories={categories || []} 
-        initialItems={items || []} 
+      <MenuClient
+        initialCategories={categories || []}
+        initialItems={items || []}
         initialTotal={total}
         initialPages={totalPages}
       />

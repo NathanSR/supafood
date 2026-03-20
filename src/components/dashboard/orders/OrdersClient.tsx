@@ -2,10 +2,10 @@
 
 import React, { useState, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Filter, 
-  Plus, 
+import {
+  Search,
+  Filter,
+  Plus,
   ChevronRight,
   Clock,
   Tablet,
@@ -23,7 +23,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
-import { updateOrderStatus } from '@/app/actions/restaurant';
+import { updateOrderStatus } from '@/lib/actions/restaurant';
 import { OrderForm } from './OrderForm';
 import { OrderDetailsDrawer } from './OrderDetailsDrawer';
 
@@ -154,7 +154,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
           <p className="text-slate-500 dark:text-slate-400 mt-1">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={handleReload}
             disabled={isPending}
             className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 text-sm font-bold shadow-sm hover:border-primary/50 transition-all active:scale-95 disabled:opacity-50"
@@ -162,7 +162,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
             <RefreshCw className={`w-4 h-4 ${isPending ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">{t('reload')}</span>
           </button>
-          <button 
+          <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-primary text-white text-sm font-bold shadow-xl shadow-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-95 transition-all"
           >
@@ -173,7 +173,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
       </motion.div>
 
       {/* Stats Quick View */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
@@ -186,11 +186,10 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
             <button
               key={tab}
               onClick={() => handleTabChange(tab)}
-              className={`p-4 rounded-[28px] border-2 transition-all flex flex-col items-center gap-2 ${
-                activeTab === tab 
-                  ? `${style.bg} ${style.border.replace('/20', '/50')} shadow-lg shadow-black/[0.02]` 
+              className={`p-4 rounded-[28px] border-2 transition-all flex flex-col items-center gap-2 ${activeTab === tab
+                  ? `${style.bg} ${style.border.replace('/20', '/50')} shadow-lg shadow-black/[0.02]`
                   : 'bg-white dark:bg-white/5 border-transparent hover:border-slate-100 dark:hover:border-white/5'
-              }`}
+                }`}
             >
               <div className={`w-10 h-10 rounded-xl ${style.bg} ${style.text} flex items-center justify-center`}>
                 <Icon className="w-5 h-5" />
@@ -224,17 +223,16 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
         <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
           <button
             onClick={() => handleTabChange('all')}
-            className={`px-6 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-              activeTab === 'all'
+            className={`px-6 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeTab === 'all'
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
                 : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10'
-            }`}
+              }`}
           >
             {t('all')} ({tabCounts.all})
           </button>
-          
+
           <div className="h-6 w-px bg-slate-100 dark:bg-white/10 mx-2 hidden lg:block" />
-          
+
           <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 transition-all">
             <Calendar className="w-4 h-4" />
             {t('today')}
@@ -266,7 +264,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
                 const StatusIcon = style.icon;
                 const SourceIcon = sourceIcons[order.type] || Utensils;
                 return (
-                  <motion.div 
+                  <motion.div
                     key={order.id}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -297,7 +295,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
                     </div>
 
                     <div>
-                      <select 
+                      <select
                         value={order.status}
                         onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
                         className={`w-full px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer border-2 transition-all ${style.bg} ${style.text} ${style.bg.replace('/10', '/30')}`}
@@ -318,14 +316,14 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
                     </div>
 
                     <div className="flex items-center justify-end gap-2">
-                      <button 
+                      <button
                         onClick={() => handleAddItems(order)}
                         title="Adicionar Itens"
                         className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-300 hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all flex items-center justify-center border border-transparent hover:border-slate-100 dark:hover:border-white/10"
                       >
                         <PlusCircle className="w-5 h-5" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => setViewingOrder(order)}
                         className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 text-slate-300 hover:text-primary hover:bg-white dark:hover:bg-white/10 transition-all flex items-center justify-center border border-transparent hover:border-slate-100 dark:hover:border-white/10"
                       >
@@ -365,7 +363,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
         )}
       </div>
 
-      <OrderDetailsDrawer 
+      <OrderDetailsDrawer
         order={viewingOrder}
         onClose={() => setViewingOrder(null)}
         statusStyles={statusStyles}
@@ -380,7 +378,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
         }}
       />
 
-      <OrderForm 
+      <OrderForm
         isOpen={isModalOpen}
         tables={tables}
         menuItems={menuItems}

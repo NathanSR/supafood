@@ -7,8 +7,8 @@ import { useTranslations } from 'next-intl';
 import { Store, ArrowRight, Loader2, LogOut, Sparkles } from 'lucide-react';
 import { useRouter } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
-import { createRestaurant } from '@/app/actions/restaurant';
-import { logout } from '@/app/actions/auth';
+import { createRestaurant } from '@/lib/actions/restaurant';
+import { logout } from '@/lib/actions/auth';
 import { onboardingRestaurantSchema, type OnboardingRestaurantInput } from '@/lib/validations/profile';
 import { motion } from 'framer-motion';
 

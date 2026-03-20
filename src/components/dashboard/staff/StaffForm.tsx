@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createStaffMember, updateStaffMember } from '@/app/actions/restaurant';
+import { createStaffMember, updateStaffMember } from '@/lib/actions/restaurant';
 import { Loader2, X, User, Mail, Phone, Briefcase, Clock as ClockIcon } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 
@@ -61,7 +61,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
           <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('name')}</label>
           <div className="relative">
             <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <input 
+            <input
               name="name"
               defaultValue={initialData?.name}
               required
@@ -76,7 +76,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('email')}</label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <input 
+              <input
                 name="email"
                 type="email"
                 defaultValue={initialData?.email}
@@ -90,7 +90,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('phone')}</label>
             <div className="relative">
               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <input 
+              <input
                 name="phone"
                 defaultValue={initialData?.phone}
                 required
@@ -106,7 +106,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('role')}</label>
             <div className="relative">
               <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <select 
+              <select
                 name="role"
                 defaultValue={initialData?.role}
                 required
@@ -122,7 +122,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('shift')}</label>
             <div className="relative">
               <ClockIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <select 
+              <select
                 name="shift"
                 defaultValue={initialData?.shift}
                 required
@@ -137,14 +137,14 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
         </div>
 
         <div className="pt-4 flex items-center gap-4">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 dark:border-white/10 font-bold hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-sm"
           >
             {t('cancel')}
           </button>
-          <button 
+          <button
             type="submit"
             disabled={isPending}
             className="flex-[2] px-6 py-4 rounded-2xl bg-primary text-white font-bold shadow-xl shadow-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:scale-100 text-sm"

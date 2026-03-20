@@ -1,6 +1,6 @@
 import React from 'react';
-import { getUser } from '@/app/actions/auth';
-import { getRestaurantSettings } from '@/app/actions/restaurant';
+import { getUser } from '@/lib/actions/auth';
+import { getRestaurantSettings } from '@/lib/actions/restaurant';
 import { SettingsClient } from '@/components/dashboard/settings/SettingsClient';
 
 export default async function SettingsPage({

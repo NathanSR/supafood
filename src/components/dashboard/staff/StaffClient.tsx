@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Plus, 
-  Phone, 
+import {
+  Search,
+  Plus,
+  Phone,
   Mail,
   Users,
   ChefHat,
@@ -20,7 +20,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { StaffForm } from './StaffForm';
 import { StaffDetailsDrawer } from './StaffDetailsDrawer';
-import { deleteStaffMember } from '@/app/actions/restaurant';
+import { deleteStaffMember } from '@/lib/actions/restaurant';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 
@@ -122,7 +122,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
   };
 
   const onDutyCount = initialStaff.filter(m => m.status === 'on_duty').length;
-  const avgPerformance = initialStaff.length > 0 
+  const avgPerformance = initialStaff.length > 0
     ? Math.round(initialStaff.reduce((acc, m) => acc + (m.performance || 0), 0) / initialStaff.length)
     : 0;
 
@@ -138,7 +138,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
           <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">{t('title')}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">{t('subtitle')}</p>
         </div>
-        <button 
+        <button
           onClick={() => {
             setEditingMember(null);
             setIsModalOpen(true);
@@ -200,11 +200,10 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
             <button
               key={role}
               onClick={() => handleRoleChange(role)}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-                activeRole === role
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeRole === role
                   ? 'bg-primary text-white shadow-lg shadow-primary/20'
                   : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10'
-              }`}
+                }`}
             >
               {t(role as any)}
             </button>
@@ -227,7 +226,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
             >
               {/* Overlay for actions on hover */}
               <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setEditingMember(member);
@@ -237,7 +236,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(member);
@@ -248,7 +247,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
                 </button>
               </div>
 
-              <div 
+              <div
                 className="cursor-pointer"
                 onClick={() => setViewingMember(member)}
               >
@@ -259,12 +258,11 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
                     ) : (
                       <span className="grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all">👤</span>
                     )}
-                    
-                    <div className={`absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md text-[10px] font-black uppercase tracking-widest ${
-                      member.status === 'on_duty' 
-                        ? 'bg-green-500/20 text-green-500' 
+
+                    <div className={`absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md text-[10px] font-black uppercase tracking-widest ${member.status === 'on_duty'
+                        ? 'bg-green-500/20 text-green-500'
                         : 'bg-slate-400/20 text-slate-400'
-                    }`}>
+                      }`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'on_duty' ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
                       {member.status === 'on_duty' ? t('onDuty') : t('offDuty')}
                     </div>
@@ -352,7 +350,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
         </motion.div>
       )}
 
-      <StaffForm 
+      <StaffForm
         isOpen={isModalOpen}
         initialData={editingMember}
         onClose={() => {
@@ -361,7 +359,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
         }}
       />
 
-      <StaffDetailsDrawer 
+      <StaffDetailsDrawer
         member={viewingMember}
         isOpen={!!viewingMember}
         onClose={() => setViewingMember(null)}

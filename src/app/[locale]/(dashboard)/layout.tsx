@@ -4,7 +4,7 @@ import { Header } from '@/components/dashboard/Header';
 import { SidebarProvider } from '@/context/SidebarContext';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import { getAllRestaurants, getRestaurantSettings } from '@/app/actions/restaurant';
+import { getAllRestaurants, getRestaurantSettings } from '@/lib/actions/restaurant';
 
 export default async function DashboardLayout({
   children,
@@ -15,15 +15,15 @@ export default async function DashboardLayout({
 }) {
   const { locale } = await params;
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
-  
+
   if (!user) {
     redirect(`/${locale}/login`);
   }
 
   const restaurants = await getAllRestaurants();
-  
+
   if (restaurants.length === 0) {
     redirect(`/${locale}/onboarding`);
   }

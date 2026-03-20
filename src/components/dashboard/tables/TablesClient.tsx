@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Plus, 
+import {
+  Plus,
   Users,
   LayoutGrid,
   List,
@@ -20,7 +20,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { TableForm } from './TableForm';
 import { TableDetailsDrawer } from './TableDetailsDrawer';
-import { deleteTable } from '@/app/actions/restaurant';
+import { deleteTable } from '@/lib/actions/restaurant';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface TablesClientProps {
@@ -51,20 +51,20 @@ const sections = ['all', 'Indoor', 'Outdoor', 'Bar', 'Terrace', 'VIP'];
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export function TablesClient({ 
-  initialTables, 
-  totalCount, 
-  currentPage, 
-  pageSize, 
-  summaryStats 
+export function TablesClient({
+  initialTables,
+  totalCount,
+  currentPage,
+  pageSize,
+  summaryStats
 }: TablesClientProps) {
   const t = useTranslations('Tables');
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const activeSection = searchParams.get('section') || 'all';
   const activeStatus = searchParams.get('status') || 'all';
-  
+
   const [viewMode, setViewMode] = useState<'floorMap' | 'listView'>('floorMap');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTable, setEditingTable] = useState<any>(null);
@@ -119,7 +119,7 @@ export function TablesClient({
               <List className="w-5 h-5" />
             </button>
           </div>
-          <button 
+          <button
             onClick={() => {
               setEditingTable(null);
               setIsModalOpen(true);
@@ -150,7 +150,7 @@ export function TablesClient({
             className={`group ${s.bg} border ${activeStatus === s.id ? 'border-primary ring-2 ring-primary/20' : 'border-[#00000005] dark:border-[#ffffff05]'} rounded-[32px] p-6 text-center hover:shadow-xl hover:shadow-black/[0.02] dark:hover:shadow-white/[0.02] transition-all cursor-pointer`}
           >
             <div className={`w-12 h-12 mx-auto rounded-2xl ${s.bg} flex items-center justify-center mb-3 group-hover:scale-110 group-hover:rotate-3 transition-transform`}>
-               <s.icon className={`w-6 h-6 ${s.color}`} />
+              <s.icon className={`w-6 h-6 ${s.color}`} />
             </div>
             <p className={`text-3xl font-black ${s.color} tracking-tight`}>{s.value}</p>
             <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-black uppercase tracking-widest">{s.label}</p>
@@ -170,17 +170,16 @@ export function TablesClient({
             <button
               key={sec}
               onClick={() => updateFilters({ section: sec })}
-              className={`px-6 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
-                activeSection === sec
+              className={`px-6 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeSection === sec
                   ? 'bg-primary text-white shadow-lg shadow-primary/20'
                   : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10'
-              }`}
+                }`}
             >
               {sec === 'all' ? t('all') : sec}
             </button>
           ))}
         </div>
-        
+
         <div className="flex items-center gap-5 pr-4 border-l border-slate-100 dark:border-white/10 pl-6 h-10 overflow-x-auto no-scrollbar">
           {Object.entries(statusConfig).map(([key, config]: [string, any]) => (
             <div key={key} className="flex items-center gap-2 group cursor-help" title={t(config.label as any)}>
@@ -215,11 +214,11 @@ export function TablesClient({
                   className={`${config.bg} border-2 ${config.border} rounded-[32px] p-6 flex flex-col items-center gap-3 hover:scale-105 transition-all duration-300 group cursor-pointer aspect-square justify-center relative shadow-sm overflow-hidden`}
                 >
                   <div className="absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-br from-white to-transparent dark:from-white/20"></div>
-                  
+
                   <div className="w-14 h-14 bg-white/40 dark:bg-black/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 group-hover:rotate-6 transition-transform">
                     🪑
                   </div>
-                  
+
                   <div className="text-center">
                     <span className={`font-black text-xl leading-none ${config.text}`}>{table.name}</span>
                     <div className="flex items-center justify-center gap-1 mt-1 font-bold text-slate-500/80">
@@ -227,9 +226,9 @@ export function TablesClient({
                       <span className="text-[11px]">{table.capacity}</span>
                     </div>
                   </div>
-                  
+
                   <div className="absolute top-3 right-3 flex flex-col gap-2 translate-x-12 group-hover:translate-x-0 transition-transform duration-500">
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setEditingTable(table);
@@ -239,7 +238,7 @@ export function TablesClient({
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDelete(table.id);
@@ -306,7 +305,7 @@ export function TablesClient({
                     Última verificação: 5m atrás
                   </div>
                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button 
+                    <button
                       onClick={() => {
                         setEditingTable(table);
                         setIsModalOpen(true);
@@ -315,7 +314,7 @@ export function TablesClient({
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(table.id)}
                       className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center"
                     >
@@ -329,7 +328,7 @@ export function TablesClient({
         </motion.div>
       )}
 
-      <TableForm 
+      <TableForm
         isOpen={isModalOpen}
         initialData={editingTable}
         onClose={() => {
@@ -366,7 +365,7 @@ export function TablesClient({
       )}
 
       {/* Table Details Drawer */}
-      <TableDetailsDrawer 
+      <TableDetailsDrawer
         table={selectedTable}
         onClose={() => setSelectedTable(null)}
         statusConfig={statusConfig}
@@ -383,9 +382,9 @@ export function TablesClient({
 
       {initialTables.length === 0 && (
         <motion.div
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           className="text-center py-40 bg-white dark:bg-white/5 rounded-[32px] border-2 border-dashed border-slate-100 dark:border-white/5 flex flex-col items-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-40 bg-white dark:bg-white/5 rounded-[32px] border-2 border-dashed border-slate-100 dark:border-white/5 flex flex-col items-center gap-4"
         >
           <div className="w-24 h-24 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-5xl grayscale opacity-30">🪑</div>
           <div className="space-y-1">

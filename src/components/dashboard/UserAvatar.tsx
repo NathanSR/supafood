@@ -14,8 +14,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, Settings, Building2, Check, LayoutGrid, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link, useRouter } from '@/i18n/routing';
-import { logout } from '@/app/actions/auth';
-import { switchRestaurant } from '@/app/actions/restaurant';
+import { logout } from '@/lib/actions/auth';
+import { switchRestaurant } from '@/lib/actions/restaurant';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 

@@ -4,7 +4,7 @@ import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Building2, Plus, Star, MapPin, Mail, Phone, Trash2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { deleteRestaurant, switchRestaurant } from '@/app/actions/restaurant';
+import { deleteRestaurant, switchRestaurant } from '@/lib/actions/restaurant';
 import { useRouter } from '@/i18n/routing';
 import { RestaurantForm } from './RestaurantForm';
 import { RestaurantDetailsDrawer } from './RestaurantDetailsDrawer';
@@ -120,11 +120,10 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
               variants={itemVariants}
               layout
               onClick={() => setSelectedRestaurant(restaurant)}
-              className={`relative bg-white dark:bg-surface-dark rounded-2xl border-2 p-5 shadow-sm transition-all cursor-pointer hover:shadow-md ${
-                isActive
+              className={`relative bg-white dark:bg-surface-dark rounded-2xl border-2 p-5 shadow-sm transition-all cursor-pointer hover:shadow-md ${isActive
                   ? 'border-[#FF5F15] shadow-[#FF5F15]/10'
                   : 'border-slate-200 dark:border-white/5 hover:border-[#FF5F15]/30'
-              }`}
+                }`}
             >
               {/* Active badge */}
               {isActive && (

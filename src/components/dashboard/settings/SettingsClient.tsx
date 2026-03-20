@@ -15,8 +15,8 @@ import { NotificationsSection } from '@/components/dashboard/settings/Notificati
 import { AppearanceSection } from '@/components/dashboard/settings/AppearanceSection';
 import { BillingSection } from '@/components/dashboard/settings/BillingSection';
 import { type UserProfileInput, type RestaurantSettingsInput, type PasswordInput } from '@/lib/validations/profile';
-import { updateProfile, updatePassword } from '@/app/actions/auth';
-import { updateRestaurantSettings } from '@/app/actions/restaurant';
+import { updateProfile, updatePassword } from '@/lib/actions/auth';
+import { updateRestaurantSettings } from '@/lib/actions/restaurant';
 
 type Section = 'profile' | 'restaurant' | 'notifications' | 'appearance' | 'billing';
 

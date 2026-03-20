@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { login } from '@/app/actions/auth';
+import { login } from '@/lib/actions/auth';
 import { useParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -30,7 +30,7 @@ export default function LoginPage() {
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('password', data.password);
-    
+
     startTransition(async () => {
       const result = await login(formData, locale);
       if (result?.error) {
@@ -53,11 +53,11 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">{t('email')}</label>
-          <input 
+          <input
             {...register('email')}
-            type="email" 
-            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100" 
-            placeholder="john@example.com" 
+            type="email"
+            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100"
+            placeholder="john@example.com"
           />
           {errors.email && (
             <p className="text-red-500 text-xs mt-1">
@@ -67,11 +67,11 @@ export default function LoginPage() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">{t('password')}</label>
-          <input 
+          <input
             {...register('password')}
-            type="password" 
-            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100" 
-            placeholder="••••••••" 
+            type="password"
+            className="w-full px-4 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border-none outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-slate-100"
+            placeholder="••••••••"
           />
           {errors.password && (
             <p className="text-red-500 text-xs mt-1">
@@ -79,8 +79,8 @@ export default function LoginPage() {
             </p>
           )}
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isPending || isSubmitting}
           className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
         >

@@ -1,6 +1,6 @@
 import React from 'react';
 import { RestaurantsClient } from '@/components/dashboard/restaurants/RestaurantsClient';
-import { getAllRestaurants, getRestaurantSettings } from '@/app/actions/restaurant';
+import { getAllRestaurants, getRestaurantSettings } from '@/lib/actions/restaurant';
 
 export default async function RestaurantsPage() {
   const [restaurants, activeRestaurant] = await Promise.all([

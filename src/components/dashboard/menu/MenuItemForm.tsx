@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { createMenuItem, updateMenuItem } from '@/app/actions/restaurant';
+import { createMenuItem, updateMenuItem } from '@/lib/actions/restaurant';
 import { Loader2, X, Image as ImageIcon, Upload, Check, Flame, Star, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { useForm, Controller } from 'react-hook-form';
@@ -124,7 +124,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
     formData.append('calories', data.calories.toString());
     formData.append('is_popular', data.is_popular ? 'on' : 'off');
     formData.append('is_spicy', data.is_spicy ? 'on' : 'off');
-    
+
     if (selectedFile) {
       formData.append('image', selectedFile);
     }
@@ -150,9 +150,9 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
       title={initialData ? t('editItem') : t('addItem')}
       maxWidth="max-w-2xl"
     >
@@ -167,7 +167,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-1.5">
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('itemName')}</label>
-            <input 
+            <input
               {...register('name')}
               className="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium"
               placeholder="Ex: Classic Burger"
@@ -178,7 +178,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('category')}</label>
-            <select 
+            <select
               {...register('category_id')}
               className="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
             >
@@ -194,7 +194,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
 
         <div className="space-y-1.5">
           <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('description')}</label>
-          <textarea 
+          <textarea
             {...register('description')}
             rows={3}
             className="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium resize-none"
@@ -207,7 +207,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('price')}</label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-              <input 
+              <input
                 {...register('price', { valueAsNumber: true })}
                 type="number"
                 step="0.01"
@@ -220,7 +220,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('prepTime')}</label>
-            <input 
+            <input
               {...register('prep_time', { valueAsNumber: true })}
               type="number"
               className="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium"
@@ -228,7 +228,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('calories')}</label>
-            <input 
+            <input
               {...register('calories', { valueAsNumber: true })}
               type="number"
               className="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium"
@@ -248,16 +248,16 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
                 className={`
                   inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl font-bold text-sm
                   transition-all duration-200 ease-out select-none
-                  ${field.value 
-                    ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/10' 
+                  ${field.value
+                    ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 ring-2 ring-amber-500/30 shadow-lg shadow-amber-500/10'
                     : 'bg-slate-100 dark:bg-white/5 text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-300'
                   }
                 `}
               >
                 <span className={`
                   flex items-center justify-center w-5 h-5 rounded-md transition-all duration-200
-                  ${field.value 
-                    ? 'bg-amber-500 text-white scale-110' 
+                  ${field.value
+                    ? 'bg-amber-500 text-white scale-110'
                     : 'bg-slate-200 dark:bg-white/10'
                   }
                 `}>
@@ -278,16 +278,16 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
                 className={`
                   inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl font-bold text-sm
                   transition-all duration-200 ease-out select-none
-                  ${field.value 
-                    ? 'bg-red-500/15 text-red-600 dark:text-red-400 ring-2 ring-red-500/30 shadow-lg shadow-red-500/10' 
+                  ${field.value
+                    ? 'bg-red-500/15 text-red-600 dark:text-red-400 ring-2 ring-red-500/30 shadow-lg shadow-red-500/10'
                     : 'bg-slate-100 dark:bg-white/5 text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-300'
                   }
                 `}
               >
                 <span className={`
                   flex items-center justify-center w-5 h-5 rounded-md transition-all duration-200
-                  ${field.value 
-                    ? 'bg-red-500 text-white scale-110' 
+                  ${field.value
+                    ? 'bg-red-500 text-white scale-110'
                     : 'bg-slate-200 dark:bg-white/10'
                   }
                 `}>
@@ -315,10 +315,10 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
               </button>
             )}
           </div>
-          <div 
+          <div
             className={`
               flex flex-col sm:flex-row items-center gap-6 p-4 rounded-3xl border-2 border-dashed transition-all duration-200
-              ${isDragging 
+              ${isDragging
                 ? 'bg-primary/5 border-primary/50 scale-[1.01]'
                 : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/10'
               }
@@ -329,8 +329,8 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
           >
             <div className={`
               w-32 h-32 rounded-2xl flex items-center justify-center overflow-hidden border transition-all duration-200
-              ${preview 
-                ? 'border-slate-100 dark:border-white/10 shadow-lg' 
+              ${preview
+                ? 'border-slate-100 dark:border-white/10 shadow-lg'
                 : 'border-dashed border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5'
               }
             `}>
@@ -346,14 +346,14 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
             <div className="flex-1 w-full">
               <label className={`
                 flex flex-col items-center justify-center gap-2 w-full p-6 text-center rounded-2xl border-2 border-dashed transition-all cursor-pointer group
-                ${isDragging 
+                ${isDragging
                   ? 'border-primary bg-primary/5'
                   : 'border-slate-200 dark:border-white/10 hover:border-primary/50 hover:bg-white/80 dark:hover:bg-white/5'
                 }
               `}>
                 <div className={`
                   w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200
-                  ${isDragging 
+                  ${isDragging
                     ? 'bg-primary/20 text-primary'
                     : 'bg-slate-100 dark:bg-white/5 text-slate-400 group-hover:bg-primary/10 group-hover:text-primary'
                   }
@@ -369,7 +369,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
                 <span className="text-[10px] text-slate-400 font-medium">
                   JPG, PNG, WEBP • Max 2MB
                 </span>
-                <input 
+                <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
@@ -385,14 +385,14 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
         </div>
 
         <div className="pt-4 flex items-center gap-4">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 dark:border-white/10 font-bold hover:bg-slate-50 dark:hover:bg-white/5 transition-all"
           >
             {t('cancel')}
           </button>
-          <button 
+          <button
             type="submit"
             disabled={isPending || isSubmitting}
             className="flex-[2] px-6 py-4 rounded-2xl bg-primary text-white font-bold shadow-xl shadow-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:scale-100"

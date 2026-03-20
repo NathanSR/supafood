@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createCategory } from '@/app/actions/restaurant';
+import { createCategory } from '@/lib/actions/restaurant';
 import { Loader2, X, Tag, FileText, Smile } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 
@@ -53,7 +53,7 @@ export function CategoryForm({ onClose, isOpen }: CategoryFormProps) {
           <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">{t('categoryName') || 'Nome da Categoria'}</label>
           <div className="relative">
             <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <input 
+            <input
               name="name"
               required
               placeholder="Ex: Hambúrgueres"
@@ -66,7 +66,7 @@ export function CategoryForm({ onClose, isOpen }: CategoryFormProps) {
           <label className="text-sm font-bold ml-1 text-slate-500 dark:text-slate-400">Emoji (Opcional)</label>
           <div className="relative">
             <Smile className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <input 
+            <input
               name="emoji"
               placeholder="Ex: 🍔"
               className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium"
@@ -75,14 +75,14 @@ export function CategoryForm({ onClose, isOpen }: CategoryFormProps) {
         </div>
 
         <div className="pt-4 flex items-center gap-4">
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 dark:border-white/10 font-bold hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-sm"
           >
             {t('cancel') || 'Cancelar'}
           </button>
-          <button 
+          <button
             type="submit"
             disabled={isPending}
             className="flex-[2] px-6 py-4 rounded-2xl bg-primary text-white font-bold shadow-xl shadow-primary/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:scale-100 text-sm"
