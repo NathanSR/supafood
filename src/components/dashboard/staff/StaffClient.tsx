@@ -185,7 +185,7 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
         transition={{ delay: 0.2 }}
         className="flex flex-col lg:flex-row items-center gap-4 bg-white dark:bg-white/5 p-2 rounded-[24px] border border-slate-100 dark:border-white/5 shadow-sm"
       >
-        <div className="relative flex-1 w-full">
+        <div className="relative flex-1 w-full lg:min-w-[400px]">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input
             type="text"
@@ -201,8 +201,8 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
               key={role}
               onClick={() => handleRoleChange(role)}
               className={`px-5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${activeRole === role
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10'
+                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10'
                 }`}
             >
               {t(role as any)}
@@ -260,8 +260,8 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
                     )}
 
                     <div className={`absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md text-[10px] font-black uppercase tracking-widest ${member.status === 'on_duty'
-                        ? 'bg-green-500/20 text-green-500'
-                        : 'bg-slate-400/20 text-slate-400'
+                      ? 'bg-green-500/20 text-green-500'
+                      : 'bg-slate-400/20 text-slate-400'
                       }`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'on_duty' ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
                       {member.status === 'on_duty' ? t('onDuty') : t('offDuty')}
