@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 
 export async function login(formData: FormData, locale: string) {
   const supabase = await createClient()
@@ -17,6 +18,28 @@ export async function login(formData: FormData, locale: string) {
 
   if (error) {
     return { error: error.message }
+  }
+
+  // Clear previous cookie to avoid fetching another user's restaurant
+  const cookieStore = await cookies()
+  cookieStore.delete('active_restaurant_id')
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) {
+    const { data: primary } = await supabase
+      .from('restaurants')
+      .select('id')
+      .eq('owner_id', user.id)
+      .order('is_primary', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      
+    if (primary) {
+      cookieStore.set('active_restaurant_id', primary.id, { 
+        path: '/',
+        maxAge: 60 * 60 * 24 * 30
+      })
+    }
   }
 
   revalidatePath('/', 'layout')
@@ -71,6 +94,9 @@ export async function signup(formData: FormData, locale: string) {
     }
   }
 
+  const cookieStore = await cookies()
+  cookieStore.delete('active_restaurant_id')
+
   revalidatePath('/', 'layout')
   redirect(`/${locale}/home`)
 }
@@ -78,6 +104,8 @@ export async function signup(formData: FormData, locale: string) {
 export async function logout(locale: string) {
   const supabase = await createClient()
   await supabase.auth.signOut()
+  const cookieStore = await cookies()
+  cookieStore.delete('active_restaurant_id')
   revalidatePath('/', 'layout')
   redirect(`/${locale}/login`)
 }

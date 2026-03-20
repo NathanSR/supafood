@@ -407,6 +407,9 @@ export async function createCategory(name: string, slug: string, emoji?: string)
 
 export async function getRestaurantSettings() {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+
   const restaurantId = await getActiveRestaurantId()
 
   if (restaurantId) {
@@ -414,15 +417,14 @@ export async function getRestaurantSettings() {
       .from('restaurants')
       .select('*')
       .eq('id', restaurantId)
+      .eq('owner_id', user.id)
       .maybeSingle()
 
     if (error) throw new Error(error.message)
-    return data
+    if (data) return data
   }
 
   // If no active restaurant, get the first one owned by the user
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
 
   const { data, error } = await supabase
     .from('restaurants')
