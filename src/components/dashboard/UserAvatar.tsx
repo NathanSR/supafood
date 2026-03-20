@@ -57,11 +57,11 @@ export function UserAvatar({ user, restaurants, activeRestaurant }: { user: any,
           </motion.div>
         </button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        align="end" 
+
+      <DropdownMenuContent
+        align="end"
         sideOffset={8}
-        className="w-72 p-2 mt-2 border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
+        className="w-72 p-2 mt-2 border border-slate-200 dark:border-white/10 shadow-2xl rounded-2xl bg-background backdrop-blur-xl animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
       >
         <div className="px-3 py-4 mb-2 rounded-xl bg-slate-50/50 dark:bg-white/5 border border-slate-100 dark:border-white/5 mx-1">
           <div className="flex items-center space-x-3">
@@ -113,8 +113,8 @@ export function UserAvatar({ user, restaurants, activeRestaurant }: { user: any,
                     onClick={() => handleSwitchRestaurant(restaurant.id)}
                     className={cn(
                       "rounded-lg py-2.5 px-3 cursor-pointer transition-all duration-200 flex items-center justify-between group border border-transparent",
-                      isActive 
-                        ? "bg-primary/10 text-primary border-primary/20" 
+                      isActive
+                        ? "bg-primary/10 text-primary border-primary/20"
                         : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5"
                     )}
                   >
@@ -148,7 +148,7 @@ export function UserAvatar({ user, restaurants, activeRestaurant }: { user: any,
         )}
 
         <DropdownMenuSeparator className="bg-slate-200 dark:bg-white/10 mx-2 mt-3 mb-2" />
-        
+
         <div className="px-1 pb-1">
           <DropdownMenuItem
             onClick={handleLogout}
