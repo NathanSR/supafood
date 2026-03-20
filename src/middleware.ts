@@ -8,7 +8,7 @@ const handleI18nRouting = createMiddleware(routing);
 export default async function middleware(req: NextRequest) {
   // 1. Update Supabase session (refresh if needed)
   const supabaseResponse = await updateSession(req);
-  
+
   // 2. Run i18n middleware
   const response = handleI18nRouting(req);
 
@@ -19,18 +19,18 @@ export default async function middleware(req: NextRequest) {
   });
 
   const { pathname } = req.nextUrl;
-  const publicPages = ['/login', '/register', '/forgot-password'];
+  const publicPages = ['/login', '/register', '/forgot-password', '/track'];
   const isPublicPage = publicPages.some(page => pathname.includes(page));
 
   // The session check should be done using the Supabase client
   // But for middleware, we can just check if the session cookie exists 
   // OR we can use the result of updateSession if we modify it to return the user.
   // For now, let's keep it simple: if not public and not logged in, redirect.
-  
+
   // Actually, a better way is to check the user in updateSession or here.
   // Since we are using @supabase/ssr, the cookie usually starts with `sb-` or similar.
-  const hasSession = req.cookies.has('sb-access-token') || 
-                     req.cookies.has(`sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1].split('.')[0]}-auth-token`);
+  const hasSession = req.cookies.has('sb-access-token') ||
+    req.cookies.has(`sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1].split('.')[0]}-auth-token`);
 
   if (!isPublicPage && !hasSession) {
     const locale = req.cookies.get('NEXT_LOCALE')?.value || routing.defaultLocale;

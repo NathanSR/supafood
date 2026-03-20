@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { getActiveRestaurantId } from './utils'
 
@@ -80,6 +80,8 @@ export async function createRestaurant(data: any) {
   })
 
   revalidatePath('/', 'layout')
+  // @ts-ignore - Following the project's specific types for revalidateTag
+  revalidateTag('restaurant', 'layout')
   return { success: true, restaurant }
 }
 
@@ -97,6 +99,8 @@ export async function updateRestaurant(id: string, data: any) {
   if (error) return { error: error.message }
   
   revalidatePath('/', 'layout')
+  // @ts-ignore
+  revalidateTag('restaurant', 'layout')
   return { success: true }
 }
 
@@ -132,6 +136,8 @@ export async function deleteRestaurant(id: string) {
   }
 
   revalidatePath('/', 'layout')
+  // @ts-ignore
+  revalidateTag('restaurant', 'layout')
   return { success: true }
 }
 
@@ -142,6 +148,8 @@ export async function switchRestaurant(id: string) {
     maxAge: 60 * 60 * 24 * 30 // 30 days
   })
   revalidatePath('/', 'layout')
+  // @ts-ignore
+  revalidateTag('restaurant', 'layout')
   return { success: true }
 }
 
@@ -159,5 +167,7 @@ export async function updateRestaurantSettings(data: any) {
   if (error) return { error: error.message }
   
   revalidatePath('/', 'layout')
+  // @ts-ignore
+  revalidateTag('restaurant', 'layout')
   return { success: true }
 }
