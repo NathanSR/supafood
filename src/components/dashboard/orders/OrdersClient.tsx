@@ -192,8 +192,8 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
               key={tab}
               onClick={() => handleTabChange(tab)}
               className={`p-4 rounded-[28px] border-2 transition-all flex flex-col items-center gap-2 ${activeTab === tab
-                  ? `${style.bg} ${style.border.replace('/20', '/50')} shadow-lg shadow-black/[0.02]`
-                  : 'bg-white dark:bg-white/5 border-transparent hover:border-slate-100 dark:hover:border-white/5'
+                ? `${style.bg} ${style.border.replace('/20', '/50')} shadow-lg shadow-black/[0.02]`
+                : 'bg-white dark:bg-white/5 border-transparent hover:border-slate-100 dark:hover:border-white/5'
                 }`}
             >
               <div className={`w-10 h-10 rounded-xl ${style.bg} ${style.text} flex items-center justify-center`}>
@@ -246,8 +246,8 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
           <button
             onClick={handleTodayToggle}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${isToday
-                ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                : 'text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10'
+              ? 'bg-primary text-white shadow-lg shadow-primary/20'
+              : 'text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10'
               }`}
           >
             <Calendar className="w-4 h-4" />
@@ -317,7 +317,7 @@ export function OrdersClient({ initialOrders, tables, menuItems, totalCount, cur
                         className={`w-full px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer border-2 transition-all ${style.bg} ${style.text} ${style.bg.replace('/10', '/30')}`}
                       >
                         {tabs.filter(tab => tab !== 'all').map(tab => (
-                          <option key={tab} value={tab}>{t(tab as any)}</option>
+                          <option key={tab} value={tab} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t(tab as any)}</option>
                         ))}
                       </select>
                     </div>

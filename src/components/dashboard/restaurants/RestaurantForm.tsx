@@ -144,7 +144,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
               >
                 {currencies.map(c => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c} value={c} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{c}</option>
                 ))}
               </select>
             </div>
@@ -159,7 +159,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
               >
                 {timezones.map(tz => (
-                  <option key={tz} value={tz}>{tz.split('/').pop()?.replace('_', ' ')}</option>
+                  <option key={tz} value={tz} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{tz.split('/').pop()?.replace('_', ' ')}</option>
                 ))}
               </select>
             </div>
@@ -174,7 +174,7 @@ export function RestaurantForm({ initialData, onClose, isOpen }: RestaurantFormP
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
               >
                 {languages.map(l => (
-                  <option key={l} value={l}>{t(l.replace('-', '') as any)}</option>
+                  <option key={l} value={l} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t(l.replace('-', '') as any)}</option>
                 ))}
               </select>
             </div>

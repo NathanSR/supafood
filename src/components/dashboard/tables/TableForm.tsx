@@ -95,7 +95,7 @@ export function TableForm({ initialData, onClose, isOpen }: TableFormProps) {
               className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
             >
               {sections.map(sec => (
-                <option key={sec} value={sec}>{sec}</option>
+                <option key={sec} value={sec} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{sec}</option>
               ))}
             </select>
           </div>

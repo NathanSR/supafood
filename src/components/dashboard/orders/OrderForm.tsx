@@ -315,9 +315,9 @@ export function OrderForm({ tables, menuItems, onClose, isOpen, initialOrder }: 
                           onChange={e => setTableId(e.target.value)}
                           className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 text-xs outline-none focus:ring-2 focus:ring-primary/30 font-black appearance-none"
                         >
-                          <option value="">Nº</option>
+                          <option value="" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Nº</option>
                           {tables.map(table => (
-                            <option key={table.id} value={table.id}>{table.name || table.number}</option>
+                            <option key={table.id} value={table.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{table.name || table.number}</option>
                           ))}
                         </select>
                       </div>

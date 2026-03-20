@@ -33,7 +33,7 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           <Store className="w-4 h-4" />
           {t('restaurantProfile')}
         </h3>
-        
+
         <SettingRow label={t('restaurantName')} description={t('restaurantNameDescription')} error={errors.name && vt(errors.name.message as any, { count: 3 })}>
           <div className="relative w-full sm:w-80">
             <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -85,9 +85,9 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           <div className="relative w-full sm:w-80">
             <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
             <select {...register('currency')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none text-slate-800 dark:text-slate-100">
-              <option value="BRL">BRL — Real Brasileiro</option>
-              <option value="USD">USD — US Dollar</option>
-              <option value="EUR">EUR — Euro</option>
+              <option value="BRL" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">BRL — Real Brasileiro</option>
+              <option value="USD" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">USD — US Dollar</option>
+              <option value="EUR" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">EUR — Euro</option>
             </select>
           </div>
         </SettingRow>
@@ -96,9 +96,9 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           <div className="relative w-full sm:w-80">
             <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
             <select {...register('timezone')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none text-slate-800 dark:text-slate-100">
-              <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</option>
-              <option value="America/New_York">America/New_York (GMT-5)</option>
-              <option value="Europe/London">Europe/London (GMT+0)</option>
+              <option value="America/Sao_Paulo" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">America/Sao_Paulo (GMT-3)</option>
+              <option value="America/New_York" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">America/New_York (GMT-5)</option>
+              <option value="Europe/London" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Europe/London (GMT+0)</option>
             </select>
           </div>
         </SettingRow>
@@ -107,8 +107,8 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           <div className="relative w-full sm:w-80">
             <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
             <select {...register('language')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none text-slate-800 dark:text-slate-100">
-              <option value="pt-BR">{t('ptBR')}</option>
-              <option value="en">{t('en')}</option>
+              <option value="pt-BR" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t('ptBR')}</option>
+              <option value="en" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t('en')}</option>
             </select>
           </div>
         </SettingRow>

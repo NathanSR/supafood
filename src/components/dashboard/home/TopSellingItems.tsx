@@ -16,7 +16,7 @@ export function TopSellingItems({ items }: { items: TopSellingItem[] }) {
   const g = useTranslations('General');
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
@@ -25,8 +25,8 @@ export function TopSellingItems({ items }: { items: TopSellingItem[] }) {
       <div className="flex items-center justify-between mb-8">
         <h3 className="font-bold text-lg">{t('topSelling')}</h3>
         <select className="bg-slate-100 dark:bg-white/5 border-none rounded-lg text-xs font-semibold py-1.5 focus:ring-1 focus:ring-primary outline-none">
-          <option>{t('last7Days')}</option>
-          <option>{t('last30Days')}</option>
+          <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t('last7Days')}</option>
+          <option className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t('last30Days')}</option>
         </select>
       </div>
 
@@ -48,13 +48,13 @@ export function TopSellingItems({ items }: { items: TopSellingItem[] }) {
                 <span>{item.name}</span>
                 <span>{g('sold', { count: item.sold })}</span>
               </div>
-              
+
               <div className="w-full bg-slate-200 dark:bg-white/5 h-2.5 rounded-full overflow-hidden">
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${item.percentage}%` }}
                   transition={{ duration: 1, delay: 0.5 + (index * 0.1) }}
-                  className={cn("h-full rounded-full transition-all duration-1000", bgClass)} 
+                  className={cn("h-full rounded-full transition-all duration-1000", bgClass)}
                 />
               </div>
             </div>

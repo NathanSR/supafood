@@ -113,7 +113,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
               >
                 {roles.map(role => (
-                  <option key={role} value={role}>{t(role as any)}</option>
+                  <option key={role} value={role} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t(role as any)}</option>
                 ))}
               </select>
             </div>
@@ -129,7 +129,7 @@ export function StaffForm({ initialData, onClose, isOpen }: StaffFormProps) {
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
               >
                 {shifts.map(shift => (
-                  <option key={shift} value={shift}>{t(shift as any)}</option>
+                  <option key={shift} value={shift} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{t(shift as any)}</option>
                 ))}
               </select>
             </div>

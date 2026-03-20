@@ -183,7 +183,7 @@ export function MenuItemForm({ categories, initialData, onClose, isOpen }: MenuI
               className="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium appearance-none"
             >
               {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                <option key={cat.id} value={cat.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">{cat.name}</option>
               ))}
             </select>
             {errors.category_id && (
