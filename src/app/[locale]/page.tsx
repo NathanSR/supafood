@@ -468,12 +468,12 @@ export default function RootLocalePage() {
               <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">{t('ctaTitle')}</h2>
               <p className="text-lg text-muted-foreground max-w-md font-medium leading-relaxed">{t('ctaSubtitle')}</p>
               <div className="flex flex-wrap items-center gap-4">
-                <Button size="lg" className="h-14 px-8 rounded-2xl font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20">
+                <Button onClick={() => router.push('/register')} size="lg" className="h-14 px-8 rounded-2xl font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20">
                   {t('ctaStart')}
                 </Button>
-                <Button size="lg" variant="outline" onClick={() => scrollTo('faq')} className="h-14 px-8 rounded-2xl font-bold border-white/10 hover:bg-white/5">
+                {/* <Button size="lg" variant="outline" onClick={() => scrollTo('faq')} className="h-14 px-8 rounded-2xl font-bold border-white/10 hover:bg-white/5">
                   {t('ctaDemo')}
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className="relative group perspective-1000">
