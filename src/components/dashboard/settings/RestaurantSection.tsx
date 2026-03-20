@@ -31,10 +31,10 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-[#FF5F15]">
           <Store className="w-4 h-4" />
-          Perfil do Restaurante
+          {t('restaurantProfile')}
         </h3>
         
-        <SettingRow label={t('restaurantName')} description="Nome oficial exibido no cardápio e recibos" error={errors.name && vt(errors.name.message as any, { count: 3 })}>
+        <SettingRow label={t('restaurantName')} description={t('restaurantNameDescription')} error={errors.name && vt(errors.name.message as any, { count: 3 })}>
           <div className="relative w-full sm:w-80">
             <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
@@ -78,13 +78,13 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-indigo-500">
           <BookOpen className="w-4 h-4" />
-          Regional e Financeiro
+          {t('regionalFinance')}
         </h3>
 
-        <SettingRow label={t('currency')} description="Moeda padrão para vendas e relatórios">
+        <SettingRow label={t('currency')} description={t('currencyDescription')}>
           <div className="relative w-full sm:w-80">
             <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
-            <select {...register('currency')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none">
+            <select {...register('currency')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none text-slate-800 dark:text-slate-100">
               <option value="BRL">BRL — Real Brasileiro</option>
               <option value="USD">USD — US Dollar</option>
               <option value="EUR">EUR — Euro</option>
@@ -92,10 +92,10 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           </div>
         </SettingRow>
 
-        <SettingRow label={t('timezone')} description="Afeta o horário de fechamento e pedidos">
+        <SettingRow label={t('timezone')} description={t('timezoneDescription')}>
           <div className="relative w-full sm:w-80">
             <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
-            <select {...register('timezone')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none">
+            <select {...register('timezone')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none text-slate-800 dark:text-slate-100">
               <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</option>
               <option value="America/New_York">America/New_York (GMT-5)</option>
               <option value="Europe/London">Europe/London (GMT+0)</option>
@@ -103,12 +103,12 @@ export function RestaurantSection({ initialData, onUpdate }: RestaurantSectionPr
           </div>
         </SettingRow>
 
-        <SettingRow label={t('language')} description="Idioma oficial do estabelecimento">
+        <SettingRow label={t('language')} description={t('restaurantLanguageDescription')}>
           <div className="relative w-full sm:w-80">
             <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400" />
-            <select {...register('language')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none">
-              <option value="pt-BR">Português (Brasil)</option>
-              <option value="en">English (US)</option>
+            <select {...register('language')} className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-bold appearance-none text-slate-800 dark:text-slate-100">
+              <option value="pt-BR">{t('ptBR')}</option>
+              <option value="en">{t('en')}</option>
             </select>
           </div>
         </SettingRow>

@@ -19,14 +19,16 @@ export function BillingSection() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-black text-slate-800 dark:text-white">Plano Professional</h3>
-                <span className="px-2 py-0.5 bg-green-500 text-white text-[10px] font-black rounded-full uppercase">Ativo</span>
+                <h3 className="text-lg font-black text-slate-800 dark:text-white">{t('professionalPlan')}</h3>
+                <span className="px-2 py-0.5 bg-green-500 text-white text-[10px] font-black rounded-full uppercase">{t('active')}</span>
               </div>
-              <p className="text-xs text-slate-500 font-semibold mt-1">Sua próxima fatura é de R$ 149,90 em 15 abr 2025</p>
+              <p className="text-xs text-slate-500 font-semibold mt-1">
+                {t('nextInvoice', { amount: 'R$ 149,90', date: '15 abr 2025' })}
+              </p>
             </div>
           </div>
           <button className="w-full sm:w-auto px-6 py-2.5 bg-[#FF5F15] text-white text-xs font-black rounded-xl hover:scale-105 transition-all shadow-lg shadow-[#FF5F15]/20">
-            UPGRADE PLANO
+            {t('upgradePlan')}
           </button>
         </div>
       </div>
@@ -35,7 +37,7 @@ export function BillingSection() {
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-indigo-500">
           <CreditCard className="w-4 h-4" />
-          Método de Pagamento
+          {t('paymentMethodTitle')}
         </h3>
         
         <div className="flex items-center justify-between p-4 bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl">
@@ -44,12 +46,16 @@ export function BillingSection() {
               VISA
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-100">Mastercard terminando em 4321</p>
-              <p className="text-[10px] text-slate-400 font-bold uppercase">Expira em 12/28</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                {t('cardEndingIn', { brand: 'Mastercard', last4: '4321' })}
+              </p>
+              <p className="text-[10px] text-slate-400 font-bold uppercase">
+                {t('expiresOn', { date: '12/28' })}
+              </p>
             </div>
           </div>
           <button className="text-xs font-black text-primary hover:underline flex items-center gap-1">
-            EDITAR <ChevronRight className="w-3 h-3" />
+            {t('edit')} <ChevronRight className="w-3 h-3" />
           </button>
         </div>
       </div>
@@ -58,13 +64,13 @@ export function BillingSection() {
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-slate-500">
           <FileText className="w-4 h-4" />
-          Faturas Recentes
+          {t('recentInvoices')}
         </h3>
         
         <div className="space-y-2">
           {[
-            { date: '15 Mar 2025', amount: 'R$ 149,90', status: 'pago' },
-            { date: '15 Fev 2025', amount: 'R$ 149,90', status: 'pago' },
+            { date: '15 Mar 2025', amount: 'R$ 149,90', status: 'paid' },
+            { date: '15 Fev 2025', amount: 'R$ 149,90', status: 'paid' },
           ].map((invoice, i) => (
             <div key={i} className="flex items-center justify-between p-3 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors group">
               <div className="flex items-center gap-3">
@@ -75,7 +81,7 @@ export function BillingSection() {
                 <span className="text-sm font-black text-slate-800 dark:text-white">{invoice.amount}</span>
                 <span className="flex items-center gap-1 text-[10px] font-black uppercase text-green-500">
                   <ShieldCheck className="w-3 h-3" />
-                  {invoice.status}
+                  {t(invoice.status)}
                 </span>
                 <button className="p-2 opacity-0 group-hover:opacity-100 text-primary hover:bg-primary/10 rounded-lg transition-all">
                   <FileText className="w-4 h-4" />

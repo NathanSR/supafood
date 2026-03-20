@@ -210,7 +210,9 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
                     </div>
                     <div>
                       <h2 className="text-xl font-black">{t(activeSection as string)}</h2>
-                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Configurações de {activeSection}</p>
+                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">
+                        {t('settingsOf', { section: t(activeSection as string) })}
+                      </p>
                     </div>
                   </>
                 );

@@ -23,9 +23,9 @@ export function NotificationsSection() {
 
   // Task list mock for automatic notifications
   const tasks = [
-    { id: 1, name: 'Relatório Diário de Vendas', schedule: 'Todo dia às 23:55', status: 'active', icon: History, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
-    { id: 2, name: 'Alerta de Estoque Crítico', schedule: 'Tempo Real', status: 'active', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-    { id: 3, name: 'Resumo Semanal de Performance', schedule: 'Segunda às 08:00', status: 'paused', icon: Clock, color: 'text-slate-400', bg: 'bg-slate-400/10' },
+    { id: 1, name: t('dailySalesReport'), schedule: t('everyDayAt', { time: '23:55' }), status: 'active', icon: History, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+    { id: 2, name: t('criticalStockAlert'), schedule: t('realTime'), status: 'active', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    { id: 3, name: t('weeklyPerformanceSummary'), schedule: t('mondayAt', { time: '08:00' }), status: 'paused', icon: Clock, color: 'text-slate-400', bg: 'bg-slate-400/10' },
   ];
 
   return (
@@ -34,15 +34,15 @@ export function NotificationsSection() {
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-primary">
           <Bell className="w-4 h-4" />
-          Canais de Comunicação
+          {t('communicationChannels')}
         </h3>
-        <SettingRow label="E-mail" description="Alertas enviados para o e-mail cadastrado">
+        <SettingRow label="E-mail" description={t('emailDescription')}>
           <Toggle enabled={channels.email} onChange={(v) => setChannels({...channels, email: v})} />
         </SettingRow>
-        <SettingRow label="Push Desktop" description="Notificações diretamente no navegador">
+        <SettingRow label="Push Desktop" description={t('pushDescription')}>
           <Toggle enabled={channels.push} onChange={(v) => setChannels({...channels, push: v})} />
         </SettingRow>
-        <SettingRow label="WhatsApp (Beta)" description="Receba ordens críticas no seu celular">
+        <SettingRow label="WhatsApp (Beta)" description={t('whatsappDescription')}>
           <Toggle enabled={channels.whatsapp} onChange={(v) => setChannels({...channels, whatsapp: v})} />
         </SettingRow>
       </div>
@@ -52,10 +52,10 @@ export function NotificationsSection() {
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-sm font-black flex items-center gap-2 text-indigo-500">
             <Zap className="w-4 h-4" />
-            Tarefas de Notificação Automática
+            {t('automaticTasks')}
           </h3>
           <span className="text-[10px] font-bold bg-indigo-500/10 text-indigo-500 px-2 py-0.5 rounded-full border border-indigo-500/10 uppercase">
-            3 Rodando
+            {t('running', { count: 3 })}
           </span>
         </div>
         
@@ -79,7 +79,7 @@ export function NotificationsSection() {
                       {task.schedule}
                     </span>
                     <span className={`text-[10px] font-black uppercase tracking-widest ${task.status === 'active' ? 'text-green-500' : 'text-slate-400'}`}>
-                      • {task.status === 'active' ? 'Ativo' : 'Pausado'}
+                      • {task.status === 'active' ? t('active') : t('paused')}
                     </span>
                   </div>
                 </div>
@@ -96,12 +96,12 @@ export function NotificationsSection() {
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-amber-500">
           <Smartphone className="w-4 h-4" />
-          Alertas de Operação
+          {t('operationAlertsTitle')}
         </h3>
-        <SettingRow label={t('orderAlerts')} description="Novos pedidos no salão ou takeaway">
+        <SettingRow label={t('orderAlerts')} description={t('orderAlertsDescription')}>
           <Toggle enabled={alerts.orders} onChange={(v) => setAlerts({...alerts, orders: v})} />
         </SettingRow>
-        <SettingRow label={t('lowStockAlerts')} description="Avisar quando itens atingem estoque mínimo">
+        <SettingRow label={t('lowStockAlerts')} description={t('lowStockAlertsDescription')}>
           <Toggle enabled={alerts.stock} onChange={(v) => setAlerts({...alerts, stock: v})} />
         </SettingRow>
       </div>

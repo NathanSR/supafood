@@ -79,16 +79,16 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
           </div>
           <div className="text-center">
             <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">{tAuth('avatar')}</p>
-            <p className="text-[10px] text-slate-400 mt-1 italic">JPG, PNG ou WebP (Máx. 2MB)</p>
+            <p className="text-[10px] text-slate-400 mt-1 italic">{t('avatarTypes')}</p>
           </div>
         </div>
 
         <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
           <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-primary">
             <User className="w-4 h-4" />
-            Informações Pessoais
+            {t('personalInfo')}
           </h3>
-          <SettingRow label={tAuth('name')} description="Como você será visto no sistema" error={profileErrors.fullName && vt(profileErrors.fullName.message as any, { count: 3 })}>
+          <SettingRow label={tAuth('name')} description={t('nameDescription')} error={profileErrors.fullName && vt(profileErrors.fullName.message as any, { count: 3 })}>
             <input
               {...regProfile('fullName')}
               className="w-full sm:w-64 px-3 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-primary/20 transition-all font-semibold"
@@ -101,7 +101,7 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
         <h3 className="text-sm font-black mb-4 flex items-center gap-2 text-indigo-500">
           <KeyRound className="w-4 h-4" />
-          Segurança da Conta
+          {t('accountSecurity')}
         </h3>
 
         <form onSubmit={handlePasswordSubmit(async (data) => {
@@ -110,14 +110,14 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
         })} className="space-y-4">
           <SettingRow
             label={t('changePassword')}
-            description="Recomendamos uma senha forte com símbolos"
+            description={t('passwordDescription')}
             error={passwordErrors.password && vt(passwordErrors.password.message as any, { count: 6 })}
           >
             <div className="relative w-full sm:w-64">
               <input
                 {...regPassword('password')}
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Nova senha"
+                placeholder={t('newPassword')}
                 className="w-full pl-3 pr-10 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-semibold"
               />
               <button
@@ -131,14 +131,14 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
           </SettingRow>
 
           <SettingRow
-            label="Confirmar Senha"
-            error={passwordErrors.confirmPassword && "As senhas não coincidem"}
+            label={t('confirmPassword')}
+            error={passwordErrors.confirmPassword && t('passwordsDoNotMatch')}
           >
             <div className="relative w-full sm:w-64">
               <input
                 {...regPassword('confirmPassword')}
                 type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Repita a nova senha"
+                placeholder={t('confirmPasswordPlaceholder')}
                 className="w-full pl-3 pr-10 py-2.5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm outline-none focus:ring-4 focus:ring-indigo-500/20 transition-all font-semibold"
               />
               <button
@@ -158,7 +158,7 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
               className="flex items-center gap-2 px-6 py-2.5 bg-indigo-500 text-white text-xs font-black rounded-xl hover:scale-105 transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 active:scale-95"
             >
               {isSubmittingPassword ? <Loader2 className="w-3 h-3 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
-              ATUALIZAR SENHA
+              {t('updatePassword')}
             </button>
           </div>
         </form>

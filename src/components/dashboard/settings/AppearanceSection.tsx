@@ -60,7 +60,7 @@ export function AppearanceSection({ currentLocale }: AppearanceSectionProps) {
 
       {/* Idioma Section */}
       <div className="bg-slate-50/50 dark:bg-white/2 rounded-2xl p-4 border border-slate-100 dark:border-white/5">
-        <SettingRow label={t('language')} description="Escolha o idioma preferido para a plataforma">
+        <SettingRow label={t('language')} description={t('languageDescription')}>
           <div className="flex flex-col sm:flex-row gap-2">
             {languages.map(lang => (
               <button
