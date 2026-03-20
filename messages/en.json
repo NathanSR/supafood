@@ -483,5 +483,33 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "Track": {
+    "title": "Track Order",
+    "subtitle": "Monitor your order's progress in real-time.",
+    "placeholder": "Enter Order Number (e.g., 0042)",
+    "search": "Track",
+    "scanQR": "Scan QR Code",
+    "noOrder": "No active order found",
+    "noOrderDesc": "Check the code or scan the QR code at your table.",
+    "orderNumber": "Order #{number}",
+    "table": "Table {number}",
+    "status": {
+      "pending": "Order Received",
+      "preparing": "Preparing",
+      "ready": "Ready to Serve",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "steps": {
+      "pending": "Received",
+      "preparing": "In Kitchen",
+      "ready": "Ready",
+      "delivered": "Enjoy!"
+    },
+    "items": "Items",
+    "activeOrders": "Active Orders",
+    "back": "Back"
   }
+
 }

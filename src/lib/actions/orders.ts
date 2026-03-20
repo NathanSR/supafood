@@ -155,3 +155,43 @@ export async function updateOrderStatus(id: string, status: string) {
   revalidatePath('/[locale]/(dashboard)/orders', 'page')
   return { success: true }
 }
+
+export async function getOrderById(id: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*, tables(number), order_items(*, menu_items(name))')
+    .eq('id', id)
+    .single()
+
+  if (error) return null
+  return data
+}
+
+export async function getOrderByNumber(orderNumber: number) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*, tables(number), order_items(*, menu_items(name))')
+    .eq('order_number', orderNumber)
+    .not('status', 'in', '("archived","cancelled")')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) return null
+  return data
+}
+
+export async function getActiveOrdersByTable(tableId: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*, tables(number), order_items(*, menu_items(name))')
+    .eq('table_id', tableId)
+    .not('status', 'in', '("archived","cancelled")')
+    .order('created_at', { ascending: false })
+
+  if (error) return []
+  return data
+}

@@ -483,5 +483,33 @@
     "light": "Claro",
     "dark": "Escuro",
     "system": "Sistema"
+  },
+  "Track": {
+    "title": "Acompanhar Pedido",
+    "subtitle": "Monitore o progresso do seu pedido em tempo real.",
+    "placeholder": "Número do pedido (ex: 0042)",
+    "search": "Acompanhar",
+    "scanQR": "Escanear QR Code",
+    "noOrder": "Pedido não encontrado",
+    "noOrderDesc": "Verifique o código ou escaneie o QR da sua mesa.",
+    "orderNumber": "Pedido #{number}",
+    "table": "Mesa {number}",
+    "status": {
+      "pending": "Pedido Recebido",
+      "preparing": "Em Preparo",
+      "ready": "Pronto para Servir",
+      "delivered": "Entregue",
+      "cancelled": "Cancelado"
+    },
+    "steps": {
+      "pending": "Recebido",
+      "preparing": "Na Cozinha",
+      "ready": "Pronto",
+      "delivered": "Bom Apetite!"
+    },
+    "items": "Itens",
+    "activeOrders": "Pedidos Ativos",
+    "back": "Voltar"
   }
+
 }
