@@ -32,14 +32,14 @@ export function AnalyticsClient({ initialPeriod }: AnalyticsClientProps) {
         <h1 className="text-2xl font-black tracking-tight">{t('title')}</h1>
         <p className="text-slate-400 text-sm mt-0.5">{t('subtitle')}</p>
       </div>
-      <div className="flex items-center gap-1 p-1 bg-white/5 rounded-xl border border-white/5">
+      <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5">
         {(['today', 'week', 'month', 'year'] as Period[]).map(p => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${initialPeriod === p
-              ? 'bg-white/10 text-[#FF5F15] shadow-lg border border-white/5'
-              : 'text-slate-400 hover:text-white hover:bg-white/5'
+              ? 'bg-white dark:bg-white/10 text-[#FF5F15] shadow-sm dark:shadow-lg border border-slate-200 dark:border-white/5'
+              : 'text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/5'
               }`}
           >
             {t(p as any)}

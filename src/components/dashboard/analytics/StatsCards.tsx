@@ -72,7 +72,7 @@ export function StatsCards({ data }: StatsCardsProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05 }}
-          className="glass rounded-2xl p-5 border border-white/5"
+          className="glass rounded-2xl p-5"
         >
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -97,13 +97,13 @@ export function StatsCardsSkeleton() {
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="glass rounded-2xl p-5 border border-white/5 animate-pulse">
+        <div key={i} className="glass rounded-2xl p-5 animate-pulse">
           <div className="flex items-center justify-between mb-3">
-            <div className="h-4 w-24 bg-white/5 rounded" />
-            <div className="w-9 h-9 rounded-xl bg-white/5" />
+            <div className="h-4 w-24 bg-slate-200 dark:bg-white/5 rounded" />
+            <div className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-white/5" />
           </div>
-          <div className="h-8 w-32 bg-white/10 rounded mb-2" />
-          <div className="h-4 w-20 bg-white/5 rounded" />
+          <div className="h-8 w-32 bg-slate-200 dark:bg-white/10 rounded mb-2" />
+          <div className="h-4 w-20 bg-slate-200 dark:bg-white/5 rounded" />
         </div>
       ))}
     </div>

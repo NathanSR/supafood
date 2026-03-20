@@ -22,7 +22,7 @@ export function CategoryDistribution({ data }: CategoryDistributionProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.25 }}
-      className="glass rounded-2xl p-6 border border-white/5"
+      className="glass rounded-2xl p-6"
     >
       <h3 className="font-bold text-base mb-6">{t('ordersByCategory')}</h3>
       <div className="flex flex-col gap-3">
@@ -33,7 +33,7 @@ export function CategoryDistribution({ data }: CategoryDistributionProps) {
                 <span className="font-medium text-slate-400">{cat.name}</span>
                 <span className="font-bold text-primary">{cat.value}%</span>
               </div>
-              <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 dark:bg-white/5 h-2 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${cat.value}%` }}
@@ -56,16 +56,16 @@ export function CategoryDistribution({ data }: CategoryDistributionProps) {
 
 export function CategoryDistributionSkeleton() {
   return (
-    <div className="glass rounded-2xl p-6 border border-white/5 animate-pulse">
-      <div className="h-6 w-48 bg-white/5 rounded mb-6" />
+    <div className="glass rounded-2xl p-6 animate-pulse">
+      <div className="h-6 w-48 bg-slate-200 dark:bg-white/5 rounded mb-6" />
       <div className="space-y-4">
         {[1, 2, 3, 4, 5].map(i => (
           <div key={i} className="space-y-2">
             <div className="flex justify-between">
-              <div className="h-4 w-24 bg-white/5 rounded" />
-              <div className="h-4 w-8 bg-white/10 rounded" />
+              <div className="h-4 w-24 bg-slate-200 dark:bg-white/5 rounded" />
+              <div className="h-4 w-8 bg-slate-200 dark:bg-white/10 rounded" />
             </div>
-            <div className="h-2 w-full bg-white/5 rounded" />
+            <div className="h-2 w-full bg-slate-200 dark:bg-white/5 rounded" />
           </div>
         ))}
       </div>

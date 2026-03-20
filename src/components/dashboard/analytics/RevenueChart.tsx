@@ -35,9 +35,9 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-900 border border-white/10 p-3 rounded-xl shadow-2xl backdrop-blur-xl">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-3 rounded-xl shadow-2xl backdrop-blur-xl">
           <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">{payload[0].payload.name}</p>
-          <p className="text-sm font-black text-white">{formatter.format(payload[0].value)}</p>
+          <p className="text-sm font-black text-slate-900 dark:text-white">{formatter.format(payload[0].value)}</p>
         </div>
       );
     }
@@ -49,7 +49,7 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="xl:col-span-2 glass rounded-2xl p-6 border border-white/5"
+      className="xl:col-span-2 glass rounded-2xl p-6"
     >
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-bold text-base">{t('revenueOverTime')}</h3>
@@ -64,7 +64,7 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
                 <stop offset="100%" stopColor="#FF5F15" stopOpacity={0.3} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-slate-200 dark:text-white/5" />
             <XAxis
               dataKey="name"
               axisLine={false}
@@ -77,7 +77,7 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
               tickLine={false}
               tick={{ fill: '#64748b', fontSize: 10 }}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'currentColor', opacity: 0.1 }} />
             <Bar dataKey="value" radius={[6, 6, 0, 0]}>
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill="url(#barGradient)" />
@@ -92,9 +92,9 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
 
 export function RevenueChartSkeleton() {
   return (
-    <div className="xl:col-span-2 glass rounded-2xl p-6 border border-white/5 animate-pulse">
-      <div className="h-6 w-48 bg-white/5 rounded mb-6" />
-      <div className="h-64 bg-white/5 rounded" />
+    <div className="xl:col-span-2 glass rounded-2xl p-6 animate-pulse">
+      <div className="h-6 w-48 bg-slate-200 dark:bg-white/5 rounded mb-6" />
+      <div className="h-64 bg-slate-200 dark:bg-white/5 rounded" />
     </div>
   );
 }

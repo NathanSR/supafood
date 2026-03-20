@@ -56,7 +56,7 @@ export function StatsOverview({ stats }: { stats: DashboardStats }) {
               <p className="text-xl font-bold">{formatter.format(stats.onlineOrdersRevenue)}</p>
             </div>
             
-            <div className="w-px h-10 bg-white/10"></div>
+            <div className="w-px h-10 bg-slate-200 dark:bg-white/10"></div>
             
             <div className="space-y-1">
               <p className="text-xs text-slate-500 dark:text-slate-400">{t('dineIn')}</p>

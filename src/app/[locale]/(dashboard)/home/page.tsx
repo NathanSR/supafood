@@ -1,7 +1,7 @@
 import React from 'react';
-import { StatsOverview } from '@/components/dashboard/StatsOverview';
-import { LiveOrders } from '@/components/dashboard/LiveOrders';
-import { TopSellingItems } from '@/components/dashboard/TopSellingItems';
+import { StatsOverview } from '@/components/dashboard/home/StatsOverview';
+import { LiveOrders } from '@/components/dashboard/home/LiveOrders';
+import { TopSellingItems } from '@/components/dashboard/home/TopSellingItems';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 
@@ -26,7 +26,7 @@ export default async function AdminDashboardPage() {
   // Calculate stats logic (simplified for now)
   const totalRevenue = orders?.reduce((acc, order) => acc + Number(order.total_amount), 0) || 0;
   const totalOrders = orders?.length || 0;
-  
+
   const stats = {
     todaysRevenue: totalRevenue,
     revenueGrowth: 15.5, // Mock growth for UI
@@ -76,7 +76,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="p-4 md:p-8 space-y-8">
       <StatsOverview stats={stats} />
-      
+
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <LiveOrders orders={formattedOrders || []} />
         <TopSellingItems items={sortedItems || []} />

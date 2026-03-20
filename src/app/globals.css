@@ -20,10 +20,11 @@
 }
 
 @utility glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 @utility sidebar-item-active {
@@ -72,6 +73,11 @@ body {
   --sidebar-accent-foreground: oklch(0.63 0.24 38);
   --sidebar-border: oklch(0.92 0.01 40);
   --sidebar-ring: oklch(0.63 0.24 38 / 50%);
+  
+  /* Glass Variables */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
 }
 
 .dark {
@@ -106,6 +112,11 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 12%);
   --sidebar-ring: oklch(0.63 0.24 38 / 60%);
+
+  /* Glass Variables - Dark mode */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: none;
 }
 
 @theme inline {

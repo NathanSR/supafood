@@ -171,10 +171,10 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
               onClick={() => handleSectionChange(key)}
               className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-black transition-all whitespace-nowrap lg:w-full text-left group box-border border-2 ${activeSection === key
                 ? `bg-white/5 border-${color.split('-')[1]}-500/30 ${color}`
-                : 'bg-transparent border-transparent text-slate-500 dark:text-slate-400 hover:bg-white/5 hover:text-primary'
+                : 'bg-transparent border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-primary'
                 }`}
             >
-              <span className={`w-10 h-10 rounded-xl ${activeSection === key ? bg : 'bg-white/5 group-hover:bg-white/10'} ${activeSection === key ? color : 'text-slate-400'} flex items-center justify-center flex-shrink-0 transition-all`}>
+              <span className={`w-10 h-10 rounded-xl ${activeSection === key ? bg : 'bg-slate-100 dark:bg-white/5 group-hover:bg-slate-200 dark:group-hover:bg-white/10'} ${activeSection === key ? color : 'text-slate-400'} flex items-center justify-center flex-shrink-0 transition-all`}>
                 <Icon className="w-5 h-5" />
               </span>
               <span className="flex-1">{t(key as string)}</span>
@@ -195,11 +195,11 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: 'circOut' }}
-            className="glass rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden"
+            className="glass rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
           >
             <div className={`absolute -top-24 -right-24 w-64 h-64 blur-[120px] rounded-full opacity-10 bg-current ${sectionConfig.find(s => s.key === activeSection)?.color}`} />
 
-            <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/5">
+            <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100 dark:border-white/5">
               {(() => {
                 const cfg = sectionConfig.find(c => c.key === activeSection)!;
                 const Icon = cfg.icon;

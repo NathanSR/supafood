@@ -65,7 +65,7 @@ export function LiveOrders({ orders }: { orders: Order[] }) {
       transition={{ duration: 0.4, delay: 0.2 }}
       className="glass rounded-xl flex flex-col h-[500px]"
     >
-      <div className="p-6 border-b border-black/5 dark:border-white/10 flex items-center justify-between">
+      <div className="p-6 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h3 className="font-bold text-lg">{t('liveOrders')}</h3>
           <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
@@ -87,7 +87,7 @@ export function LiveOrders({ orders }: { orders: Order[] }) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="p-4 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors border border-transparent hover:border-black/5 dark:hover:border-white/5 flex items-center justify-between"
+                className="p-4 hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors border border-transparent hover:border-slate-100 dark:hover:border-white/5 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   <div className={cn("w-10 h-10 rounded-full flex items-center justify-center font-bold", config.container)}>

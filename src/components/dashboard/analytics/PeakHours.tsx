@@ -28,8 +28,8 @@ export function PeakHours({ data }: PeakHoursProps) {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-900 border border-white/10 p-2 rounded-lg shadow-2xl backdrop-blur-xl">
-          <p className="text-[10px] text-white font-bold">{payload[0].payload.hour}: {payload[0].value}%</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-2xl backdrop-blur-xl">
+          <p className="text-[10px] text-slate-900 dark:text-white font-bold">{payload[0].payload.hour}: {payload[0].value}%</p>
         </div>
       );
     }
@@ -41,13 +41,13 @@ export function PeakHours({ data }: PeakHoursProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="glass rounded-2xl p-6 border border-white/5"
+      className="glass rounded-2xl p-6"
     >
       <h3 className="font-bold text-base mb-6">{t('peakHours')}</h3>
       <div className="h-44 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'currentColor', opacity: 0.1 }} />
             <Bar dataKey="value" radius={[2, 2, 0, 0]}>
               {chartData.map((entry, index) => (
                 <Cell
@@ -79,9 +79,9 @@ export function PeakHours({ data }: PeakHoursProps) {
 
 export function PeakHoursSkeleton() {
   return (
-    <div className="glass rounded-2xl p-6 border border-white/5 animate-pulse">
-      <div className="h-6 w-48 bg-white/5 rounded mb-6" />
-      <div className="h-44 bg-white/5 rounded" />
+    <div className="glass rounded-2xl p-6 animate-pulse">
+      <div className="h-6 w-48 bg-slate-200 dark:bg-white/5 rounded mb-6" />
+      <div className="h-44 bg-slate-200 dark:bg-white/5 rounded" />
     </div>
   );
 }
