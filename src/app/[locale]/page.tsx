@@ -24,7 +24,9 @@ import {
   Zap,
   ShieldCheck,
   Package,
-  QrCode
+  QrCode,
+  UtensilsCrossed,
+  LayoutDashboard
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -112,7 +114,10 @@ export default function RootLocalePage() {
           className="w-full max-w-7xl flex items-center justify-between px-6 py-4 glass rounded-2xl border border-white/5 shadow-2xl"
         >
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <span className="text-2xl font-black tracking-tighter text-primary">Supafood</span>
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform duration-300">
+              <UtensilsCrossed className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-black tracking-tighter text-foreground uppercase">Supafood</span>
           </div>
 
           <div className="hidden md:flex items-center gap-8 font-semibold text-sm">
@@ -134,8 +139,9 @@ export default function RootLocalePage() {
           </div>
 
           <Link href="/login">
-            <Button size="lg" className="rounded-xl font-bold px-6 shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
-              {t('navAccess')}
+            <Button size="lg" className="rounded-xl font-bold px-3 shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+              <LayoutDashboard className="w-5 h-5" />
+              <span className="hidden md:inline">{t('navAccess')}</span>
             </Button>
           </Link>
         </motion.nav>
