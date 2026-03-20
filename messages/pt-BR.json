@@ -511,5 +511,15 @@
     "items": "Itens",
     "activeOrders": "Pedidos Ativos",
     "back": "Voltar"
+  },
+  "Confirmation": {
+    "title": "Tem certeza?",
+    "description": "Esta ação não pode ser desfeita.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "deleteTitle": "Excluir Item",
+    "deleteDescription": "Você tem certeza que deseja excluir '{name}'? Esta ação é irreversível.",
+    "deleteConfirm": "Sim, Excluir",
+    "deleteCancel": "Não, Cancelar"
   }
 }

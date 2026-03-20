@@ -22,6 +22,8 @@ import { TableForm } from './TableForm';
 import { TableDetailsDrawer } from './TableDetailsDrawer';
 import { deleteTable, updateTable } from '@/lib/actions/tables';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+
 
 interface TablesClientProps {
   initialTables: any[];
@@ -59,7 +61,9 @@ export function TablesClient({
   summaryStats
 }: TablesClientProps) {
   const t = useTranslations('Tables');
+  const c = useTranslations('Confirmation');
   const router = useRouter();
+
   const searchParams = useSearchParams();
 
   const activeSection = searchParams.get('section') || 'all';
@@ -69,6 +73,10 @@ export function TablesClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTable, setEditingTable] = useState<any>(null);
   const [selectedTable, setSelectedTable] = useState<any>(null);
+  const [tableToDelete, setTableToDelete] = useState<any>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
 
   const updateFilters = (updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -86,11 +94,30 @@ export function TablesClient({
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  const handleDelete = async (id: string) => {
-    if (confirm('Deseja realmente remover esta mesa?')) {
-      await deleteTable(id);
+  const handleDelete = (id: string) => {
+    const table = initialTables.find(t => t.id === id);
+    if (table) {
+      setTableToDelete(table);
+      setIsDeleteConfirmOpen(true);
     }
   };
+
+  const confirmDelete = async () => {
+    if (!tableToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      await deleteTable(tableToDelete.id);
+      setIsDeleteConfirmOpen(false);
+      setTableToDelete(null);
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting table:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
 
   return (
     <div className="space-y-8">
@@ -393,6 +420,17 @@ export function TablesClient({
           </div>
         </motion.div>
       )}
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={confirmDelete}
+        title={c('deleteTitle')}
+        description={c('deleteDescription', { name: tableToDelete?.name || '' })}
+        confirmText={c('deleteConfirm')}
+        cancelText={c('deleteCancel')}
+        variant="delete"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

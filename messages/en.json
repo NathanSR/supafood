@@ -511,5 +511,15 @@
     "items": "Items",
     "activeOrders": "Active Orders",
     "back": "Back"
+  },
+  "Confirmation": {
+    "title": "Are you sure?",
+    "description": "This action cannot be undone.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "deleteTitle": "Delete Item",
+    "deleteDescription": "Are you sure you want to delete '{name}'? This action is irreversible.",
+    "deleteConfirm": "Yes, Delete",
+    "deleteCancel": "No, Cancel"
   }
 }

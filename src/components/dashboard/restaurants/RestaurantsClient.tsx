@@ -8,6 +8,8 @@ import { deleteRestaurant, switchRestaurant } from '@/lib/actions/restaurant';
 import { useRouter } from '@/i18n/routing';
 import { RestaurantForm } from './RestaurantForm';
 import { RestaurantDetailsDrawer } from './RestaurantDetailsDrawer';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+
 
 interface Restaurant {
   id: string;
@@ -30,29 +32,43 @@ interface RestaurantsClientProps {
 export function RestaurantsClient({ restaurants: initialRestaurants, activeRestaurantId }: RestaurantsClientProps) {
   const t = useTranslations('Restaurants');
   const gt = useTranslations('General');
+  const c = useTranslations('Confirmation');
+
   const router = useRouter();
 
   const [showForm, setShowForm] = useState(false);
   const [editingRestaurant, setEditingRestaurant] = useState<Restaurant | null>(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const [restaurantToDelete, setRestaurantToDelete] = useState<Restaurant | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+
 
   const handleDelete = (restaurant: Restaurant) => {
     if (restaurant.is_primary) {
       alert(t('cannotDeletePrimary'));
       return;
     }
-    if (!confirm(t('confirmDelete', { name: restaurant.name }))) return;
+    setRestaurantToDelete(restaurant);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!restaurantToDelete) return;
+    
     startTransition(async () => {
-      const result = await deleteRestaurant(restaurant.id);
+      const result = await deleteRestaurant(restaurantToDelete.id);
       if (result.error) {
         alert(result.error);
       } else {
+        setIsDeleteConfirmOpen(false);
+        setRestaurantToDelete(null);
         setSelectedRestaurant(null);
         router.refresh();
       }
     });
   };
+
 
   const handleSwitch = (id: string) => {
     startTransition(async () => {
@@ -221,6 +237,17 @@ export function RestaurantsClient({ restaurants: initialRestaurants, activeResta
         onEdit={handleEdit}
         onDelete={handleDelete}
         isActive={selectedRestaurant?.id === activeRestaurantId}
+      />
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={confirmDelete}
+        title={c('deleteTitle')}
+        description={c('deleteDescription', { name: restaurantToDelete?.name || '' })}
+        confirmText={c('deleteConfirm')}
+        cancelText={c('deleteCancel')}
+        variant="delete"
+        isLoading={isPending}
       />
     </div>
   );

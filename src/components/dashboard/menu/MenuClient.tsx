@@ -23,6 +23,8 @@ import { deleteMenuItem, updateMenuItem, getMenuItems } from '@/lib/actions/menu
 import { MenuItemForm } from './MenuItemForm';
 import { CategoryForm } from './CategoryForm';
 import { ItemDetailsDrawer } from './ItemDetailsDrawer';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+
 
 interface MenuClientProps {
   initialCategories: any[];
@@ -34,6 +36,8 @@ interface MenuClientProps {
 export function MenuClient({ initialCategories, initialItems, initialTotal, initialPages }: MenuClientProps) {
   const t = useTranslations('Menu');
   const g = useTranslations('General');
+  const c = useTranslations('Confirmation');
+
 
   // State for filters and pagination
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -56,6 +60,9 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [itemToDelete, setItemToDelete] = useState<any>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
 
   // Search debounce effect
   useEffect(() => {
@@ -99,13 +106,24 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this item?')) {
-      startTransition(async () => {
-        await deleteMenuItem(id);
-        fetchItems();
-      });
+    const item = items.find(i => i.id === id);
+    if (item) {
+      setItemToDelete(item);
+      setIsDeleteConfirmOpen(true);
     }
   };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    
+    startTransition(async () => {
+      await deleteMenuItem(itemToDelete.id);
+      setIsDeleteConfirmOpen(false);
+      setItemToDelete(null);
+      fetchItems();
+    });
+  };
+
 
   const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -401,6 +419,17 @@ export function MenuClient({ initialCategories, initialItems, initialTotal, init
           handleDelete(id);
           setIsDetailsOpen(false);
         }}
+      />
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={confirmDelete}
+        title={c('deleteTitle')}
+        description={c('deleteDescription', { name: itemToDelete?.name || '' })}
+        confirmText={c('deleteConfirm')}
+        cancelText={c('deleteCancel')}
+        variant="delete"
+        isLoading={isPending}
       />
     </div>
   );

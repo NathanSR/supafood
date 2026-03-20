@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
-import { Sidebar } from '@/components/dashboard/Sidebar';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { Toaster } from 'sonner';
 
 const inter = Inter({
   variable: '--font-display',
@@ -45,6 +45,15 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             {children}
+            <Toaster
+              richColors
+              closeButton
+              position="bottom-right"
+              toastOptions={{
+                style: { background: '#0f172a', color: '#f8fafc', border: '1px solid #1e293b' },
+                className: 'my-toast-class',
+              }}
+            />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

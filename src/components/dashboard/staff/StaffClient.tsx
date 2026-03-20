@@ -23,6 +23,8 @@ import { StaffDetailsDrawer } from './StaffDetailsDrawer';
 import { deleteStaffMember } from '@/lib/actions/staff';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+
 
 interface StaffClientProps {
   initialStaff: any[];
@@ -60,6 +62,8 @@ const shiftEmoji: Record<string, string> = {
 export function StaffClient({ initialStaff, totalCount, totalPages, currentPage, pageSize }: StaffClientProps) {
   const t = useTranslations('Staff');
   const g = useTranslations('General');
+  const c = useTranslations('Confirmation');
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -68,6 +72,9 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<any>(null);
   const [viewingMember, setViewingMember] = useState<any>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [memberToDelete, setMemberToDelete] = useState<any>(null);
+
 
   const activeRole = searchParams.get('role') || 'all';
   const query = searchParams.get('query') || '';
@@ -112,14 +119,22 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
     router.push(`${pathname}?${createQueryString({ page: page.toString() })}`);
   };
 
-  const handleDelete = async (member: any) => {
-    if (confirm(t('confirmDelete', { name: member.name }) || `Deseja realmente remover ${member.name}?`)) {
-      startTransition(async () => {
-        await deleteStaffMember(member.id);
-        router.refresh();
-      });
-    }
+  const handleDelete = (member: any) => {
+    setMemberToDelete(member);
+    setIsDeleteConfirmOpen(true);
   };
+
+  const confirmDelete = async () => {
+    if (!memberToDelete) return;
+    
+    startTransition(async () => {
+      await deleteStaffMember(memberToDelete.id);
+      setIsDeleteConfirmOpen(false);
+      setMemberToDelete(null);
+      router.refresh();
+    });
+  };
+
 
   const onDutyCount = initialStaff.filter(m => m.status === 'on_duty').length;
   const avgPerformance = initialStaff.length > 0
@@ -382,6 +397,17 @@ export function StaffClient({ initialStaff, totalCount, totalPages, currentPage,
           </div>
         </div>
       )}
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={confirmDelete}
+        title={c('deleteTitle')}
+        description={c('deleteDescription', { name: memberToDelete?.name || '' })}
+        confirmText={c('deleteConfirm')}
+        cancelText={c('deleteCancel')}
+        variant="delete"
+        isLoading={isPending}
+      />
     </div>
   );
 }
