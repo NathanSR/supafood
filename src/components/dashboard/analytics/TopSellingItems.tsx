@@ -27,7 +27,7 @@ export function TopSellingItems({ data }: TopSellingItemsProps) {
       transition={{ delay: 0.35 }}
       className="glass rounded-2xl p-6 border border-white/5"
     >
-      <h3 className="font-bold text-base mb-4 text-white">{t('topItems')}</h3>
+      <h3 className="font-bold text-base mb-4">{t('topItems')}</h3>
       <div className="space-y-4">
         {data.length > 0 ? (
           data.map((item, i) => (
@@ -37,7 +37,7 @@ export function TopSellingItems({ data }: TopSellingItemsProps) {
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-sm font-semibold truncate text-white">{item.name}</p>
+                  <p className="text-sm font-semibold truncate">{item.name}</p>
                   <p className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-wider">
                     {item.count} {t('orders')}
                   </p>
@@ -51,7 +51,7 @@ export function TopSellingItems({ data }: TopSellingItemsProps) {
                   />
                 </div>
               </div>
-              <p className="text-sm font-black text-white whitespace-nowrap min-w-[80px] text-right">
+              <p className="text-sm font-black whitespace-nowrap min-w-[80px] text-right">
                 {formatter.format(item.revenue)}
               </p>
             </div>

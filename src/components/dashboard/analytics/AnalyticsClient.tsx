@@ -29,7 +29,7 @@ export function AnalyticsClient({ initialPeriod }: AnalyticsClientProps) {
       className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
     >
       <div>
-        <h1 className="text-2xl font-black tracking-tight text-white">{t('title')}</h1>
+        <h1 className="text-2xl font-black tracking-tight">{t('title')}</h1>
         <p className="text-slate-400 text-sm mt-0.5">{t('subtitle')}</p>
       </div>
       <div className="flex items-center gap-1 p-1 bg-white/5 rounded-xl border border-white/5">

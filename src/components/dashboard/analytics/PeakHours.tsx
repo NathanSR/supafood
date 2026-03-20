@@ -3,12 +3,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
   ResponsiveContainer,
   Cell
 } from 'recharts';
@@ -43,24 +43,24 @@ export function PeakHours({ data }: PeakHoursProps) {
       transition={{ delay: 0.3 }}
       className="glass rounded-2xl p-6 border border-white/5"
     >
-      <h3 className="font-bold text-base mb-6 text-white">{t('peakHours')}</h3>
+      <h3 className="font-bold text-base mb-6">{t('peakHours')}</h3>
       <div className="h-44 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
             <Bar dataKey="value" radius={[2, 2, 0, 0]}>
               {chartData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={entry.value > 75 ? '#FF5F15' : entry.value > 50 ? 'rgba(255, 95, 21, 0.6)' : 'rgba(255, 95, 21, 0.3)'} 
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.value > 75 ? '#FF5F15' : entry.value > 50 ? 'rgba(255, 95, 21, 0.6)' : 'rgba(255, 95, 21, 0.3)'}
                 />
               ))}
             </Bar>
-            <XAxis 
-              dataKey="hour" 
-              hide={false} 
-              axisLine={false} 
-              tickLine={false} 
+            <XAxis
+              dataKey="hour"
+              hide={false}
+              axisLine={false}
+              tickLine={false}
               tick={{ fill: '#64748b', fontSize: 10 }}
               interval={5}
             />

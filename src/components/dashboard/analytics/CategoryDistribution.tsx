@@ -24,14 +24,14 @@ export function CategoryDistribution({ data }: CategoryDistributionProps) {
       transition={{ delay: 0.25 }}
       className="glass rounded-2xl p-6 border border-white/5"
     >
-      <h3 className="font-bold text-base mb-6 text-white">{t('ordersByCategory')}</h3>
+      <h3 className="font-bold text-base mb-6">{t('ordersByCategory')}</h3>
       <div className="flex flex-col gap-3">
         {data.length > 0 ? (
           data.map((cat, i) => (
             <div key={cat.name} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium text-slate-400">{cat.name}</span>
-                <span className="font-bold text-white">{cat.value}%</span>
+                <span className="font-bold text-primary">{cat.value}%</span>
               </div>
               <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
                 <motion.div

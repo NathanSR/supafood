@@ -20,7 +20,7 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
   const t = useTranslations('Settings');
   const tAuth = useTranslations('Auth');
   const vt = useTranslations('Validation');
-  
+
   const [avatarPreview, setAvatarPreview] = useState<string | null>(initialData.avatarUrl || null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -69,11 +69,11 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
             </Avatar>
             <label className="absolute bottom-1 right-1 w-10 h-10 bg-[#FF5F15] text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:scale-110 transition-transform border-4 border-white dark:border-[#1c120e]">
               <Camera className="w-5 h-5" />
-              <input 
+              <input
                 {...regProfile('avatar')}
-                type="file" 
-                accept="image/*" 
-                className="hidden" 
+                type="file"
+                accept="image/*"
+                className="hidden"
               />
             </label>
           </div>
@@ -103,13 +103,13 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
           <KeyRound className="w-4 h-4" />
           Segurança da Conta
         </h3>
-        
+
         <form onSubmit={handlePasswordSubmit(async (data) => {
           await onUpdatePassword(data);
           resetPassword();
         })} className="space-y-4">
-          <SettingRow 
-            label={t('changePassword')} 
+          <SettingRow
+            label={t('changePassword')}
             description="Recomendamos uma senha forte com símbolos"
             error={passwordErrors.password && vt(passwordErrors.password.message as any, { count: 6 })}
           >
@@ -130,8 +130,8 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
             </div>
           </SettingRow>
 
-          <SettingRow 
-            label="Confirmar Senha" 
+          <SettingRow
+            label="Confirmar Senha"
             error={passwordErrors.confirmPassword && "As senhas não coincidem"}
           >
             <div className="relative w-full sm:w-64">
@@ -152,8 +152,8 @@ export function ProfileSection({ initialData, onUpdateProfile, onUpdatePassword 
           </SettingRow>
 
           <div className="flex justify-end pt-2">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isSubmittingPassword}
               className="flex items-center gap-2 px-6 py-2.5 bg-indigo-500 text-white text-xs font-black rounded-xl hover:scale-105 transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 active:scale-95"
             >

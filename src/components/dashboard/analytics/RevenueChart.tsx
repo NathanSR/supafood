@@ -3,13 +3,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   Cell
 } from 'recharts';
@@ -23,7 +23,7 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
   const t = useTranslations('Analytics');
   const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
-  const labels = period === 'today' 
+  const labels = period === 'today'
     ? ['-18h', '-15h', '-12h', '-9h', '-6h', '-3h', 'Agora']
     : [t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat'), t('sun')];
 
@@ -52,9 +52,9 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
       className="xl:col-span-2 glass rounded-2xl p-6 border border-white/5"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-base text-white">{t('revenueOverTime')}</h3>
+        <h3 className="font-bold text-base">{t('revenueOverTime')}</h3>
       </div>
-      
+
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -65,16 +65,16 @@ export function RevenueChart({ data, period }: RevenueChartProps) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-            <XAxis 
-              dataKey="name" 
-              axisLine={false} 
-              tickLine={false} 
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
               tick={{ fill: '#64748b', fontSize: 10, fontWeight: 500 }}
               dy={10}
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
+            <YAxis
+              axisLine={false}
+              tickLine={false}
               tick={{ fill: '#64748b', fontSize: 10 }}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />

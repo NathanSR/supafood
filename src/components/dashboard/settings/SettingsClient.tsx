@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   User, Store, Bell, Palette, CreditCard, Check, ChevronRight, Loader2
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -93,17 +93,17 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
     switch (activeSection) {
       case 'profile':
         return (
-          <ProfileSection 
-            initialData={initialProfile} 
-            onUpdateProfile={handleUpdateProfile} 
-            onUpdatePassword={handleUpdatePassword} 
+          <ProfileSection
+            initialData={initialProfile}
+            onUpdateProfile={handleUpdateProfile}
+            onUpdatePassword={handleUpdatePassword}
           />
         );
       case 'restaurant':
         return (
-          <RestaurantSection 
-            initialData={initialRestaurant} 
-            onUpdate={handleUpdateRestaurant} 
+          <RestaurantSection
+            initialData={initialRestaurant}
+            onUpdate={handleUpdateRestaurant}
           />
         );
       case 'notifications':
@@ -124,10 +124,10 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-white">{t('title')}</h1>
+          <h1 className="text-3xl font-black tracking-tight">{t('title')}</h1>
           <p className="text-slate-400 text-sm mt-1">{t('subtitle')}</p>
         </div>
-        
+
         <AnimatePresence mode="wait">
           {saved ? (
             <motion.div
@@ -169,11 +169,10 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
             <button
               key={key}
               onClick={() => handleSectionChange(key)}
-              className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-black transition-all whitespace-nowrap lg:w-full text-left group box-border border-2 ${
-                activeSection === key
-                  ? `bg-white/5 border-${color.split('-')[1]}-500/30 ${color}`
-                  : 'bg-transparent border-transparent text-slate-500 dark:text-slate-400 hover:bg-white/5 hover:text-white'
-              }`}
+              className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl text-sm font-black transition-all whitespace-nowrap lg:w-full text-left group box-border border-2 ${activeSection === key
+                ? `bg-white/5 border-${color.split('-')[1]}-500/30 ${color}`
+                : 'bg-transparent border-transparent text-slate-500 dark:text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
             >
               <span className={`w-10 h-10 rounded-xl ${activeSection === key ? bg : 'bg-white/5 group-hover:bg-white/10'} ${activeSection === key ? color : 'text-slate-400'} flex items-center justify-center flex-shrink-0 transition-all`}>
                 <Icon className="w-5 h-5" />
@@ -199,7 +198,7 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
             className="glass rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden"
           >
             <div className={`absolute -top-24 -right-24 w-64 h-64 blur-[120px] rounded-full opacity-10 bg-current ${sectionConfig.find(s => s.key === activeSection)?.color}`} />
-            
+
             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/5">
               {(() => {
                 const cfg = sectionConfig.find(c => c.key === activeSection)!;
@@ -210,7 +209,7 @@ export function SettingsClient({ initialProfile, initialRestaurant, locale }: Se
                       <Icon className="w-6 h-6" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-black text-white">{t(activeSection as string)}</h2>
+                      <h2 className="text-xl font-black">{t(activeSection as string)}</h2>
                       <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Configurações de {activeSection}</p>
                     </div>
                   </>
