@@ -452,6 +452,7 @@
     "heroSubtitle": "Transform your gastronomic operation with predictive intelligence. From the floor to the kitchen, automate processes and maximize profits with the innovator SaaS leader.",
     "trackOrderPlaceholder": "Track Order: #0000",
     "heroCTA": "Let's Start!",
+    "trackOrder": "Track Order",
     "partnersTitle": "5M+",
     "partnersSubtitle": "ORDERS PROCESSED",
     "featuresTitle": "Power in Each Module",
@@ -511,5 +512,4 @@
     "activeOrders": "Active Orders",
     "back": "Back"
   }
-
 }

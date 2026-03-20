@@ -452,6 +452,7 @@
     "heroSubtitle": "Transforme sua operação gastronômica com inteligência preditiva. Do salão à cozinha, automatize processos e maximize lucros com o SaaS líder em inovação.",
     "trackOrderPlaceholder": "Rastrear Pedido: #0000",
     "heroCTA": "Vamos Começar!",
+    "trackOrder": "Acompanhar Pedido",
     "partnersTitle": "5M+",
     "partnersSubtitle": "PEDIDOS PROCESSADOS",
     "featuresTitle": "Potência em Cada Módulo",
@@ -511,5 +512,4 @@
     "activeOrders": "Pedidos Ativos",
     "back": "Voltar"
   }
-
 }

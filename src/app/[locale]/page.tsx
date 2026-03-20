@@ -23,7 +23,8 @@ import {
   MessageCircle,
   Zap,
   ShieldCheck,
-  Package
+  Package,
+  QrCode
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -181,18 +182,15 @@ export default function RootLocalePage() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
 
-            <form onSubmit={handleTrack} className="relative group w-full sm:w-auto">
-              <input
-                type="text"
-                placeholder={t('trackOrderPlaceholder')}
-                className="h-16 w-full sm:w-[320px] pl-6 pr-14 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium"
-                value={trackId}
-                onChange={(e) => setTrackId(e.target.value)}
-              />
-              <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl text-muted-foreground hover:text-primary hover:bg-white/5 transition-all">
-                <Search className="w-5 h-5" />
-              </button>
-            </form>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => router.push('/track')}
+              className="h-16 px-10 rounded-2xl text-base font-bold flex items-center gap-4 group"
+            >
+              {t('trackOrder')}
+              <QrCode className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </motion.div>
 
