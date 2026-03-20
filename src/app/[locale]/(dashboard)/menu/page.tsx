@@ -1,18 +1,13 @@
 import React from 'react';
-import { createClient } from '@/utils/supabase/server';
 import { MenuClient } from '@/components/dashboard/menu/MenuClient';
-import { getMenuItems } from '@/lib/actions/restaurant';
+import { getMenuItems } from '@/lib/actions/menu';
+import { getCategories } from '@/lib/actions/categories';
 
 export default async function MenuPage() {
-  const supabase = await createClient();
+  // Fetch categories using server action (filtered by restaurant_id)
+  const categories = await getCategories();
 
-  // Fetch categories
-  const { data: categories } = await supabase
-    .from('menu_categories')
-    .select('*')
-    .order('sort_order', { ascending: true });
-
-  // Fetch initial items (first page, no filters)
+  // Fetch initial items (first page, no filters, filtered by restaurant_id in action)
   const { items, total, totalPages } = await getMenuItems({ page: 1, limit: 12 });
 
   return (
@@ -26,4 +21,3 @@ export default async function MenuPage() {
     </div>
   );
 }
-

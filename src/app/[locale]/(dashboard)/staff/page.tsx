@@ -1,6 +1,6 @@
 import React from 'react';
 import { StaffClient } from '@/components/dashboard/staff/StaffClient';
-import { getStaff } from '@/lib/actions/restaurant';
+import { getStaff } from '@/lib/actions/staff';
 
 export default async function StaffPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>

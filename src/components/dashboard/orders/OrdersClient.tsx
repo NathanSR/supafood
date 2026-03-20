@@ -23,7 +23,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
-import { updateOrderStatus } from '@/lib/actions/restaurant';
+import { updateOrderStatus } from '@/lib/actions/orders';
 import { OrderForm } from './OrderForm';
 import { OrderDetailsDrawer } from './OrderDetailsDrawer';
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createCategory } from '@/lib/actions/restaurant';
+import { createCategory } from '@/lib/actions/categories';
 import { Loader2, X, Tag, FileText, Smile } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 

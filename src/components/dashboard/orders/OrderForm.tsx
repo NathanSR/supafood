@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { createOrder, addItemsToOrder } from '@/lib/actions/restaurant';
+import { createOrder, addItemsToOrder } from '@/lib/actions/orders';
 import { Loader2, X, ShoppingCart, Trash2, Plus, Minus, Search, Utensils, User, MapPin, CreditCard, PlusCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Modal } from '@/components/ui/Modal';

@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createTable, updateTable } from '@/lib/actions/restaurant';
+import { createTable, updateTable } from '@/lib/actions/tables';
 import { Loader2, X, Users, MapPin, Hash } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 

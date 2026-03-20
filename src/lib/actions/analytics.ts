@@ -16,6 +16,7 @@ import {
   parseISO
 } from 'date-fns';
 import { cache } from 'react';
+import { getActiveRestaurantId } from './utils';
 
 export type Period = 'today' | 'week' | 'month' | 'year';
 
@@ -63,10 +64,18 @@ const calculateChange = (current: number, previous: number) => {
 export const getStats = cache(async (period: Period) => {
   const supabase = await createClient();
   const { start, end, prevStart, prevEnd } = getInterval(period);
+  const restaurantId = await getActiveRestaurantId();
+
+  if (!restaurantId) return {
+    revenue: 0, revenueChange: 0,
+    orders: 0, ordersChange: 0,
+    customers: 0, customersChange: 0,
+    avgOrder: 0, avgOrderChange: 0
+  };
 
   const [current, prev] = await Promise.all([
-    supabase.from('orders').select('total_amount, customer_name').gte('created_at', start.toISOString()).lte('created_at', end.toISOString()),
-    supabase.from('orders').select('total_amount, customer_name').gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
+    supabase.from('orders').select('total_amount, customer_name').eq('restaurant_id', restaurantId).gte('created_at', start.toISOString()).lte('created_at', end.toISOString()),
+    supabase.from('orders').select('total_amount, customer_name').eq('restaurant_id', restaurantId).gte('created_at', prevStart.toISOString()).lte('created_at', prevEnd.toISOString())
   ]);
 
   const revenue = current.data?.reduce((acc, o) => acc + (Number(o.total_amount) || 0), 0) || 0;
@@ -96,10 +105,14 @@ export const getRevenueChartData = cache(async (period: Period) => {
   const supabase = await createClient();
   const { start, end } = getInterval(period);
   const now = new Date();
+  const restaurantId = await getActiveRestaurantId();
+
+  if (!restaurantId) return [];
 
   const { data } = await supabase
     .from('orders')
     .select('total_amount, created_at')
+    .eq('restaurant_id', restaurantId)
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString());
 
@@ -129,10 +142,14 @@ export const getRevenueChartData = cache(async (period: Period) => {
 export const getCategoryDistribution = cache(async (period: Period) => {
   const supabase = await createClient();
   const { start, end } = getInterval(period);
+  const restaurantId = await getActiveRestaurantId();
+
+  if (!restaurantId) return [];
 
   const { data } = await supabase
     .from('order_items')
-    .select('quantity, menu_items(menu_categories(name))')
+    .select('quantity, menu_items!inner(restaurant_id, menu_categories(name))')
+    .eq('menu_items.restaurant_id', restaurantId)
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString());
 
@@ -158,10 +175,14 @@ export const getCategoryDistribution = cache(async (period: Period) => {
 export const getPeakHours = cache(async (period: Period) => {
   const supabase = await createClient();
   const { start, end } = getInterval(period);
+  const restaurantId = await getActiveRestaurantId();
+
+  if (!restaurantId) return new Array(24).fill(0);
 
   const { data } = await supabase
     .from('orders')
     .select('created_at')
+    .eq('restaurant_id', restaurantId)
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString());
 
@@ -177,10 +198,14 @@ export const getPeakHours = cache(async (period: Period) => {
 export const getTopItems = cache(async (period: Period) => {
   const supabase = await createClient();
   const { start, end } = getInterval(period);
+  const restaurantId = await getActiveRestaurantId();
+
+  if (!restaurantId) return [];
 
   const { data } = await supabase
     .from('order_items')
-    .select('quantity, unit_price, menu_items(name)')
+    .select('quantity, unit_price, menu_items!inner(name, restaurant_id)')
+    .eq('menu_items.restaurant_id', restaurantId)
     .gte('created_at', start.toISOString())
     .lte('created_at', end.toISOString());
 

@@ -19,7 +19,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { deleteMenuItem, updateMenuItem, getMenuItems } from '@/lib/actions/restaurant';
+import { deleteMenuItem, updateMenuItem, getMenuItems } from '@/lib/actions/menu';
 import { MenuItemForm } from './MenuItemForm';
 import { CategoryForm } from './CategoryForm';
 import { ItemDetailsDrawer } from './ItemDetailsDrawer';

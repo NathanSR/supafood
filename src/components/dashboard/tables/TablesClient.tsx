@@ -20,7 +20,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { TableForm } from './TableForm';
 import { TableDetailsDrawer } from './TableDetailsDrawer';
-import { deleteTable } from '@/lib/actions/restaurant';
+import { deleteTable, updateTable } from '@/lib/actions/tables';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface TablesClientProps {

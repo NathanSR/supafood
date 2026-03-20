@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { createMenuItem, updateMenuItem } from '@/lib/actions/restaurant';
+import { createMenuItem, updateMenuItem } from '@/lib/actions/menu';
 import { Loader2, X, Image as ImageIcon, Upload, Check, Flame, Star, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { useForm, Controller } from 'react-hook-form';

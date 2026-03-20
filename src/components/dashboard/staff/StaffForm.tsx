@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createStaffMember, updateStaffMember } from '@/lib/actions/restaurant';
+import { createStaffMember, updateStaffMember } from '@/lib/actions/staff';
 import { Loader2, X, User, Mail, Phone, Briefcase, Clock as ClockIcon } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 

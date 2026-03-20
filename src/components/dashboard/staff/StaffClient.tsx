@@ -20,7 +20,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { StaffForm } from './StaffForm';
 import { StaffDetailsDrawer } from './StaffDetailsDrawer';
-import { deleteStaffMember } from '@/lib/actions/restaurant';
+import { deleteStaffMember } from '@/lib/actions/staff';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 
